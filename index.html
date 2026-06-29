@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic Tac Toe - Arcade Arcade</title>
+    <title>Arcade Hub - 6 Games Edition</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 100vh;
             margin: 0;
             background: linear-gradient(-45deg, #111, #222, #0b132b, #1c2541);
             background-size: 400% 400%;
             animation: gradientBG 12s ease infinite;
             color: white;
-            overflow-y: auto;
-            padding: 20px 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         @keyframes gradientBG {
@@ -27,63 +27,105 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Start Screen Overlay */
-        #startScreen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 15, 30, 0.95);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 200;
-        }
-
-        .start-btn {
-            padding: 20px 40px;
-            font-size: 2rem;
-            background: #2ed573;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 0 20px #2ed573;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        .start-btn:hover { transform: scale(1.1); }
-
         /* Stats Bar */
         .stats-bar {
             background: rgba(255, 255, 255, 0.1);
-            padding: 10px 20px;
+            padding: 10px 25px;
             border-radius: 30px;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: bold;
             color: #ffea00;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        /* Main Menu / Games Dashboard */
+        .menu-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .menu-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #1e90ff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .games-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .game-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #444;
+            border-radius: 12px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: 0.3s ease;
+        }
+
+        .game-item.unlocked {
+            border-color: #2ed573;
+            background: rgba(46, 213, 115, 0.1);
+        }
+
+        .game-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+
+        .btn-play { background: #2ed573; color: white; }
+        .btn-play:hover { transform: scale(1.05); }
+        .btn-lock { background: #ffea00; color: #111; }
+
+        /* Tic Tac Toe Game Screen */
+        .game-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
         }
 
         .controls { margin-bottom: 15px; display: flex; gap: 10px; }
-        select, button {
+        select, .btn-back, .btn-reset {
             padding: 10px 15px; font-size: 1rem; font-weight: bold;
             border: none; border-radius: 8px; cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
         }
         select { background: white; color: #333; }
-        button { background: #ff4757; color: white; }
+        .btn-reset { background: #ff4757; color: white; }
+        .btn-back { background: #57606f; color: white; }
 
-        /* Board */
         .board {
-            display: grid; grid-template-columns: repeat(3, 90px);
-            grid-template-rows: repeat(3, 90px); gap: 8px;
+            display: grid; grid-template-columns: repeat(3, 95px);
+            grid-template-rows: repeat(3, 95px); gap: 8px;
             background: rgba(255, 255, 255, 0.05); padding: 12px;
             border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.6);
         }
         .cell {
-            width: 90px; height: 90px; background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px; font-size: 2.5rem; font-weight: bold;
+            width: 95px; height: 95px; background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px; font-size: 2.6rem; font-weight: bold;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; color: #333; transition: 0.2s;
         }
@@ -92,97 +134,85 @@
         .cell[data-user="O"] { color: #1e90ff; }
         .cell.winner { background: #ffea00 !important; box-shadow: 0 0 20px #ffea00; }
 
-        #status, #countdown { margin-top: 10px; font-size: 1.2rem; font-weight: bold; }
-        #countdown { color: #ffea00; }
-
-        /* Arcade Shop Section */
-        .shop-title { margin-top: 30px; font-size: 1.5rem; color: #1e90ff; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        .games-grid {
-            display: grid; grid-template-columns: repeat(2, 160px); gap: 15px; margin-top: 10px;
-        }
-        .game-card {
-            background: rgba(255, 255, 255, 0.05); border: 2px solid #555;
-            padding: 15px; border-radius: 12px; text-align: center;
-            position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        .game-card.unlocked { border-color: #2ed573; background: rgba(46, 213, 115, 0.1); }
-        .unlock-btn {
-            margin-top: 8px; padding: 6px 12px; font-size: 0.85rem;
-            background: #ffea00; color: #111; border-radius: 5px; width: 100%;
-        }
-        .unlock-btn.owned { background: #2ed573; color: white; cursor: default; }
+        #status, #countdown { margin-top: 15px; font-size: 1.3rem; font-weight: bold; text-align: center; }
+        #countdown { color: #ffea00; min-height: 24px; }
 
         canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
     </style>
 </head>
 <body>
 
-    <div id="startScreen">
-        <h1 style="margin-bottom: 30px; font-size: 3rem; text-align:center;">TIC TAC TOE<br><span style="color:#ffea00; font-size: 1.5rem;">ARCADE EDITION</span></h1>
-        <button class="start-btn" onclick="startGame()">START GAME</button>
-    </div>
-
     <canvas id="fireworksCanvas"></canvas>
 
     <div class="stats-bar">🪙 Coins: <span id="coinCount">0</span></div>
 
-    <div class="controls">
-        <select id="gameMode" onchange="handleModeChange()">
-            <option value="computer">Vs Computer</option>
-            <option value="friend">Vs Friend</option>
-        </select>
-        <select id="levelSelect" onchange="resetGame()">
-            <option value="1">Level 1 🟢</option>
-            <option value="2">Level 2 🟡</option>
-            <option value="3">Level 3 🔴</option>
-        </select>
-        <button onclick="resetGame()">Reset</button>
+    <div class="menu-container" id="menuScreen">
+        <div class="menu-title">🎮 SELECT A GAME</div>
+        <div class="games-list">
+            <div class="game-card game-item" id="card-1">
+                <span class="game-name">1. Snake</span>
+                <button class="action-btn btn-lock" id="btn-1" onclick="buyGame(1, 100)">🪙 100</button>
+            </div>
+            <div class="game-card game-item" id="card-2">
+                <span class="game-name">2. Car Race</span>
+                <button class="action-btn btn-lock" id="btn-2" onclick="buyGame(2, 200)">🪙 200</button>
+            </div>
+            <div class="game-card game-item" id="card-3">
+                <span class="game-name">3. Block Blast</span>
+                <button class="action-btn btn-lock" id="btn-3" onclick="buyGame(3, 300)">🪙 300</button>
+            </div>
+            <div class="game-card game-item" id="card-4">
+                <span class="game-name">4. Free Fire</span>
+                <button class="action-btn btn-lock" id="btn-4" onclick="buyGame(4, 400)">🪙 400</button>
+            </div>
+            <div class="game-card game-item" id="card-5">
+                <span class="game-name">5. Bike Race</span>
+                <button class="action-btn btn-lock" id="btn-5" onclick="buyGame(5, 500)">🪙 500</button>
+            </div>
+            <div class="game-item unlocked">
+                <span class="game-name">6. Tic Tac Toe</span>
+                <button class="action-btn btn-play" onclick="showTTTScreen()">PLAY</button>
+            </div>
+        </div>
     </div>
 
-    <div class="board" id="board">
-        <div class="cell" data-index="0"></div>
-        <div class="cell" data-index="1"></div>
-        <div class="cell" data-index="2"></div>
-        <div class="cell" data-index="3"></div>
-        <div class="cell" data-index="4"></div>
-        <div class="cell" data-index="5"></div>
-        <div class="cell" data-index="6"></div>
-        <div class="cell" data-index="7"></div>
-        <div class="cell" data-index="8"></div>
-    </div>
+    <div class="game-screen" id="tttScreen">
+        <div class="controls">
+            <button class="btn-back" onclick="showMenuScreen()">⬅ Menu</button>
+            <select id="gameMode" onchange="handleModeChange()">
+                <option value="computer">Vs Computer</option>
+                <option value="friend">Vs Friend</option>
+            </select>
+            <select id="levelSelect" onchange="resetGame()">
+                <option value="1">Level 1 🟢</option>
+                <option value="2">Level 2 🟡</option>
+                <option value="3">Level 3 🔴</option>
+            </select>
+            <button class="btn-reset" onclick="resetGame()">Reset</button>
+        </div>
 
-    <div id="status">Turn: X</div>
-    <div id="countdown"></div>
+        <div class="board" id="board">
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
+        </div>
 
-    <div class="shop-title">🎮 Unlock More Games</div>
-    <div class="games-grid">
-        <div class="game-card" id="card-1">
-            <div>Game 1.1</div>
-            <button class="unlock-btn" id="btn-1" onclick="buyGame(1, 100)">🪙 100</button>
-        </div>
-        <div class="game-card" id="card-2">
-            <div>Game 1.2</div>
-            <button class="unlock-btn" id="btn-2" onclick="buyGame(2, 200)">🪙 200</button>
-        </div>
-        <div class="game-card" id="card-3">
-            <div>Game 1.3</div>
-            <button class="unlock-btn" id="btn-3" onclick="buyGame(3, 300)">🪙 300</button>
-        </div>
-        <div class="game-card" id="card-4">
-            <div>Game 1.4</div>
-            <button class="unlock-btn" id="btn-4" onclick="buyGame(4, 400)">🪙 400</button>
-        </div>
-        <div class="game-card" id="card-5">
-            <div>Game 1.5</div>
-            <button class="unlock-btn" id="btn-5" onclick="buyGame(5, 500)">🪙 500</button>
-        </div>
+        <div id="status">Turn: X</div>
+        <div id="countdown"></div>
     </div>
 
     <script>
-        // Game State & Variables
         let coins = 0;
-        let unlockedGames = [false, false, false, false, false, false]; // Track unlocked games
+        let unlockedGames = [false, false, false, false, false, false];
 
+        const menuScreen = document.getElementById('menuScreen');
+        const tttScreen = document.getElementById('tttScreen');
         const cells = document.querySelectorAll('.cell');
         const statusText = document.getElementById('status');
         const countdownText = document.getElementById('countdown');
@@ -206,8 +236,17 @@
         window.addEventListener('resize', resizeCanvas); resizeCanvas();
         cells.forEach(cell => cell.addEventListener('click', handleCellClick));
 
-        function startGame() {
-            document.getElementById('startScreen').style.display = 'none';
+        function showTTTScreen() {
+            menuScreen.style.display = 'none';
+            tttScreen.style.display = 'flex';
+            resetGame();
+        }
+
+        function showMenuScreen() {
+            clearTimeout(nextLevelTimeout);
+            clearInterval(countdownInterval);
+            tttScreen.style.display = 'none';
+            menuScreen.style.display = 'flex';
         }
 
         function handleModeChange() {
@@ -274,19 +313,22 @@
             }
 
             if (roundWon) {
-                statusText.innerText = `Player ${currentPlayer} Wins! 🎉`;
                 isGameActive = false;
                 winningLine.forEach(index => cells[index].classList.add('winner'));
-                startFireworksEffect();
-
-                // Reward 100 Coins On Win
-                coins += 100;
-                coinCountDisplay.innerText = coins;
-
-                if (gameModeSelect.value === 'computer' && currentPlayer === 'X') {
-                    if (levelSelect.value !== '3') startNextLevelTimer();
-                    else countdownText.innerText = "All Levels Complete! 🏆 (+100 Coins!)";
+                
+                if (currentPlayer === 'X') {
+                    // Player Wins
+                    statusText.innerText = "You Win! 🎉 (+100 Coins)";
+                    coins += 100;
+                    startFireworksEffect();
+                    if (gameModeSelect.value === 'computer' && levelSelect.value !== '3') startNextLevelTimer();
+                } else {
+                    // Computer Wins
+                    statusText.innerText = "Computer Wins! 🤖 (-100 Coins)";
+                    coins = Math.max(0, coins - 100); // 100 coins minus, par 0 se neeche nahi jayega
                 }
+                
+                coinCountDisplay.innerText = coins;
                 return true;
             }
             if (!gameState.includes("")) { statusText.innerText = "Game Draw! 🤝"; isGameActive = false; return true; }
@@ -316,26 +358,25 @@
 
         // Shop Purchase Logic
         function buyGame(id, cost) {
-            if (unlockedGames[id]) {
-                alert("Yeh game pehle se unlocked hai!"); return;
-            }
+            if (unlockedGames[id]) return;
             if (coins >= cost) {
                 coins -= cost;
                 coinCountDisplay.innerText = coins;
                 unlockedGames[id] = true;
                 
-                // Visual Update
-                document.getElementById(`card-${id}`).classList.add('unlocked');
+                const card = document.getElementById(`card-${id}`);
                 const btn = document.getElementById(`btn-${id}`);
-                btn.innerText = "Unlocked ✔";
-                btn.classList.add('owned');
-                alert(`Game 1.${id} kamyabi se unlock ho gaya! 🎉`);
+                card.classList.add('unlocked');
+                btn.innerText = "PLAY";
+                btn.className = "action-btn btn-play";
+                btn.onclick = function() { alert("Yeh game abhi ready nahi hai, jaldi update aayega!"); };
+                alert("Game unlocked! 🎉");
             } else {
-                alert("Paise/Coins kam hain! Aur game jeetkar kamayein. 🪙");
+                alert("Coins kam hain! Tic Tac Toe jeetkar aur coins kamayein. 🪙");
             }
         }
 
-        // Fireworks Logic
+        // Fireworks Animation
         function startFireworksEffect() {
             let count = 0;
             const interval = setInterval(() => {
