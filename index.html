@@ -3,59 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic Tac Toe</title>
+    <title>Tic Tac Toe - Premium</title>
     <style>
+        /* Moving/Motion Background */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background-color: #f0f0f0;
             margin: 0;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
         }
-        h1 { color: #333; }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Controls / Mode Selection */
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        select, button {
+            padding: 10px 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+
+        select {
+            background-color: white;
+            color: #333;
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #111;
+            color: white;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            background-color: #222;
+        }
+
+        /* Game Board */
         .board {
             display: grid;
             grid-template-columns: repeat(3, 100px);
             grid-template-rows: repeat(3, 100px);
-            gap: 5px;
+            gap: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
         }
+
         .cell {
             width: 100px;
             height: 100px;
-            background-color: #fff;
-            border: 2px solid #333;
-            font-size: 2rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            font-size: 2.5rem;
             font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            transition: background-color 0.2s;
         }
-        .cell:hover { background-color: #e0e0e0; }
+
+        .cell:hover {
+            background-color: white;
+        }
+
+        /* X and O Colors */
+        .cell[data-user="X"] { color: #e73c7e; }
+        .cell[data-user="O"] { color: #23a6d5; }
+
         #status {
             margin-top: 20px;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
         }
-        button {
-            margin-top: 15px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            cursor: pointer;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        button:hover { background-color: #0056b3; }
     </style>
 </head>
 <body>
 
     <h1>Tic Tac Toe</h1>
+
+    <div class="controls">
+        <select id="gameMode" onchange="resetGame()">
+            <option value="friend">Vs Friend</option>
+            <option value="computer">Vs Computer</option>
+        </select>
+        <button onclick="resetGame()">Reset Game</button>
+    </div>
+
     <div class="board" id="board">
         <div class="cell" data-index="0"></div>
         <div class="cell" data-index="1"></div>
@@ -67,21 +128,22 @@
         <div class="cell" data-index="7"></div>
         <div class="cell" data-index="8"></div>
     </div>
+
     <div id="status">Turn: X</div>
-    <button onclick="resetGame()">Reset Game</button>
 
     <script>
-        const board = document.getElementById('board');
         const cells = document.querySelectorAll('.cell');
         const statusText = document.getElementById('status');
+        const gameModeSelect = document.getElementById('gameMode');
+        
         let currentPlayer = 'X';
         let gameState = ["", "", "", "", "", "", "", "", ""];
         let isGameActive = true;
 
         const winningConditions = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-            [0, 4, 8], [2, 4, 6]             // Diagonals
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
         ];
 
         cells.forEach(cell => cell.addEventListener('click', handleCellClick));
@@ -94,10 +156,39 @@
                 return;
             }
 
-            gameState[clickedCellIndex] = currentPlayer;
-            clickedCell.innerText = currentPlayer;
+            makeMove(clickedCellIndex, currentPlayer);
 
-            checkResult();
+            if (isGameActive && gameModeSelect.value === 'computer' && currentPlayer === 'O') {
+                // Computer ki turn thodi der baad aayegi taaki real lage
+                setTimeout(computerMove, 500);
+            }
+        }
+
+        function makeMove(index, player) {
+            gameState[index] = player;
+            cells[index].innerText = player;
+            cells[index].setAttribute('data-user', player);
+
+            if (checkResult()) return;
+
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+            statusText.innerText = `Turn: ${currentPlayer}`;
+        }
+
+        function computerMove() {
+            if (!isGameActive) return;
+
+            // Khaali jagah dhoondhna
+            let emptyCells = [];
+            gameState.forEach((val, index) => {
+                if (val === "") emptyCells.push(index);
+            });
+
+            if (emptyCells.length > 0) {
+                // Randomly ek khaali cell chunna
+                const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                makeMove(randomIndex, 'O');
+            }
         }
 
         function checkResult() {
@@ -107,9 +198,7 @@
                 let a = gameState[winCondition[0]];
                 let b = gameState[winCondition[1]];
                 let c = gameState[winCondition[2]];
-                if (a === '' || b === '' || c === '') {
-                    continue;
-                }
+                if (a === '' || b === '' || c === '') continue;
                 if (a === b && b === c) {
                     roundWon = true;
                     break;
@@ -119,18 +208,17 @@
             if (roundWon) {
                 statusText.innerText = `Player ${currentPlayer} Wins! 🎉`;
                 isGameActive = false;
-                return;
+                return true;
             }
 
             let roundDraw = !gameState.includes("");
             if (roundDraw) {
                 statusText.innerText = "Game Draw! 🤝";
                 isGameActive = false;
-                return;
+                return true;
             }
 
-            currentPlayer = currentPlayer === "X" ? "O" : "X";
-            statusText.innerText = `Turn: ${currentPlayer}`;
+            return false;
         }
 
         function resetGame() {
@@ -138,7 +226,10 @@
             gameState = ["", "", "", "", "", "", "", "", ""];
             isGameActive = true;
             statusText.innerText = `Turn: ${currentPlayer}`;
-            cells.forEach(cell => cell.innerText = "");
+            cells.forEach(cell => {
+                cell.innerText = "";
+                cell.removeAttribute('data-user');
+            });
         }
     </script>
 </body>
