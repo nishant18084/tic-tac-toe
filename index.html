@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic Tac Toe - Fireworks & Trophy Edition</title>
+    <title>Tic Tac Toe - Arcade Arcade</title>
     <style>
-        /* Moving Background */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background: linear-gradient(-45deg, #111, #222, #0b132b, #1c2541);
             background-size: 400% 400%;
             animation: gradientBG 12s ease infinite;
             color: white;
-            overflow: hidden;
-            position: relative;
+            overflow-y: auto;
+            padding: 20px 0;
         }
 
         @keyframes gradientBG {
@@ -28,173 +27,115 @@
             100% { background-position: 0% 50%; }
         }
 
-        h1 {
-            margin-bottom: 5px;
-            text-shadow: 0px 4px 10px rgba(0,0,0,0.7);
-            font-size: 2.5rem;
-            z-index: 10;
-        }
-
-        /* Controls Section */
-        .controls {
-            margin-bottom: 15px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            z-index: 10;
-        }
-
-        select, button {
-            padding: 10px 15px;
-            font-size: 1rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-            transition: all 0.2s ease;
-        }
-
-        select { background-color: white; color: #333; }
-        button { background-color: #ff4757; color: white; }
-        button:hover { transform: translateY(-2px); background-color: #ff6b81; }
-
-        /* Game Board */
-        .board {
-            display: grid;
-            grid-template-columns: repeat(3, 100px);
-            grid-template-rows: repeat(3, 100px);
-            gap: 8px;
-            background-color: rgba(255, 255, 255, 0.05);
-            padding: 12px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-            z-index: 10;
-        }
-
-        .cell {
-            width: 100px;
-            height: 100px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            font-size: 2.8rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: #333;
-        }
-
-        .cell:hover { background-color: white; transform: scale(1.03); }
-        .cell[data-user="X"] { color: #2ed573; }
-        .cell[data-user="O"] { color: #1e90ff; }
-
-        .cell.winner {
-            background-color: #ffea00 !important;
-            color: #111 !important;
-            box-shadow: 0 0 20px #ffea00;
-        }
-
-        #status, #countdown {
-            margin-top: 15px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
-            text-align: center;
-            z-index: 10;
-        }
-        #countdown { color: #ffea00; min-height: 24px; }
-
-        /* Fireworks Canvas */
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        /* Trophy Pop-up Overlay */
-        .trophy-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+        /* Start Screen Overlay */
+        #startScreen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 15, 30, 0.95);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
+            z-index: 200;
         }
 
-        .trophy-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .trophy-box {
-            text-align: center;
-            transform: scale(0.5);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .trophy-overlay.show .trophy-box {
-            transform: scale(1);
-        }
-
-        .trophy-icon {
-            font-size: 8rem;
-            animation: floatTrophy 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes floatTrophy {
-            0% { transform: translateY(0) rotate(-5deg); }
-            100% { transform: translateY(-15px) rotate(5deg); }
-        }
-
-        .trophy-text {
+        .start-btn {
+            padding: 20px 40px;
             font-size: 2rem;
+            background: #2ed573;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px #2ed573;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .start-btn:hover { transform: scale(1.1); }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #ffea00;
-            margin-top: 15px;
-            text-shadow: 0 0 10px rgba(255,234,0,0.5);
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
+
+        .controls { margin-bottom: 15px; display: flex; gap: 10px; }
+        select, button {
+            padding: 10px 15px; font-size: 1rem; font-weight: bold;
+            border: none; border-radius: 8px; cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+        }
+        select { background: white; color: #333; }
+        button { background: #ff4757; color: white; }
+
+        /* Board */
+        .board {
+            display: grid; grid-template-columns: repeat(3, 90px);
+            grid-template-rows: repeat(3, 90px); gap: 8px;
+            background: rgba(255, 255, 255, 0.05); padding: 12px;
+            border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+        }
+        .cell {
+            width: 90px; height: 90px; background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px; font-size: 2.5rem; font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #333; transition: 0.2s;
+        }
+        .cell:hover { background: white; transform: scale(1.03); }
+        .cell[data-user="X"] { color: #2ed573; }
+        .cell[data-user="O"] { color: #1e90ff; }
+        .cell.winner { background: #ffea00 !important; box-shadow: 0 0 20px #ffea00; }
+
+        #status, #countdown { margin-top: 10px; font-size: 1.2rem; font-weight: bold; }
+        #countdown { color: #ffea00; }
+
+        /* Arcade Shop Section */
+        .shop-title { margin-top: 30px; font-size: 1.5rem; color: #1e90ff; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .games-grid {
+            display: grid; grid-template-columns: repeat(2, 160px); gap: 15px; margin-top: 10px;
+        }
+        .game-card {
+            background: rgba(255, 255, 255, 0.05); border: 2px solid #555;
+            padding: 15px; border-radius: 12px; text-align: center;
+            position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .game-card.unlocked { border-color: #2ed573; background: rgba(46, 213, 115, 0.1); }
+        .unlock-btn {
+            margin-top: 8px; padding: 6px 12px; font-size: 0.85rem;
+            background: #ffea00; color: #111; border-radius: 5px; width: 100%;
+        }
+        .unlock-btn.owned { background: #2ed573; color: white; cursor: default; }
+
+        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
     </style>
 </head>
 <body>
 
-    <canvas id="fireworksCanvas"></canvas>
-
-    <div class="trophy-overlay" id="trophyOverlay">
-        <div class="trophy-box">
-            <div class="trophy-icon">🏆</div>
-            <div class="trophy-text" id="trophyMessage">Level 1 Cleared!</div>
-        </div>
+    <div id="startScreen">
+        <h1 style="margin-bottom: 30px; font-size: 3rem; text-align:center;">TIC TAC TOE<br><span style="color:#ffea00; font-size: 1.5rem;">ARCADE EDITION</span></h1>
+        <button class="start-btn" onclick="startGame()">START GAME</button>
     </div>
 
-    <h1>Tic Tac Toe</h1>
+    <canvas id="fireworksCanvas"></canvas>
+
+    <div class="stats-bar">🪙 Coins: <span id="coinCount">0</span></div>
 
     <div class="controls">
         <select id="gameMode" onchange="handleModeChange()">
             <option value="computer">Vs Computer</option>
             <option value="friend">Vs Friend</option>
         </select>
-        
         <select id="levelSelect" onchange="resetGame()">
             <option value="1">Level 1 🟢</option>
             <option value="2">Level 2 🟡</option>
             <option value="3">Level 3 🔴</option>
         </select>
-
         <button onclick="resetGame()">Reset</button>
     </div>
 
@@ -213,14 +154,41 @@
     <div id="status">Turn: X</div>
     <div id="countdown"></div>
 
+    <div class="shop-title">🎮 Unlock More Games</div>
+    <div class="games-grid">
+        <div class="game-card" id="card-1">
+            <div>Game 1.1</div>
+            <button class="unlock-btn" id="btn-1" onclick="buyGame(1, 100)">🪙 100</button>
+        </div>
+        <div class="game-card" id="card-2">
+            <div>Game 1.2</div>
+            <button class="unlock-btn" id="btn-2" onclick="buyGame(2, 200)">🪙 200</button>
+        </div>
+        <div class="game-card" id="card-3">
+            <div>Game 1.3</div>
+            <button class="unlock-btn" id="btn-3" onclick="buyGame(3, 300)">🪙 300</button>
+        </div>
+        <div class="game-card" id="card-4">
+            <div>Game 1.4</div>
+            <button class="unlock-btn" id="btn-4" onclick="buyGame(4, 400)">🪙 400</button>
+        </div>
+        <div class="game-card" id="card-5">
+            <div>Game 1.5</div>
+            <button class="unlock-btn" id="btn-5" onclick="buyGame(5, 500)">🪙 500</button>
+        </div>
+    </div>
+
     <script>
+        // Game State & Variables
+        let coins = 0;
+        let unlockedGames = [false, false, false, false, false, false]; // Track unlocked games
+
         const cells = document.querySelectorAll('.cell');
         const statusText = document.getElementById('status');
         const countdownText = document.getElementById('countdown');
         const gameModeSelect = document.getElementById('gameMode');
         const levelSelect = document.getElementById('levelSelect');
-        const trophyOverlay = document.getElementById('trophyOverlay');
-        const trophyMessage = document.getElementById('trophyMessage');
+        const coinCountDisplay = document.getElementById('coinCount');
         const canvas = document.getElementById('fireworksCanvas');
         const ctx = canvas.getContext('2d');
         
@@ -232,21 +200,15 @@
         let fireworks = [];
         let particles = [];
 
-        const winningConditions = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8],
-            [0, 3, 6], [1, 4, 7], [2, 5, 8],
-            [0, 4, 8], [2, 4, 6]
-        ];
+        const winningConditions = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
-        // Resize Canvas
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas); resizeCanvas();
         cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+
+        function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+        }
 
         function handleModeChange() {
             levelSelect.style.display = (gameModeSelect.value === 'friend') ? 'none' : 'inline-block';
@@ -256,13 +218,9 @@
         function handleCellClick(e) {
             const clickedCell = e.target;
             const clickedCellIndex = parseInt(clickedCell.getAttribute('data-index'));
-
-            if (gameState[clickedCellIndex] !== "" || !isGameActive || (gameModeSelect.value === 'computer' && currentPlayer === 'O')) {
-                return;
-            }
+            if (gameState[clickedCellIndex] !== "" || !isGameActive || (gameModeSelect.value === 'computer' && currentPlayer === 'O')) return;
 
             makeMove(clickedCellIndex, currentPlayer);
-
             if (isGameActive && gameModeSelect.value === 'computer' && currentPlayer === 'O') {
                 setTimeout(computerMove, 500);
             }
@@ -272,9 +230,7 @@
             gameState[index] = player;
             cells[index].innerText = player;
             cells[index].setAttribute('data-user', player);
-
             if (checkResult()) return;
-
             currentPlayer = currentPlayer === "X" ? "O" : "X";
             statusText.innerText = `Turn: ${currentPlayer}`;
         }
@@ -283,22 +239,16 @@
             if (!isGameActive) return;
             const level = levelSelect.value;
             let move;
-
-            if (level === '3') {
-                move = getBestMove('O') || getBestMove('X') || getRandomMove();
-            } else if (level === '2') {
-                move = Math.random() > 0.5 ? (getBestMove('O') || getBestMove('X') || getRandomMove()) : getRandomMove();
-            } else {
-                move = getRandomMove();
-            }
+            if (level === '3') move = getBestMove('O') || getBestMove('X') || getRandomMove();
+            else if (level === '2') move = Math.random() > 0.5 ? (getBestMove('O') || getBestMove('X') || getRandomMove()) : getRandomMove();
+            else move = getRandomMove();
 
             if (move !== undefined) makeMove(move, 'O');
         }
 
         function getBestMove(player) {
             for (let condition of winningConditions) {
-                let count = 0;
-                let emptyIndex = -1;
+                let count = 0; let emptyIndex = -1;
                 for (let index of condition) {
                     if (gameState[index] === player) count++;
                     else if (gameState[index] === "") emptyIndex = index;
@@ -315,19 +265,11 @@
         }
 
         function checkResult() {
-            let roundWon = false;
-            let winningLine = [];
-
+            let roundWon = false; let winningLine = [];
             for (let i = 0; i < winningConditions.length; i++) {
                 const winCondition = winningConditions[i];
-                let a = gameState[winCondition[0]];
-                let b = gameState[winCondition[1]];
-                let c = gameState[winCondition[2]];
-                if (a === '' || b === '' || c === '') continue;
-                if (a === b && b === c) {
-                    roundWon = true;
-                    winningLine = winCondition;
-                    break;
+                if (gameState[winCondition[0]] !== '' && gameState[winCondition[0]] === gameState[winCondition[1]] && gameState[winCondition[1]] === gameState[winCondition[2]]) {
+                    roundWon = true; winningLine = winCondition; break;
                 }
             }
 
@@ -335,140 +277,91 @@
                 statusText.innerText = `Player ${currentPlayer} Wins! 🎉`;
                 isGameActive = false;
                 winningLine.forEach(index => cells[index].classList.add('winner'));
-
-                // Launch Fireworks Rocket Effect
                 startFireworksEffect();
 
-                // Show Trophy Overlay
+                // Reward 100 Coins On Win
+                coins += 100;
+                coinCountDisplay.innerText = coins;
+
                 if (gameModeSelect.value === 'computer' && currentPlayer === 'X') {
-                    trophyMessage.innerText = `Level ${levelSelect.value} Cleared! 🏆`;
-                    trophyOverlay.classList.add('show');
-                    
-                    setTimeout(() => {
-                        trophyOverlay.classList.remove('show');
-                        if (levelSelect.value !== '3') {
-                            startNextLevelTimer();
-                        } else {
-                            countdownText.innerText = "Ultimate Champion! 👑 Saare Levels Khatam!";
-                        }
-                    }, 3000); // 3 second tak trophy dikhegi
+                    if (levelSelect.value !== '3') startNextLevelTimer();
+                    else countdownText.innerText = "All Levels Complete! 🏆 (+100 Coins!)";
                 }
                 return true;
             }
-
-            if (!gameState.includes("")) {
-                statusText.innerText = "Game Draw! 🤝";
-                isGameActive = false;
-                return true;
-            }
+            if (!gameState.includes("")) { statusText.innerText = "Game Draw! 🤝"; isGameActive = false; return true; }
             return false;
         }
 
         function startNextLevelTimer() {
-            let timeLeft = 4;
-            const nextLvl = parseInt(levelSelect.value) + 1;
-            countdownText.innerText = `Level ${nextLvl} starts in ${timeLeft}s...`;
-            
+            let timeLeft = 4; const nextLvl = parseInt(levelSelect.value) + 1;
+            countdownText.innerText = `Level ${nextLvl} in ${timeLeft}s...`;
             countdownInterval = setInterval(() => {
                 timeLeft--;
-                if(timeLeft > 0) {
-                    countdownText.innerText = `Level ${nextLvl} starts in ${timeLeft}s...`;
-                } else {
-                    clearInterval(countdownInterval);
-                }
+                if(timeLeft > 0) countdownText.innerText = `Level ${nextLvl} in ${timeLeft}s...`;
+                else clearInterval(countdownInterval);
             }, 1000);
-
             nextLevelTimeout = setTimeout(() => {
-                let currentLevel = parseInt(levelSelect.value);
-                if (currentLevel < 3) levelSelect.value = (currentLevel + 1).toString();
-                resetGame();
+                levelSelect.value = nextLvl.toString(); resetGame();
             }, 4000);
         }
 
         function resetGame() {
-            clearTimeout(nextLevelTimeout);
-            clearInterval(countdownInterval);
-            currentPlayer = 'X';
-            gameState = ["", "", "", "", "", "", "", "", ""];
-            isGameActive = true;
-            statusText.innerText = `Turn: ${currentPlayer}`;
-            countdownText.innerText = "";
-            trophyOverlay.classList.remove('show');
-            fireworks = [];
-            particles = [];
-            cells.forEach(cell => {
-                cell.innerText = "";
-                cell.removeAttribute('data-user');
-                cell.classList.remove('winner');
-            });
+            clearTimeout(nextLevelTimeout); clearInterval(countdownInterval);
+            currentPlayer = 'X'; gameState = ["", "", "", "", "", "", "", "", ""]; isGameActive = true;
+            statusText.innerText = `Turn: ${currentPlayer}`; countdownText.innerText = "";
+            fireworks = []; particles = [];
+            cells.forEach(cell => { cell.innerText = ""; cell.removeAttribute('data-user'); cell.classList.remove('winner'); });
         }
 
-        // --- FIREWORKS ROCKET LOGIC ---
-        function startFireworksEffect() {
-            let count = 0;
-            const interval = setInterval(() => {
-                if (isGameActive || count > 10) { clearInterval(interval); return; }
-                fireworks.push({
-                    x: Math.random() * canvas.width,
-                    y: canvas.height,
-                    tx: Math.random() * canvas.width,
-                    ty: Math.random() * (canvas.height / 2),
-                    v: 4 + Math.random() * 4,
-                    color: `hsl(${Math.random() * 360}, 100%, 60%)`
-                });
-                count++;
-            }, 400);
-            animate();
-        }
-
-        function createParticles(x, y, color) {
-            for (let i = 0; i < 40; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 5 + 2;
-                particles.push({
-                    x: x, y: y,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    alpha: 1,
-                    color: color
-                });
+        // Shop Purchase Logic
+        function buyGame(id, cost) {
+            if (unlockedGames[id]) {
+                alert("Yeh game pehle se unlocked hai!"); return;
+            }
+            if (coins >= cost) {
+                coins -= cost;
+                coinCountDisplay.innerText = coins;
+                unlockedGames[id] = true;
+                
+                // Visual Update
+                document.getElementById(`card-${id}`).classList.add('unlocked');
+                const btn = document.getElementById(`btn-${id}`);
+                btn.innerText = "Unlocked ✔";
+                btn.classList.add('owned');
+                alert(`Game 1.${id} kamyabi se unlock ho gaya! 🎉`);
+            } else {
+                alert("Paise/Coins kam hain! Aur game jeetkar kamayein. 🪙");
             }
         }
 
+        // Fireworks Logic
+        function startFireworksEffect() {
+            let count = 0;
+            const interval = setInterval(() => {
+                if (isGameActive || count > 8) { clearInterval(interval); return; }
+                fireworks.push({ x: Math.random() * canvas.width, y: canvas.height, tx: Math.random() * canvas.width, ty: Math.random() * (canvas.height / 2), v: 5, color: `hsl(${Math.random() * 360}, 100%, 60%)` });
+                count++;
+            }, 300);
+            animate();
+        }
+        function createParticles(x, y, color) {
+            for (let i = 0; i < 30; i++) {
+                const angle = Math.random() * Math.PI * 2; const speed = Math.random() * 4 + 2;
+                particles.push({ x: x, y: y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, alpha: 1, color: color });
+            }
+        }
         function animate() {
             if (isGameActive && fireworks.length === 0 && particles.length === 0) return;
-            requestAnimationFrame(animate);
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+            requestAnimationFrame(animate); ctx.clearRect(0, 0, canvas.width, canvas.height);
             fireworks.forEach((f, i) => {
-                f.y -= f.v;
-                ctx.beginPath();
-                ctx.fillStyle = f.color;
-                ctx.arc(f.x, f.y, 4, 0, Math.PI * 2);
-                ctx.fill();
-
-                if (f.y <= f.ty) {
-                    createParticles(f.x, f.y, f.color);
-                    fireworks.splice(i, 1);
-                }
+                f.y -= f.v; ctx.beginPath(); ctx.fillStyle = f.color; ctx.arc(f.x, f.y, 4, 0, Math.PI * 2); ctx.fill();
+                if (f.y <= f.ty) { createParticles(f.x, f.y, f.color); fireworks.splice(i, 1); }
             });
-
             particles.forEach((p, i) => {
-                p.x += p.vx;
-                p.y += p.vy;
-                p.alpha -= 0.015;
-                if (p.alpha <= 0) {
-                    particles.splice(i, 1);
-                } else {
-                    ctx.save();
-                    ctx.globalAlpha = p.alpha;
-                    ctx.beginPath();
-                    ctx.fillStyle = p.color;
-                    ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                }
+                p.x += p.vx; p.y += p.vy; p.alpha -= 0.02;
+                if (p.alpha <= 0) { particles.splice(i, 1); } 
+                else { ctx.save(); ctx.globalAlpha = p.alpha; ctx.beginPath(); ctx.fillStyle = p.color; ctx.arc(p.x, p.y, 2, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
             });
         }
     </script>
