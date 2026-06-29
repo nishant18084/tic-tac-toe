@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic Tac Toe - Premium</title>
+    <title>Tic Tac Toe - Level Edition</title>
     <style>
-        /* Moving/Motion Background */
+        /* Moving Background */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -14,10 +14,11 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background: linear-gradient(-45deg, #1f1c2c, #928dab, #2c3e50, #000000);
             background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            animation: gradientBG 12s ease infinite;
             color: white;
+            overflow: hidden;
         }
 
         @keyframes gradientBG {
@@ -27,13 +28,17 @@
         }
 
         h1 {
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 5px;
+            text-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+            font-size: 2.5rem;
         }
 
-        /* Controls / Mode Selection */
+        /* Controls Section */
         .controls {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
 
         select, button {
@@ -41,27 +46,15 @@
             font-size: 1rem;
             font-weight: bold;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             transition: all 0.2s ease;
         }
 
-        select {
-            background-color: white;
-            color: #333;
-            margin-right: 10px;
-        }
-
-        button {
-            background-color: #111;
-            color: white;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            background-color: #222;
-        }
+        select { background-color: white; color: #333; }
+        button { background-color: #ff4757; color: white; }
+        button:hover { transform: translateY(-2px); background-color: #ff6b81; }
 
         /* Game Board */
         .board {
@@ -70,39 +63,51 @@
             grid-template-rows: repeat(3, 100px);
             gap: 8px;
             background-color: rgba(255, 255, 255, 0.1);
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            padding: 12px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         }
 
         .cell {
             width: 100px;
             height: 100px;
             background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 8px;
-            font-size: 2.5rem;
+            border-radius: 10px;
+            font-size: 2.8rem;
             font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease;
+            color: #333;
         }
 
-        .cell:hover {
-            background-color: white;
+        .cell:hover { background-color: white; transform: scale(1.03); }
+        .cell[data-user="X"] { color: #2ed573; }
+        .cell[data-user="O"] { color: #1e90ff; }
+
+        /* Winning Animation Effect */
+        .cell.winner {
+            animation: winFlash 0.5s ease infinite alternate;
+            background-color: #ffa500 !important;
+            color: white !important;
+            box-shadow: 0 0 20px #ffa500;
         }
 
-        /* X and O Colors */
-        .cell[data-user="X"] { color: #e73c7e; }
-        .cell[data-user="O"] { color: #23a6d5; }
+        @keyframes winFlash {
+            0% { transform: scale(1); filter: brightness(1); }
+            100% { transform: scale(1.05); filter: brightness(1.3); }
+        }
 
-        #status {
-            margin-top: 20px;
-            font-size: 1.4rem;
+        #status, #countdown {
+            margin-top: 15px;
+            font-size: 1.3rem;
             font-weight: bold;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+            text-align: center;
         }
+        #countdown { color: #ffea00; min-height: 24px; }
     </style>
 </head>
 <body>
@@ -110,11 +115,18 @@
     <h1>Tic Tac Toe</h1>
 
     <div class="controls">
-        <select id="gameMode" onchange="resetGame()">
-            <option value="friend">Vs Friend</option>
+        <select id="gameMode" onchange="handleModeChange()">
             <option value="computer">Vs Computer</option>
+            <option value="friend">Vs Friend</option>
         </select>
-        <button onclick="resetGame()">Reset Game</button>
+        
+        <select id="levelSelect" onchange="resetGame()">
+            <option value="1">Level 1 🟢</option>
+            <option value="2">Level 2 🟡</option>
+            <option value="3">Level 3 🔴</option>
+        </select>
+
+        <button onclick="resetGame()">Reset</button>
     </div>
 
     <div class="board" id="board">
@@ -130,15 +142,20 @@
     </div>
 
     <div id="status">Turn: X</div>
+    <div id="countdown"></div>
 
     <script>
         const cells = document.querySelectorAll('.cell');
         const statusText = document.getElementById('status');
+        const countdownText = document.getElementById('countdown');
         const gameModeSelect = document.getElementById('gameMode');
+        const levelSelect = document.getElementById('levelSelect');
         
         let currentPlayer = 'X';
         let gameState = ["", "", "", "", "", "", "", "", ""];
         let isGameActive = true;
+        let nextLevelTimeout;
+        let countdownInterval;
 
         const winningConditions = [
             [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -148,18 +165,26 @@
 
         cells.forEach(cell => cell.addEventListener('click', handleCellClick));
 
+        function handleModeChange() {
+            if(gameModeSelect.value === 'friend') {
+                levelSelect.style.display = 'none';
+            } else {
+                levelSelect.style.display = 'inline-block';
+            }
+            resetGame();
+        }
+
         function handleCellClick(e) {
             const clickedCell = e.target;
             const clickedCellIndex = parseInt(clickedCell.getAttribute('data-index'));
 
-            if (gameState[clickedCellIndex] !== "" || !isGameActive) {
+            if (gameState[clickedCellIndex] !== "" || !isGameActive || (gameModeSelect.value === 'computer' && currentPlayer === 'O')) {
                 return;
             }
 
             makeMove(clickedCellIndex, currentPlayer);
 
             if (isGameActive && gameModeSelect.value === 'computer' && currentPlayer === 'O') {
-                // Computer ki turn thodi der baad aayegi taaki real lage
                 setTimeout(computerMove, 500);
             }
         }
@@ -177,22 +202,46 @@
 
         function computerMove() {
             if (!isGameActive) return;
+            const level = levelSelect.value;
+            let move;
 
-            // Khaali jagah dhoondhna
-            let emptyCells = [];
-            gameState.forEach((val, index) => {
-                if (val === "") emptyCells.push(index);
-            });
-
-            if (emptyCells.length > 0) {
-                // Randomly ek khaali cell chunna
-                const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-                makeMove(randomIndex, 'O');
+            if (level === '3') {
+                // Level 3: Hard AI (Koshish karega haraane ki ya block karne ki)
+                move = getBestMove('O') || getBestMove('X') || getRandomMove();
+            } else if (level === '2') {
+                // Level 2: Medium AI (50% dimag chalayega, 50% random)
+                move = Math.random() > 0.5 ? (getBestMove('O') || getBestMove('X') || getRandomMove()) : getRandomMove();
+            } else {
+                // Level 1: Easy AI (Bilkul random chalega)
+                move = getRandomMove();
             }
+
+            if (move !== undefined) makeMove(move, 'O');
+        }
+
+        function getBestMove(player) {
+            for (let condition of winningConditions) {
+                let count = 0;
+                let emptyIndex = -1;
+                for (let index of condition) {
+                    if (gameState[index] === player) count++;
+                    else if (gameState[index] === "") emptyIndex = index;
+                }
+                if (count === 2 && emptyIndex !== -1) return emptyIndex;
+            }
+            return null;
+        }
+
+        function getRandomMove() {
+            let emptyCells = [];
+            gameState.forEach((val, idx) => { if (val === "") emptyCells.push(idx); });
+            return emptyCells.length > 0 ? emptyCells[Math.floor(Math.random() * emptyCells.length)] : undefined;
         }
 
         function checkResult() {
             let roundWon = false;
+            let winningLine = [];
+
             for (let i = 0; i < winningConditions.length; i++) {
                 const winCondition = winningConditions[i];
                 let a = gameState[winCondition[0]];
@@ -201,6 +250,7 @@
                 if (a === '' || b === '' || c === '') continue;
                 if (a === b && b === c) {
                     roundWon = true;
+                    winningLine = winCondition;
                     break;
                 }
             }
@@ -208,27 +258,68 @@
             if (roundWon) {
                 statusText.innerText = `Player ${currentPlayer} Wins! 🎉`;
                 isGameActive = false;
+                
+                // Winning Animation Effect
+                winningLine.forEach(index => cells[index].classList.add('winner'));
+
+                // Auto Next Level System (Jab aap Computer mode me jeetenge)
+                if (gameModeSelect.value === 'computer' && currentPlayer === 'X') {
+                    if (levelSelect.value !== '3') { // Agar Level 3 par hain toh aur aage nahi badhega
+                        startNextLevelTimer();
+                    } else {
+                        countdownText.innerText = "Congratulations! Aapne saare Levels poore kar liye! 🏆";
+                    }
+                }
                 return true;
             }
 
-            let roundDraw = !gameState.includes("");
-            if (roundDraw) {
+            if (!gameState.includes("")) {
                 statusText.innerText = "Game Draw! 🤝";
                 isGameActive = false;
                 return true;
             }
-
             return false;
         }
 
+        function startNextLevelTimer() {
+            let timeLeft = 4;
+            const nextLvl = parseInt(levelSelect.value) + 1;
+            countdownText.innerText = `Level ${nextLvl} starts in ${timeLeft}s...`;
+            
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                if(timeLeft > 0) {
+                    countdownText.innerText = `Level ${nextLvl} starts in ${timeLeft}s...`;
+                } else {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+
+            nextLevelTimeout = setTimeout(() => {
+                goToNextLevel();
+            }, 4000);
+        }
+
+        function goToNextLevel() {
+            let currentLevel = parseInt(levelSelect.value);
+            if (currentLevel < 3) {
+                levelSelect.value = (currentLevel + 1).toString();
+            }
+            resetGame();
+        }
+
         function resetGame() {
+            clearTimeout(nextLevelTimeout);
+            clearInterval(countdownInterval);
             currentPlayer = 'X';
             gameState = ["", "", "", "", "", "", "", "", ""];
             isGameActive = true;
             statusText.innerText = `Turn: ${currentPlayer}`;
+            countdownText.innerText = "";
             cells.forEach(cell => {
                 cell.innerText = "";
                 cell.removeAttribute('data-user');
+                cell.classList.remove('winner');
             });
         }
     </script>
