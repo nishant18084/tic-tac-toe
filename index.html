@@ -3,53 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber Neon Arcade - All Unlocked</title>
+    <title>Mega Arcade Pro - Realistic Emojis</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            min-height: 100vh; margin: 0; background: #050811; color: white; padding: 20px; box-sizing: border-box;
+            min-height: 100vh; margin: 0; background: #080d1a; color: white; padding: 15px; box-sizing: border-box;
             user-select: none; -webkit-user-select: none;
         }
-        .menu-container, .game-screen { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 450px; }
+        .menu-container, .game-screen { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 430px; }
         .game-screen { display: none; }
-        .menu-title { font-size: 2.2rem; margin-bottom: 25px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 15px #00f0ff; letter-spacing: 2px; }
+        .menu-title { font-size: 2.4rem; margin-bottom: 25px; color: #00ffcc; font-weight: 900; text-shadow: 0 0 20px rgba(0,255,204,0.6); letter-spacing: 1px; }
         .games-list { display: flex; flex-direction: column; gap: 15px; width: 100%; }
         .game-item {
-            background: rgba(0, 240, 255, 0.03); border: 2px solid #00f0ff; border-radius: 16px;
-            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 0 10px rgba(0,240,255,0.1);
+            background: linear-gradient(135deg, #111936, #0a0f24); border: 2px solid #1e295d; border-radius: 20px;
+            padding: 18px 22px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5); transition: 0.3s;
         }
-        .game-name { font-size: 1.3rem; font-weight: bold; color: #fff; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
-        .btn-play { background: #ff007f; color: white; padding: 10px 22px; font-size: 1rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 0 15px #ff007f; transition: 0.2s; }
-        .btn-play:active { transform: scale(0.95); box-shadow: 0 0 5px #ff007f; }
-        .controls { margin-bottom: 15px; display: flex; gap: 10px; width: 100%; justify-content: center; }
-        .btn-back { padding: 10px 15px; font-size: 1rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; background: #1f2d3d; color: #00f0ff; border: 1px solid #00f0ff; }
-        canvas.game-canvas { background: #02040a; border: 3px solid #ff007f; border-radius: 12px; width: 100%; max-width: 400px; height: 400px; box-shadow: 0 0 25px rgba(255, 0, 127, 0.2); }
-        .mobile-controls { display: none; flex-direction: column; align-items: center; gap: 10px; margin-top: 15px; width: 100%; }
-        .pad-row { display: flex; gap: 25px; }
-        .d-btn { width: 60px; height: 60px; background: #0d1b2a; color: #00f0ff; border: 2px solid #00f0ff; font-size: 1.5rem; font-weight: bold; border-radius: 50%; box-shadow: 0 0 10px rgba(0,240,255,0.2); }
-        .d-btn:active { background: #00f0ff; color: #000; }
-        .action-shoot-btn { width: 140px; height: 50px; background: #ff007f; color: white; border: none; font-weight: bold; border-radius: 30px; font-size: 1.2rem; margin-top: 8px; box-shadow: 0 0 20px #ff007f; letter-spacing: 1px; }
+        .game-item:hover { border-color: #00ffcc; }
+        .game-name { font-size: 1.3rem; font-weight: bold; color: #fff; }
+        .btn-play { background: linear-gradient(90deg, #ff0055, #ff00aa); color: white; padding: 12px 26px; font-size: 1rem; font-weight: bold; border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 0 15px rgba(255,0,85,0.4); }
+        .btn-play:active { transform: scale(0.95); }
+        .controls { margin-bottom: 15px; display: flex; gap: 10px; width: 100%; justify-content: center; align-items: center; }
+        .btn-back { padding: 10px 18px; font-size: 1rem; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; background: #1f2d3d; color: #00ffcc; border: 1px solid #00ffcc; }
+        .score-board { font-size: 1.2rem; font-weight: bold; color: #ffff00; text-shadow: 0 0 5px rgba(255,255,0,0.5); }
+        canvas.game-canvas { background: linear-gradient(to bottom, #02040a, #0d1326); border: 3px solid #00ffcc; border-radius: 16px; width: 100%; max-width: 400px; height: 400px; box-shadow: 0 0 30px rgba(0, 255, 204, 0.2); }
+        
+        /* Premium Arcade Controller Console */
+        .mobile-controls { display: none; flex-direction: column; align-items: center; gap: 8px; margin-top: 15px; width: 100%; }
+        .pad-row { display: flex; gap: 30px; }
+        .d-btn { width: 65px; height: 65px; background: #161f38; color: #00ffcc; border: 2px solid #1e295d; font-size: 1.6rem; font-weight: bold; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; }
+        .d-btn:active { background: #00ffcc; color: #000; border-color: #00ffcc; box-shadow: 0 0 15px #00ffcc; }
+        .action-shoot-btn { width: 160px; height: 55px; background: linear-gradient(90deg, #ff3300, #ff0055); color: white; border: none; font-weight: 900; border-radius: 35px; font-size: 1.3rem; margin-top: 10px; box-shadow: 0 5px 20px rgba(255,51,0,0.4); letter-spacing: 1px; }
+        .action-shoot-btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
 
     <div class="menu-container" id="menuScreen">
-        <div class="menu-title">⚡ CYBER ARCADE</div>
+        <div class="menu-title">🎮 MEGA ARCADE PRO</div>
         <div class="games-list">
-            <div class="game-item"><span class="game-name">🟢 Neon Snake</span><button class="btn-play" onclick="startCanvasGame(1)">PLAY</button></div>
-            <div class="game-item"><span class="game-name">🏎️ Cyber Race</span><button class="btn-play" onclick="startCanvasGame(2)">PLAY</button></div>
-            <div class="game-item"><span class="game-name">🧱 Block Blast</span><button class="btn-play" onclick="startCanvasGame(3)">PLAY</button></div>
-            <div class="game-item"><span class="game-name">🔥 Free Fire 2D</span><button class="btn-play" onclick="startCanvasGame(4)">PLAY</button></div>
-            <div class="game-item"><span class="game-name">🏍️ Neon Bike</span><button class="btn-play" onclick="startCanvasGame(5)">PLAY</button></div>
+            <div class="game-item"><span class="game-name">🐍 Neon Snake 3D</span><button class="btn-play" onclick="startCanvasGame(1)">PLAY</button></div>
+            <div class="game-item"><span class="game-name">🏎️ Asphalt Nitro (2D)</span><button class="btn-play" onclick="startCanvasGame(2)">PLAY</button></div>
+            <div class="game-item"><span class="game-name">🧱 Tetris Block Blast</span><button class="btn-play" onclick="startCanvasGame(3)">PLAY</button></div>
+            <div class="game-item"><span class="game-name">🪖 Free Fire Max (2D)</span><button class="btn-play" onclick="startCanvasGame(4)">PLAY</button></div>
+            <div class="game-item"><span class="game-name">🏍️ Moto Hill Climb</span><button class="btn-play" onclick="startCanvasGame(5)">PLAY</button></div>
         </div>
     </div>
 
     <div class="game-screen" id="canvasScreen">
         <div class="controls">
             <button class="btn-back" onclick="exitCanvasGame()">⬅ Menu</button>
-            <span id="canvasGameTitle" style="font-size:1.4rem; font-weight:bold; margin-left:15px; color:#00f0ff; text-shadow: 0 0 10px #00f0ff;">Game</span>
+            <span id="canvasGameTitle" style="font-size:1.3rem; font-weight:bold; color:#00ffcc;">Game</span>
+            <span class="score-board">🏆 Score: <span id="gameScore">0</span></span>
         </div>
         <canvas id="mainGameCanvas" class="game-canvas" width="400" height="400"></canvas>
         
@@ -66,7 +72,7 @@
 
     <script>
         let activeCanvasGame = null, canvasInterval = null;
-        let pX, pY, score, objects, bullets, playerSpeed = 18;
+        let pX, pY, score, objects, bullets, playerSpeed = 20;
         let snake, food, dx, dy; let bikeY, bikeVy;
 
         const cCanvas = document.getElementById('mainGameCanvas');
@@ -79,6 +85,10 @@
             document.getElementById(screenId).style.display = 'flex';
         }
 
+        function updateScoreBar() {
+            document.getElementById('gameScore').innerText = score;
+        }
+
         function startCanvasGame(gameId) {
             clearInterval(canvasInterval);
             switchScreen('canvasScreen');
@@ -86,29 +96,31 @@
             document.getElementById('mobControls').style.display = 'flex';
             document.getElementById('shootBtn').style.display = (gameId === 4) ? 'block' : 'none';
             score = 0; objects = []; bullets = [];
+            updateScoreBar();
 
-            // Setup glow engine graphics
-            cCtx.shadowBlur = 12;
+            // Set typography settings for emoji assets
+            cCtx.textAlign = "center";
+            cCtx.textBaseline = "middle";
 
             if (gameId === 1) {
                 document.getElementById('canvasGameTitle').innerText = "Neon Snake";
-                snake = [{x: 200, y: 200}]; food = {x: 80, y: 80}; dx = 20; dy = 0;
-                canvasInterval = setInterval(renderSnake, 120);
+                snake = [{x: 200, y: 200}, {x:180, y:200}, {x:160, y:200}]; food = {x: 80, y: 80}; dx = 20; dy = 0;
+                canvasInterval = setInterval(renderSnake, 130);
             } else if (gameId === 2) {
-                document.getElementById('canvasGameTitle').innerText = "Cyber Race";
-                pX = 180; pY = 310;
+                document.getElementById('canvasGameTitle').innerText = "Asphalt Nitro";
+                pX = 200; pY = 340;
                 canvasInterval = setInterval(renderCarRace, 35);
             } else if (gameId === 3) {
                 document.getElementById('canvasGameTitle').innerText = "Block Blast";
-                pX = 180; pY = 350;
+                pX = 200; pY = 360;
                 canvasInterval = setInterval(renderBlockBlast, 35);
             } else if (gameId === 4) {
-                document.getElementById('canvasGameTitle').innerText = "Free Fire 2D";
-                pX = 180; pY = 330;
+                document.getElementById('canvasGameTitle').innerText = "Free Fire Max";
+                pX = 200; pY = 330;
                 canvasInterval = setInterval(renderFreeFire, 35);
             } else if (gameId === 5) {
-                document.getElementById('canvasGameTitle').innerText = "Neon Bike";
-                pX = 50; bikeY = 260; bikeVy = 0;
+                document.getElementById('canvasGameTitle').innerText = "Moto Climb";
+                pX = 60; bikeY = 280; bikeVy = 0;
                 canvasInterval = setInterval(renderBikeRace, 35);
             }
         }
@@ -123,127 +135,131 @@
                 if (dir === 'UP' && dy === 0) { dx = 0; dy = -20; }
                 if (dir === 'DOWN' && dy === 0) { dx = 0; dy = 20; }
             } else if (activeCanvasGame === 5) {
-                if ((dir === 'UP' || dir === 'RIGHT') && bikeY === 260) bikeVy = -7.5;
+                if ((dir === 'UP' || dir === 'RIGHT') && bikeY === 280) bikeVy = -8.5;
             } else {
-                if (dir === 'LEFT') pX = Math.max(5, pX - playerSpeed);
-                if (dir === 'RIGHT') pX = Math.min(355, pX + playerSpeed);
+                if (dir === 'LEFT') pX = Math.max(25, pX - playerSpeed);
+                if (dir === 'RIGHT') pX = Math.min(375, pX + playerSpeed);
                 if (dir === 'UP' && activeCanvasGame === 4) pY = Math.max(150, pY - playerSpeed);
-                if (dir === 'DOWN' && activeCanvasGame === 4) pY = Math.min(340, pY + playerSpeed);
+                if (dir === 'DOWN' && activeCanvasGame === 4) pY = Math.min(350, pY + playerSpeed);
             }
         }
 
-        function triggerAction() { if (activeCanvasGame === 4) bullets.push({x: pX + 16, y: pY - 10}); }
+        function triggerAction() { if (activeCanvasGame === 4) bullets.push({x: pX, y: pY - 20}); }
 
-        function gameOver() { clearInterval(canvasInterval); alert(`💥 Game Over! Score: ${score}`); exitCanvasGame(); }
+        function gameOver() { clearInterval(canvasInterval); alert(`💥 Mission Over! Final Score: ${score}`); exitCanvasGame(); }
 
-        // 1. NEON SNAKE
+        // 1. REAL SNAKE (🍏 Engine)
         function renderSnake() {
             const head = {x: snake[0].x + dx, y: snake[0].y + dy};
             if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400 || snake.some(s => s.x === head.x && s.y === head.y)) { gameOver(); return; }
             snake.unshift(head);
-            if (head.x === food.x && head.y === food.y) { score += 10; food = {x: Math.floor(Math.random()*19)*20, y: Math.floor(Math.random()*19)*20}; } else { snake.pop(); }
+            if (head.x === food.x && head.y === food.y) { 
+                score += 10; updateScoreBar();
+                food = {x: Math.floor(Math.random()*19)*20 + 10, y: Math.floor(Math.random()*19)*20 + 10}; 
+            } else { snake.pop(); }
             
             cCtx.fillStyle = '#050811'; cCtx.fillRect(0,0,400,400);
             
-            cCtx.shadowColor = '#00f0ff';
-            cCtx.fillStyle = '#00f0ff'; 
-            snake.forEach(s => cCtx.fillRect(s.x+1, s.y+1, 18, 18));
+            // Draw Apple
+            cCtx.font = "18px Arial";
+            cCtx.fillText("🍏", food.x, food.y);
             
-            cCtx.shadowColor = '#ff007f';
-            cCtx.fillStyle = '#ff007f'; 
-            cCtx.fillRect(food.x+2, food.y+2, 16, 16);
+            // Draw Snake Elements
+            snake.forEach((s, idx) => {
+                cCtx.fillText(idx === 0 ? "🐸" : "🟢", s.x, s.y);
+            });
         }
 
-        // 2. CYBER RACE
+        // 2. REAL CAR RACE (🏎️ Asset Engine)
         function renderCarRace() {
-            if (Math.random() < 0.06) objects.push({x: Math.random()*240 + 60, y: -60, w: 30, h: 55, speed: 7});
-            cCtx.fillStyle = '#050811'; cCtx.fillRect(0,0,400,400);
+            if (Math.random() < 0.05) objects.push({x: Math.random()*240 + 80, y: -30, speed: 7});
+            cCtx.fillStyle = '#0a0f1d'; cCtx.fillRect(0,0,400,400);
             
-            // Cyber Grid Lines instead of a boring road
-            cCtx.strokeStyle = 'rgba(0, 240, 255, 0.15)';
-            cCtx.lineWidth = 2;
-            for(let i=60; i<=340; i+=40){ cCtx.beginPath(); cCtx.moveTo(i, 0); cCtx.lineTo(i, 400); cCtx.stroke(); }
+            // Road Tracks lines
+            cCtx.fillStyle = '#18223d'; cCtx.fillRect(60, 0, 280, 400);
+            cCtx.strokeStyle = '#00ffcc'; cCtx.lineWidth = 2;
+            cCtx.setLineDash([20, 20]); cCtx.beginPath(); cCtx.moveTo(200, 0); cCtx.lineTo(200, 400); cCtx.stroke(); cCtx.setLineDash([]);
 
-            // Player Ship/Car
-            cCtx.shadowColor = '#00f0ff'; cCtx.fillStyle = '#00f0ff'; 
-            cCtx.fillRect(pX, pY, 30, 55); 
+            // Draw Player SuperCar
+            cCtx.font = "32px Arial";
+            cCtx.fillText("🏎️", pX, pY);
             
             objects.forEach((o, i) => {
                 o.y += o.speed;
-                cCtx.shadowColor = '#ff007f'; cCtx.fillStyle = '#ff007f'; 
-                cCtx.fillRect(o.x, o.y, o.w, o.h);
-                if(o.y > 400) { objects.splice(i,1); score += 10; }
-                if(pX < o.x + o.w && pX + 30 > o.x && pY < o.y + o.h && pY + 55 > o.y) gameOver();
+                cCtx.fillText("🚘", o.x, o.y);
+                if(o.y > 420) { objects.splice(i,1); score += 10; updateScoreBar(); }
+                // Smart Hitbox check
+                if(Math.abs(pX - o.x) < 25 && Math.abs(pY - o.y) < 35) gameOver();
             });
         }
 
-        // 3. BLOCK BLAST
+        // 3. BLOCK BLAST (💎 Diamond Fall)
         function renderBlockBlast() {
-            if (Math.random() < 0.09) objects.push({x: Math.random()*360, y: 0, w: 35, h: 35, speed: 6});
+            if (Math.random() < 0.08) objects.push({x: Math.random()*360 + 20, y: -20, speed: 6});
             cCtx.fillStyle = '#050811'; cCtx.fillRect(0,0,400,400);
             
-            cCtx.shadowColor = '#00f0ff'; cCtx.fillStyle = '#00f0ff'; 
-            cCtx.fillRect(pX, pY, 45, 15); 
+            // Basket/Bucket Pad
+            cCtx.font = "34px Arial";
+            cCtx.fillText("📥", pX, pY);
             
             objects.forEach((o, i) => {
                 o.y += o.speed;
-                cCtx.shadowColor = '#ffff00'; cCtx.fillStyle = '#ffff00'; 
-                cCtx.fillRect(o.x, o.y, o.w, o.h);
-                if (o.y > 400) { objects.splice(i, 1); score += 5; }
-                if (o.x < pX + 45 && o.x + o.w > pX && o.y < pY + 15 && o.y + o.h > pY) gameOver();
+                cCtx.fillText("💎", o.x, o.y);
+                if (o.y > 420) { objects.splice(i, 1); gameOver(); } // Drop lost check
+                if (Math.abs(pX - o.x) < 30 && Math.abs(pY - o.y) < 20) { objects.splice(i,1); score += 10; updateScoreBar(); }
             });
         }
 
-        // 4. FREE FIRE 2D
+        // 4. FREE FIRE MAX 2D (🪖 Survival Shoot)
         function renderFreeFire() {
-            if (Math.random() < 0.05) objects.push({x: Math.random()*360, y: 0, w: 32, h: 32});
-            cCtx.fillStyle = '#050811'; cCtx.fillRect(0,0,400,400);
+            if (Math.random() < 0.05) objects.push({x: Math.random()*360 + 20, y: -20});
+            cCtx.fillStyle = '#0b1224'; cCtx.fillRect(0,0,400,400);
             
-            cCtx.shadowColor = '#00f0ff'; cCtx.fillStyle = '#00f0ff'; 
-            cCtx.fillRect(pX, pY, 32, 32); 
+            // Player Soldier Hero
+            cCtx.font = "32px Arial";
+            cCtx.fillText("🪖", pX, pY); 
 
+            // Laser Fire bullets mechanics
             bullets.forEach((b, bi) => { 
-                b.y -= 10; 
-                cCtx.shadowColor = '#ffff00'; cCtx.fillStyle = '#ffff00'; 
-                cCtx.fillRect(b.x, b.y, 4, 12); 
+                b.y -= 12; 
+                cCtx.font = "16px Arial"; cCtx.fillText("⚡", b.x, b.y);
                 if(b.y < 0) bullets.splice(bi, 1); 
             });
 
+            // Zombie Monsters Spawning
             objects.forEach((o, oi) => {
-                o.y += 3.5;
-                cCtx.shadowColor = '#ff007f'; cCtx.fillStyle = '#ff007f'; 
-                cCtx.fillRect(o.x, o.y, o.w, o.h);
+                o.y += 4;
+                cCtx.font = "30px Arial"; cCtx.fillText("👾", o.x, o.y);
                 if(o.y > 400) { objects.splice(oi, 1); gameOver(); } 
                 
                 bullets.forEach((b, bi) => {
-                    if(b.x > o.x && b.x < o.x + o.w && b.y > o.y && b.y < o.y + o.h) { 
-                        objects.splice(oi, 1); bullets.splice(bi, 1); score += 20; 
+                    if(Math.abs(b.x - o.x) < 20 && Math.abs(b.y - o.y) < 25) { 
+                        objects.splice(oi, 1); bullets.splice(bi, 1); score += 20; updateScoreBar();
                     }
                 });
             });
         }
 
-        // 5. NEON BIKE
+        // 5. MOTO HILL CLIMB (🏍️ Gravity Bike)
         function renderBikeRace() {
-            bikeVy += 0.45; bikeY += bikeVy; if(bikeY > 260) { bikeY = 260; bikeVy = 0; } 
-            if (Math.random() < 0.035) objects.push({x: 400, y: 265, w: 18, h: 25}); 
+            bikeVy += 0.5; bikeY += bikeVy; 
+            if(bikeY > 280) { bikeY = 280; bikeVy = 0; } // Floor landing safety limit
             
+            if (Math.random() < 0.03) objects.push({x: 420, y: 290}); 
             cCtx.fillStyle = '#050811'; cCtx.fillRect(0,0,400,400);
             
-            // Neon Floor Line
-            cCtx.shadowColor = '#00f0ff'; cCtx.strokeStyle = '#00f0ff'; cCtx.lineWidth = 4;
-            cCtx.beginPath(); cCtx.moveTo(0, 285); cCtx.lineTo(400, 285); cCtx.stroke();
+            // Desert Hill Line
+            cCtx.fillStyle = '#e5a93b'; cCtx.fillRect(0, 305, 400, 95);
             
-            // Bike Player
-            cCtx.shadowColor = '#7fff00'; cCtx.fillStyle = '#7fff00'; 
-            cCtx.fillRect(pX, bikeY, 32, 22);
+            // Render Dirt Motorbike
+            cCtx.font = "34px Arial";
+            cCtx.fillText("🏍️", pX, bikeY);
             
             objects.forEach((o, i) => {
-                o.x -= 6;
-                cCtx.shadowColor = '#ff007f'; cCtx.fillStyle = '#ff007f'; 
-                cCtx.fillRect(o.x, o.y, o.w, o.h);
-                if(o.x < -20) { objects.splice(i, 1); score += 15; }
-                if(pX < o.x + o.w && pX + 32 > o.x && bikeY + 22 > o.y) gameOver();
+                o.x -= 6.5;
+                cCtx.font = "24px Arial"; cCtx.fillText("🚧", o.x, o.y);
+                if(o.x < -20) { objects.splice(i, 1); score += 15; updateScoreBar(); }
+                if(Math.abs(pX - o.x) < 25 && Math.abs(bikeY - o.y) < 20) gameOver();
             });
         }
     </script>
