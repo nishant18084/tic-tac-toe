@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arcade Hub Ultimate - 6 Fully Working Games</title>
+    <title>Arcade Hub Fixed - All Games Working</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -54,10 +54,10 @@
         /* Canvas Arena */
         canvas.game-canvas { background: #111; border: 4px solid #333; border-radius: 10px; width: 100%; max-width: 400px; height: 400px; }
         
-        /* Universal Smart Pad Controls */
+        /* Gamepad Controls */
         .mobile-controls { display: none; flex-direction: column; align-items: center; gap: 10px; margin-top: 15px; width: 100%; }
         .pad-row { display: flex; gap: 20px; }
-        .d-btn { width: 55px; height: 55px; background: #333; color: white; border: none; font-size: 1.3rem; font-weight: bold; border-radius: 50%; active { background: #555; } }
+        .d-btn { width: 55px; height: 55px; background: #333; color: white; border: none; font-size: 1.3rem; font-weight: bold; border-radius: 50%; }
         .action-shoot-btn { width: 120px; height: 45px; background: #ff4757; color: white; border: none; font-weight: bold; border-radius: 8px; font-size: 1.1rem; margin-top: 5px; }
 
         #fxCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
@@ -132,6 +132,7 @@
         window.addEventListener('resize', resFx); resFx();
 
         function switchScreen(screenId) {
+            clearInterval(canvasInterval); 
             document.getElementById('menuScreen').style.display = 'none';
             document.getElementById('tttScreen').style.display = 'none';
             document.getElementById('canvasScreen').style.display = 'none';
@@ -143,10 +144,17 @@
             if (coins >= cost) {
                 coins -= cost; coinCountDisplay.innerText = coins;
                 unlockedGames[id] = true;
-                document.getElementById(`card-${id}`).classList.add('unlocked');
+                
+                // Visual & Function Reset Fix
+                const card = document.getElementById(`card-${id}`);
                 const btn = document.getElementById(`btn-${id}`);
-                btn.innerText = "PLAY"; btn.className = "action-btn btn-play";
+                card.classList.add('unlocked');
+                btn.innerText = "PLAY"; 
+                btn.className = "action-btn btn-play";
+                
+                // Directly overwriting click bug
                 btn.onclick = function() { startCanvasGame(id); };
+                
                 alert("Game Successfully Unlocked! 🎉");
             } else { alert("Coins kam hain! Tic Tac Toe jeet kar coins kamao. 🪙"); }
         }
@@ -162,7 +170,7 @@
         function makeTTTMove(idx, player) {
             gameState[idx] = player;
             const cell = document.querySelector(`[data-index='${idx}']`);
-            cell.innerText = player; cell.setAttribute('data-user', player);
+            if(cell) { cell.innerText = player; cell.setAttribute('data-user', player); }
             if (checkTTTResult()) return;
             currentPlayer = currentPlayer === "X" ? "O" : "X";
             document.getElementById('status').innerText = `Turn: ${currentPlayer}`;
@@ -233,56 +241,60 @@
 
         // --- MULTI CANVAS ARCADE SYSTEM ---
         let pX, pY, score, objects, bullets, playerSpeed = 15;
-        let snake, food, dx, dy; // Snake specific
-        let bikeY, bikeVy, bikeTargetY; // Bike Race specific
+        let snake, food, dx, dy; 
+        let bikeY, bikeVy; 
 
         function startCanvasGame(gameId) {
+            clearInterval(canvasInterval); 
             switchScreen('canvasScreen');
             activeCanvasGame = gameId;
-            clearInterval(canvasInterval);
             document.getElementById('mobControls').style.display = 'flex';
             document.getElementById('shootBtn').style.display = (gameId === 4) ? 'block' : 'none';
             score = 0; objects = []; bullets = [];
 
-            if (gameId === 1) { // 1. SNAKE
+            if (gameId === 1) { 
                 document.getElementById('canvasGameTitle').innerText = "Snake Game";
                 snake = [{x: 200, y: 200}]; food = {x: 80, y: 80}; dx = 20; dy = 0;
                 canvasInterval = setInterval(renderSnake, 130);
             } 
-            else if (gameId === 2) { // 2. CAR RACE
+            else if (gameId === 2) { 
                 document.getElementById('canvasGameTitle').innerText = "Car Race";
                 pX = 180; pY = 320;
                 canvasInterval = setInterval(renderCarRace, 40);
             } 
-            else if (gameId === 3) { // 3. BLOCK BLAST
+            else if (gameId === 3) { 
                 document.getElementById('canvasGameTitle').innerText = "Block Blast";
                 pX = 180; pY = 350;
                 canvasInterval = setInterval(renderBlockBlast, 40);
             } 
-            else if (gameId === 4) { // 4. FREE FIRE (2D Shooter)
+            else if (gameId === 4) { 
                 document.getElementById('canvasGameTitle').innerText = "Free Fire 2D";
                 pX = 180; pY = 340;
                 canvasInterval = setInterval(renderFreeFire, 40);
             } 
-            else if (gameId === 5) { // 5. BIKE RACE
+            else if (gameId === 5) { 
                 document.getElementById('canvasGameTitle').innerText = "Bike Race";
-                pX = 50; bikeY = 250; bikeVy = 0;
+                pX = 50; bikeY = 260; bikeVy = 0;
                 canvasInterval = setInterval(renderBikeRace, 40);
             }
         }
 
-        function exitCanvasGame() { clearInterval(canvasInterval); activeCanvasGame = null; switchScreen('menuScreen'); }
+        function exitCanvasGame() { 
+            clearInterval(canvasInterval); 
+            activeCanvasGame = null; 
+            switchScreen('menuScreen'); 
+        }
 
         function changeDir(dir) {
             if (!activeCanvasGame) return;
-            if (activeCanvasGame === 1) { // Snake Engine Controls
+            if (activeCanvasGame === 1) { 
                 if (dir === 'LEFT' && dx === 0) { dx = -20; dy = 0; }
                 if (dir === 'RIGHT' && dx === 0) { dx = 20; dy = 0; }
                 if (dir === 'UP' && dy === 0) { dx = 0; dy = -20; }
                 if (dir === 'DOWN' && dy === 0) { dx = 0; dy = 20; }
-            } else if (activeCanvasGame === 5) { // Bike Physics Controls
-                if (dir === 'UP' || dir === 'RIGHT') bikeVy = -6; // Jump/Accelerate
-            } else { // Standard Left-Right Car/Shooter grid
+            } else if (activeCanvasGame === 5) { 
+                if ((dir === 'UP' || dir === 'RIGHT') && bikeY === 260) bikeVy = -7; 
+            } else { 
                 if (dir === 'LEFT') pX = Math.max(10, pX - playerSpeed);
                 if (dir === 'RIGHT') pX = Math.min(350, pX + playerSpeed);
                 if (dir === 'UP' && activeCanvasGame === 4) pY = Math.max(150, pY - playerSpeed);
@@ -290,11 +302,10 @@
             }
         }
 
-        function triggerAction() { // Fire weapon
+        function triggerAction() { 
             if (activeCanvasGame === 4) { bullets.push({x: pX + 18, y: pY - 10}); }
         }
 
-        // Keyboard inputs (PC controls compatibility)
         window.addEventListener('keydown', e => {
             if (e.key === 'ArrowLeft' || e.key === 'a') changeDir('LEFT');
             if (e.key === 'ArrowRight' || e.key === 'd') changeDir('RIGHT');
@@ -304,12 +315,14 @@
         });
 
         function gameOver(rewardDivider) {
+            clearInterval(canvasInterval);
             let reward = Math.floor(score / rewardDivider);
             alert(`Game Over! Score: ${score}. Earned ${reward} Coins! 🪙`);
-            coins += reward; coinCountDisplay.innerText = coins; exitCanvasGame();
+            coins += reward; coinCountDisplay.innerText = coins; 
+            exitCanvasGame();
         }
 
-        // 1. SNAKE
+        // 1. SNAKE Engine
         function renderSnake() {
             const head = {x: snake[0].x + dx, y: snake[0].y + dy};
             if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400 || snake.some(s => s.x === head.x && s.y === head.y)) { gameOver(2); return; }
@@ -320,12 +333,12 @@
             cCtx.fillStyle = '#ff4757'; cCtx.fillRect(food.x, food.y, 18, 18);
         }
 
-        // 2. CAR RACE
+        // 2. CAR RACE Engine
         function renderCarRace() {
-            if (Math.random() < 0.05) objects.push({x: Math.random()*340 + 20, y: -50, w: 35, h: 60, speed: 6});
+            if (Math.random() < 0.05) objects.push({x: Math.random()*260 + 50, y: -50, w: 35, h: 60, speed: 6});
             cCtx.fillStyle = '#222'; cCtx.fillRect(0,0,400,400);
-            cCtx.fillStyle = 'gray'; cCtx.fillRect(50, 0, 300, 400); // Road
-            cCtx.fillStyle = '#ffea00'; cCtx.fillRect(pX, pY, 35, 60); // Player Car
+            cCtx.fillStyle = 'gray'; cCtx.fillRect(50, 0, 300, 400); 
+            cCtx.fillStyle = '#ffea00'; cCtx.fillRect(pX, pY, 35, 60); 
             
             cCtx.fillStyle = '#ff4757';
             objects.forEach((o, i) => {
@@ -335,11 +348,11 @@
             });
         }
 
-        // 3. BLOCK BLAST
+        // 3. BLOCK BLAST Engine
         function renderBlockBlast() {
             if (Math.random() < 0.08) objects.push({x: Math.random()*360, y: 0, w: 30, h: 30, speed: 5});
             cCtx.fillStyle = '#111'; cCtx.fillRect(0,0,400,400);
-            cCtx.fillStyle = '#1e90ff'; cCtx.fillRect(pX, pY, 40, 20); // Pad
+            cCtx.fillStyle = '#1e90ff'; cCtx.fillRect(pX, pY, 40, 20); 
             
             cCtx.fillStyle = '#ffea00';
             objects.forEach((o, i) => {
@@ -349,13 +362,11 @@
             });
         }
 
-        // 4. FREE FIRE (2D Shooter)
+        // 4. FREE FIRE Engine (2D Survival Shooter)
         function renderFreeFire() {
-            if (Math.random() < 0.04) objects.push({x: Math.random()*360, y: 0, w: 30, h: 30, hp: 1});
+            if (Math.random() < 0.04) objects.push({x: Math.random()*360, y: 0, w: 30, h: 30});
             cCtx.fillStyle = '#1c2541'; cCtx.fillRect(0,0,400,400);
-            cCtx.fillStyle = '#2ed573'; cCtx.fillRect(pX, pY, 35, 35); // Player
+            cCtx.fillStyle = '#2ed573'; cCtx.fillRect(pX, pY, 35, 35); 
 
-            // Render Bullets
-            cCtx.fillStyle = '#ffea00';
             bullets.forEach((b, bi) => {
-                b.y -
+                b.y -= 8; cCtx.fillStyle = '#ffea00'; cCtx.fillRect(b.x, 
