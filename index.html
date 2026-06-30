@@ -8,36 +8,34 @@
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            min-height: 100vh; margin: 0; background: #050811; color: white; padding: 15px; box-sizing: border-box;
+            min-height: 100vh; margin: 0; background: #040814; color: white; padding: 15px; box-sizing: border-box;
             user-select: none; -webkit-user-select: none;
         }
         .menu-container, .game-screen { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 430px; }
         .game-screen { display: none; }
-        .menu-title { font-size: 2.6rem; margin-bottom: 25px; color: #00ffcc; font-weight: 900; text-shadow: 0 0 20px rgba(0,255,204,0.8); letter-spacing: 2px; text-align: center; }
-        .high-score-tag { font-size: 1rem; color: #ff00aa; margin-top: -15px; margin-bottom: 20px; font-weight: bold; text-shadow: 0 0 10px rgba(255,0,170,0.5); }
+        .menu-title { font-size: 2.5rem; margin-bottom: 5px; color: #00ffcc; font-weight: 900; text-shadow: 0 0 20px rgba(0,255,204,0.8); letter-spacing: 2px; text-align: center; }
+        .high-score-tag { font-size: 1rem; color: #ff00aa; margin-bottom: 25px; font-weight: bold; text-shadow: 0 0 10px rgba(255,0,170,0.5); }
         .games-list { display: flex; flex-direction: column; gap: 15px; width: 100%; }
         .game-item {
-            background: linear-gradient(135deg, #111936, #0a0f24); border: 2px solid #1e295d; border-radius: 20px;
+            background: linear-gradient(135deg, #0f173a, #070b1e); border: 2px solid #1a2456; border-radius: 20px;
             padding: 18px 22px; display: flex; justify-content: space-between; align-items: center;
             box-shadow: 0 8px 25px rgba(0,0,0,0.7); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .game-item:hover { border-color: #00ffcc; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,255,204,0.2); }
-        .game-name { font-size: 1.3rem; font-weight: bold; color: #fff; }
+        .game-name { font-size: 1.2rem; font-weight: bold; color: #fff; letter-spacing: 0.5px; }
         .btn-play { background: linear-gradient(90deg, #ff0055, #ff00aa); color: white; padding: 12px 26px; font-size: 1rem; font-weight: bold; border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 0 15px rgba(255,0,85,0.4); transition: 0.2s; }
         .btn-play:hover { background: linear-gradient(90deg, #ff00aa, #ff0055); box-shadow: 0 0 25px rgba(255,0,85,0.8); }
-        .btn-play:active { transform: scale(0.95); }
         .controls { margin-bottom: 15px; display: flex; gap: 10px; width: 100%; justify-content: space-between; align-items: center; }
-        .btn-back { padding: 10px 18px; font-size: 1rem; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; background: #1f2d3d; color: #00ffcc; border: 1px solid #00ffcc; transition: 0.2s; }
+        .btn-back { padding: 10px 18px; font-size: 1rem; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; background: #182433; color: #00ffcc; border: 1px solid #00ffcc; transition: 0.2s; }
         .btn-back:hover { background: #00ffcc; color: #000; box-shadow: 0 0 15px #00ffcc; }
-        .score-board { font-size: 1.1rem; font-weight: bold; color: #ffff00; text-shadow: 0 0 5px rgba(255,255,0,0.5); text-align: right; line-height: 1.3; }
-        canvas.game-canvas { background: #02040a; border: 3px solid #00ffcc; border-radius: 16px; width: 100%; max-width: 400px; height: 400px; box-shadow: 0 0 35px rgba(0, 255, 204, 0.3); }
+        .score-board { font-size: 1.1rem; font-weight: bold; color: #ffff00; text-shadow: 0 0 5px rgba(255,255,0,0.5); text-align: right; }
+        canvas.game-canvas { background: #020409; border: 3px solid #00ffcc; border-radius: 16px; width: 100%; max-width: 400px; height: 400px; box-shadow: 0 0 35px rgba(0, 255, 204, 0.3); }
         
         .mobile-controls { display: none; flex-direction: column; align-items: center; gap: 8px; margin-top: 15px; width: 100%; }
         .pad-row { display: flex; gap: 40px; }
-        .d-btn { width: 65px; height: 65px; background: #161f38; color: #00ffcc; border: 2px solid #1e295d; font-size: 1.6rem; font-weight: bold; border-radius: 50%; box-shadow: 0 5px 15px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.1s; -webkit-tap-highlight-color: transparent; }
+        .d-btn { width: 65px; height: 65px; background: #141c34; color: #00ffcc; border: 2px solid #1a2456; font-size: 1.6rem; font-weight: bold; border-radius: 50%; box-shadow: 0 5px 15px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.1s; -webkit-tap-highlight-color: transparent; }
         .d-btn:active { background: #00ffcc; color: #000; border-color: #00ffcc; box-shadow: 0 0 20px #00ffcc; transform: scale(0.9); }
-        .action-shoot-btn { width: 180px; height: 55px; background: linear-gradient(90deg, #ff3300, #ff0055); color: white; border: none; font-weight: 900; border-radius: 35px; font-size: 1.3rem; margin-top: 10px; box-shadow: 0 5px 20px rgba(255,51,0,0.5); letter-spacing: 1px; cursor: pointer; transition: 0.2s; }
-        .action-shoot-btn:active { transform: scale(0.95); box-shadow: 0 0 25px #ff3300; }
+        .action-shoot-btn { width: 180px; height: 55px; background: linear-gradient(90deg, #ff3300, #ff0055); color: white; border: none; font-weight: 900; border-radius: 35px; font-size: 1.3rem; margin-top: 10px; box-shadow: 0 5px 20px rgba(255,51,0,0.5); letter-spacing: 1px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -46,11 +44,11 @@
         <div class="menu-title">🎮 MEGA ARCADE PRO</div>
         <div class="high-score-tag" id="globalHighScore">🔥 ALL-TIME HIGH: 0</div>
         <div class="games-list">
-            <div class="game-item"><span class="game-name">🐍 Neon Snake HD</span><button class="btn-play" onclick="startCanvasGame(1)">PLAY</button></div>
-            <div class="game-item"><span class="game-name">🏎️ Asphalt Nitro Pro</span><button class="btn-play" onclick="startCanvasGame(2)">PLAY</button></div>
-            <div class="game-item"><span class="game-name">💎 Diamond Block Blast</span><button class="btn-play" onclick="startCanvasGame(3)">PLAY</button></div>
-            <div class="game-item"><span class="game-name">🪖 Squad Survival 2D</span><button class="btn-play" onclick="startCanvasGame(4)">PLAY</button></div>
-            <div class="game-item"><span class="game-name">🏍️ Moto Hill Overdrive</span><button class="btn-play" onclick="startCanvasGame(5)">PLAY</button></div>
+            <div class="game-item"><span class="game-name">Neon Snake HD</span><button class="btn-play" onclick="startCanvasGame(1)">PLAY</button></div>
+            <div class="game-item"><span class="game-name">Cyber Racer 2D</span><button class="btn-play" onclick="startCanvasGame(2)">PLAY</button></div>
+            <div class="game-item"><span class="game-name">Neon Block Blast</span><button class="btn-play" onclick="startCanvasGame(3)">PLAY</button></div>
+            <div class="game-item"><span class="game-name">Alpha Trooper 2D</span><button class="btn-play" onclick="startCanvasGame(4)">PLAY</button></div>
+            <div class="game-item"><span class="game-name">Cyber Hill Climb</span><button class="btn-play" onclick="startCanvasGame(5)">PLAY</button></div>
         </div>
     </div>
 
@@ -63,7 +61,7 @@
                 <div style="font-size:0.8rem; color:#ff00aa;">Best: <span id="gameBest">0</span></div>
             </div>
         </div>
-        <canvas id="mainGameCanvas" class="game-canvas" width="400" height="400"></canvas>
+        <canvas id="mainGameCanvas" width="400" height="400" class="game-canvas"></canvas>
         
         <div class="mobile-controls" id="mobControls">
             <button class="d-btn" onmousedown="changeDir('UP')" ontouchstart="changeDir('UP')">▲</button>
@@ -77,15 +75,16 @@
     </div>
 
     <script>
-        let activeCanvasGame = null, canvasInterval = null;
+        let activeCanvasGame = null, gameLoopId = null;
         let pX, pY, score, objects, bullets, playerSpeed = 20;
-        let snake, food, dx, dy; let bikeY, bikeVy, roadOffset = 0;
+        let snake, food, dx, dy, lastSnakeUpdate = 0; 
+        let bikeY, bikeVy, roadOffset = 0;
         let particles = [];
 
         const cCanvas = document.getElementById('mainGameCanvas');
         const cCtx = cCanvas.getContext('2d');
 
-        // Synth Audio Engine (Bina kisi audio file ke sound generate karega)
+        // Synth Audio Engine
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(freq, type, duration) {
             try {
@@ -93,13 +92,12 @@
                 let gain = audioCtx.createGain();
                 osc.type = type; osc.frequency.value = freq;
                 osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(); gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                osc.start(); gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
                 osc.stop(audioCtx.currentTime + duration);
             } catch(e){}
         }
 
-        // High Score Engine
         function loadHighScores() {
             let globalMax = 0;
             for(let i=1; i<=5; i++) {
@@ -109,13 +107,6 @@
             document.getElementById('globalHighScore').innerText = `🔥 ALL-TIME HIGH: ${globalMax}`;
         }
         loadHighScores();
-
-        function switchScreen(screenId) {
-            clearInterval(canvasInterval);
-            document.getElementById('menuScreen').style.display = 'none';
-            document.getElementById('canvasScreen').style.display = 'none';
-            document.getElementById(screenId).style.display = 'flex';
-        }
 
         function updateScoreBar() {
             document.getElementById('gameScore').innerText = score;
@@ -129,42 +120,45 @@
 
         function startCanvasGame(gameId) {
             if(audioCtx.state === 'suspended') audioCtx.resume();
-            switchScreen('canvasScreen');
+            document.getElementById('menuScreen').style.display = 'none';
+            document.getElementById('canvasScreen').style.display = 'flex';
             activeCanvasGame = gameId;
             document.getElementById('mobControls').style.display = 'flex';
             document.getElementById('shootBtn').style.display = (gameId === 4) ? 'block' : 'none';
+            
             score = 0; objects = []; bullets = []; particles = [];
             updateScoreBar();
-
-            cCtx.textAlign = "center";
-            cCtx.textBaseline = "middle";
 
             if (gameId === 1) {
                 document.getElementById('canvasGameTitle').innerText = "Neon Snake";
                 snake = [{x: 200, y: 200}, {x:180, y:200}, {x:160, y:200}]; food = {x: 100, y: 100}; dx = 20; dy = 0;
-                canvasInterval = setInterval(renderSnake, 120);
             } else if (gameId === 2) {
-                document.getElementById('canvasGameTitle').innerText = "Asphalt Nitro";
-                pX = 200; pY = 340;
-                canvasInterval = setInterval(renderCarRace, 30);
+                document.getElementById('canvasGameTitle').innerText = "Cyber Racer";
+                pX = 200; pY = 340; playerSpeed = 15;
             } else if (gameId === 3) {
-                document.getElementById('canvasGameTitle').innerText = "Block Blast";
-                pX = 200; pY = 350;
-                canvasInterval = setInterval(renderBlockBlast, 30);
+                document.getElementById('canvasGameTitle').innerText = "Neon Blast";
+                pX = 200; pY = 360; playerSpeed = 25;
             } else if (gameId === 4) {
-                document.getElementById('canvasGameTitle').innerText = "Squad Survival";
-                pX = 200; pY = 330;
-                canvasInterval = setInterval(renderFreeFire, 30);
+                document.getElementById('canvasGameTitle').innerText = "Alpha Trooper";
+                pX = 200; pY = 320; playerSpeed = 15;
             } else if (gameId === 5) {
-                document.getElementById('canvasGameTitle').innerText = "Moto Overdrive";
+                document.getElementById('canvasGameTitle').innerText = "Cyber Climb";
                 pX = 80; bikeY = 280; bikeVy = 0;
-                canvasInterval = setInterval(renderBikeRace, 30);
             }
+            
+            lastSnakeUpdate = performance.now();
+            if(gameLoopId) cancelAnimationFrame(gameLoopId);
+            gameLoopId = requestAnimationFrame(mainGameLoop);
         }
 
-        function exitCanvasGame() { clearInterval(canvasInterval); activeCanvasGame = null; loadHighScores(); switchScreen('menuScreen'); }
+        function exitCanvasGame() { 
+            if(gameLoopId) cancelAnimationFrame(gameLoopId); 
+            activeCanvasGame = null; 
+            loadHighScores(); 
+            document.getElementById('canvasScreen').style.display = 'none';
+            document.getElementById('menuScreen').style.display = 'flex';
+        }
 
-        // Keyboard Event Handlers (For PC Players)
         window.addEventListener('keydown', e => {
             if (!activeCanvasGame) return;
             if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space','KeyW','KeyA','KeyS','KeyD'].includes(e.code)) e.preventDefault();
@@ -178,12 +172,12 @@
         function changeDir(dir) {
             if (!activeCanvasGame) return;
             if (activeCanvasGame === 1) {
-                if (dir === 'LEFT' && dx === 0) { dx = -20; dy = 0; playSound(300, 'square', 0.05); }
-                if (dir === 'RIGHT' && dx === 0) { dx = 20; dy = 0; playSound(300, 'square', 0.05); }
-                if (dir === 'UP' && dy === 0) { dx = 0; dy = -20; playSound(300, 'square', 0.05); }
-                if (dir === 'DOWN' && dy === 0) { dx = 0; dy = 20; playSound(300, 'square', 0.05); }
+                if (dir === 'LEFT' && dx === 0) { dx = -20; dy = 0; playSound(300, 'square', 0.04); }
+                if (dir === 'RIGHT' && dx === 0) { dx = 20; dy = 0; playSound(300, 'square', 0.04); }
+                if (dir === 'UP' && dy === 0) { dx = 0; dy = -20; playSound(300, 'square', 0.04); }
+                if (dir === 'DOWN' && dy === 0) { dx = 0; dy = 20; playSound(300, 'square', 0.04); }
             } else if (activeCanvasGame === 5) {
-                if ((dir === 'UP' || dir === 'RIGHT') && bikeY === 280) { bikeVy = -10; playSound(200, 'sawtooth', 0.1); }
+                if ((dir === 'UP' || dir === 'RIGHT') && bikeY === 280) { bikeVy = -11; playSound(180, 'sawtooth', 0.12); }
             } else {
                 if (dir === 'LEFT') pX = Math.max(30, pX - playerSpeed);
                 if (dir === 'RIGHT') pX = Math.min(370, pX + playerSpeed);
@@ -193,163 +187,172 @@
         }
 
         function triggerAction() { 
-            if (activeCanvasGame === 4) {
-                bullets.push({x: pX, y: pY - 25}); 
-                playSound(600, 'triangle', 0.08);
-            } 
+            if (activeCanvasGame === 4) { bullets.push({x: pX, y: pY - 20}); playSound(700, 'triangle', 0.06); } 
         }
 
         function createExplosion(x, y, color) {
-            for(let i=0; i<12; i++) {
-                particles.push({x: x, y: y, dx: (Math.random()-0.5)*6, dy: (Math.random()-0.5)*6, radius: Math.random()*4+2, alpha: 1, color: color});
+            for(let i=0; i<15; i++) {
+                particles.push({x: x, y: y, dx: (Math.random()-0.5)*7, dy: (Math.random()-0.5)*7, radius: Math.random()*3+1.5, alpha: 1, color: color});
             }
         }
 
-        function updateParticles() {
-            particles.forEach((p, i) => {
-                p.x += p.dx; p.y += p.dy; p.alpha -= 0.04;
-                cCtx.save(); cCtx.globalAlpha = p.alpha;
-                cCtx.fillStyle = p.color; cCtx.beginPath(); cCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2); cCtx.fill(); cCtx.restore();
-                if(p.alpha <= 0) particles.splice(i, 1);
-            });
-        }
-
         function drawGrid() {
-            cCtx.strokeStyle = 'rgba(0, 255, 204, 0.04)'; cCtx.lineWidth = 1;
-            for(let i=0; i<400; i+=20) {
+            cCtx.strokeStyle = 'rgba(0, 255, 204, 0.05)'; cCtx.lineWidth = 1;
+            for(let i=0; i<=400; i+=20) {
                 cCtx.beginPath(); cCtx.moveTo(i,0); cCtx.lineTo(i,400); cCtx.stroke();
                 cCtx.beginPath(); cCtx.moveTo(0,i); cCtx.lineTo(400,i); cCtx.stroke();
             }
         }
 
         function gameOver() { 
-            playSound(100, 'sawtooth', 0.5);
-            setTimeout(() => {
-                alert(`💥 GAME OVER!\nFinal Score: ${score}`); 
-                exitCanvasGame();
-            }, 10);
+            playSound(90, 'sawtooth', 0.6);
+            alert(`💥 MISSION OVER!\nFinal Score: ${score}`); 
+            exitCanvasGame();
         }
 
-        // 1. NEON SNAKE
-        function renderSnake() {
-            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
-            if (head.x < 10 || head.x > 390 || head.y < 10 || head.y > 390 || snake.some(s => s.x === head.x && s.y === head.y)) { gameOver(); return; }
+        // --- MAIN ENGINE LOOP ---
+        function mainGameLoop(timestamp) {
+            if(!activeCanvasGame) return;
             
-            snake.unshift(head);
-            if (Math.abs(head.x - food.x) < 15 && Math.abs(head.y - food.y) < 15) { 
-                score += 10; updateScoreBar(); playSound(800, 'sine', 0.1);
-                createExplosion(food.x, food.y, '#00ffcc');
-                food = {x: Math.floor(Math.random()*18)*20 + 20, y: Math.floor(Math.random()*18)*20 + 20}; 
-            } else { snake.pop(); }
-            
-            cCtx.fillStyle = '#020511'; cCtx.fillRect(0,0,400,400);
+            cCtx.fillStyle = '#020510'; cCtx.fillRect(0,0,400,400);
             drawGrid();
-            updateParticles();
-            
-            cCtx.font = "22px Arial"; cCtx.fillText("🍎", food.x, food.y);
-            snake.forEach((s, idx) => {
-                cCtx.font = idx === 0 ? "24px Arial" : "20px Arial";
-                cCtx.fillText(idx === 0 ? "👑" : "🟢", s.x, s.y);
+
+            // Handle Particles
+            particles.forEach((p, i) => {
+                p.x += p.dx; p.y += p.dy; p.alpha -= 0.03;
+                cCtx.save(); cCtx.globalAlpha = p.alpha;
+                cCtx.shadowBlur = 10; cCtx.shadowColor = p.color;
+                cCtx.fillStyle = p.color; cCtx.beginPath(); cCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2); cCtx.fill();
+                cCtx.restore();
+                if(p.alpha <= 0) particles.splice(i, 1);
             });
+
+            // Route to Active Game Render
+            if (activeCanvasGame === 1) renderSnakeGame(timestamp);
+            else if (activeCanvasGame === 2) renderRacerGame();
+            else if (activeCanvasGame === 3) renderBlastGame();
+            else if (activeCanvasGame === 4) renderTrooperGame();
+            else if (activeCanvasGame === 5) renderClimbGame();
+
+            gameLoopId = requestAnimationFrame(mainGameLoop);
         }
 
-        // 2. ASPHALT NITRO
-        function renderCarRace() {
-            if (Math.random() < 0.06) objects.push({x: Math.random()*220 + 90, y: -30, speed: Math.random()*3 + 6});
-            cCtx.fillStyle = '#0a0f1d'; cCtx.fillRect(0,0,400,400);
+        // 1. NEON SNAKE ENGINE
+        function renderSnakeGame(timestamp) {
+            if (timestamp - lastSnakeUpdate > 110) {
+                const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+                if (head.x < 10 || head.x >= 390 || head.y < 10 || head.y >= 390 || snake.some(s => s.x === head.x && s.y === head.y)) { gameOver(); return; }
+                
+                snake.unshift(head);
+                if (Math.abs(head.x - food.x) < 15 && Math.abs(head.y - food.y) < 15) { 
+                    score += 10; updateScoreBar(); playSound(850, 'sine', 0.08);
+                    createExplosion(food.x, food.y, '#ff00aa');
+                    food = {x: Math.floor(Math.random()*18)*20 + 20, y: Math.floor(Math.random()*18)*20 + 20}; 
+                } else { snake.pop(); }
+                lastSnakeUpdate = timestamp;
+            }
+
+            // Draw Target Food Glow Ring
+            cCtx.strokeStyle = '#ff00aa'; cCtx.lineWidth = 3; cCtx.shadowBlur = 12; cCtx.shadowColor = '#ff00aa';
+            cCtx.beginPath(); cCtx.arc(food.x, food.y, 7, 0, Math.PI*2); cCtx.stroke(); cCtx.shadowBlur = 0;
+
+            // Draw Vector Snake
+            snake.forEach((s, idx) => {
+                cCtx.fillStyle = idx === 0 ? '#00ffcc' : '#00aa99';
+                cCtx.shadowBlur = idx === 0 ? 10 : 0; cCtx.shadowColor = '#00ffcc';
+                cCtx.fillRect(s.x - 8, s.y - 8, 16, 16);
+            });
+            cCtx.shadowBlur = 0;
+        }
+
+        // 2. CYBER RACER ENGINE
+        function renderRacerGame() {
+            if (Math.random() < 0.04) objects.push({x: Math.random()*200 + 100, y: -40, speed: Math.random()*2 + 5, w: 24, h: 40});
             
-            // Neon Cyber Road Tracks
-            cCtx.fillStyle = '#10162b'; cCtx.fillRect(60, 0, 280, 400);
-            roadOffset = (roadOffset + 8) % 40;
-            cCtx.strokeStyle = '#00ffcc'; cCtx.lineWidth = 4;
-            cCtx.setLineDash([20, 20]); cCtx.lineDashOffset = -roadOffset;
+            // Cyber Road Boundaries
+            cCtx.fillStyle = '#0b1021'; cCtx.fillRect(80, 0, 240, 400);
+            roadOffset = (roadOffset + 7) % 40;
+            cCtx.strokeStyle = '#00ffcc'; cCtx.lineWidth = 3; cCtx.setLineDash([20, 20]); cCtx.lineDashOffset = -roadOffset;
             cCtx.beginPath(); cCtx.moveTo(200, 0); cCtx.lineTo(200, 400); cCtx.stroke(); cCtx.setLineDash([]);
 
-            updateParticles();
-            cCtx.font = "34px Arial"; cCtx.fillText("🏎️", pX, pY);
+            // Draw Custom Vector Player Car
+            cCtx.fillStyle = '#ff00aa'; cCtx.shadowBlur = 15; cCtx.shadowColor = '#ff00aa';
+            cCtx.fillRect(pX - 12, pY - 20, 24, 40); // Body
+            cCtx.fillStyle = '#00ffcc'; cCtx.fillRect(pX - 10, pY - 12, 20, 8); // Windshield
             
             objects.forEach((o, i) => {
                 o.y += o.speed;
-                cCtx.fillText("🚘", o.x, o.y);
-                if(o.y > 430) { objects.splice(i,1); score += 10; updateScoreBar(); playSound(450, 'sine', 0.05); }
-                if(Math.abs(pX - o.x) < 26 && Math.abs(pY - o.y) < 32) { createExplosion(o.x, o.y, '#ff0055'); gameOver(); }
+                cCtx.fillStyle = '#3366ff'; cCtx.shadowColor = '#3366ff';
+                cCtx.fillRect(o.x - o.w/2, o.y - o.h/2, o.w, o.h);
+                
+                if(o.y > 440) { objects.splice(i,1); score += 10; updateScoreBar(); playSound(400, 'sine', 0.04); }
+                if(Math.abs(pX - o.x) < 22 && Math.abs(pY - o.y) < 35) { createExplosion(o.x, o.y, '#ff0055'); gameOver(); }
             });
+            cCtx.shadowBlur = 0;
         }
 
-        // 3. DIAMOND BLOCK BLAST
-        function renderBlockBlast() {
-            if (Math.random() < 0.09) objects.push({x: Math.random()*340 + 30, y: -20, speed: Math.random()*2 + 5});
-            cCtx.fillStyle = '#02040a'; cCtx.fillRect(0,0,400,400);
-            drawGrid();
-            updateParticles();
+        // 3. NEON BLOCK BLAST
+        function renderBlastGame() {
+            if (Math.random() < 0.07) objects.push({x: Math.random()*340 + 30, y: -20, speed: 4.5, size: 20});
             
-            cCtx.font = "38px Arial"; cCtx.fillText("📥", pX, pY);
+            // Draw Catching Paddle Bar
+            cCtx.fillStyle = '#00ffcc'; cCtx.shadowBlur = 15; cCtx.shadowColor = '#00ffcc';
+            cCtx.fillRect(pX - 30, pY - 8, 60, 16);
             
             objects.forEach((o, i) => {
                 o.y += o.speed;
-                cCtx.fillText("💎", o.x, o.y);
+                cCtx.fillStyle = '#ffaa00'; cCtx.shadowColor = '#ffaa00';
+                cCtx.fillRect(o.x - o.size/2, o.y - o.size/2, o.size, o.size);
+                
                 if (o.y > 420) { createExplosion(o.x, 390, '#ff3300'); gameOver(); } 
-                if (Math.abs(pX - o.x) < 32 && Math.abs(pY - o.y) < 25) { 
+                if (Math.abs(pX - o.x) < 40 && Math.abs(pY - o.y) < 16) { 
                     createExplosion(o.x, o.y, '#00ffff');
-                    objects.splice(i,1); score += 10; updateScoreBar(); playSound(900, 'sine', 0.08); 
+                    objects.splice(i,1); score += 10; updateScoreBar(); playSound(950, 'sine', 0.05); 
                 }
             });
+            cCtx.shadowBlur = 0;
         }
 
-        // 4. SQUAD SURVIVAL 2D
-        function renderFreeFire() {
-            if (Math.random() < 0.06) objects.push({x: Math.random()*340 + 30, y: -20, hp: 1});
-            cCtx.fillStyle = '#090e1a'; cCtx.fillRect(0,0,400,400);
-            drawGrid();
-            updateParticles();
+        // 4. ALPHA TROOPER
+        function renderTrooperGame() {
+            if (Math.random() < 0.05) objects.push({x: Math.random()*340 + 30, y: -20, speed: 2.5});
             
-            cCtx.font = "34px Arial"; cCtx.fillText("🪖", pX, pY); 
+            // Draw Player Jet Fighter Shape
+            cCtx.fillStyle = '#00ffcc'; cCtx.shadowBlur = 12; cCtx.shadowColor = '#00ffcc';
+            cCtx.beginPath(); cCtx.moveTo(pX, pY - 20); cCtx.lineTo(pX - 15, pY + 15); cCtx.lineTo(pX + 15, pY + 15); cCtx.closePath(); cCtx.fill();
 
+            // Bullets Laser logic
             bullets.forEach((b, bi) => { 
-                b.y -= 14; 
-                cCtx.font = "18px Arial"; cCtx.fillText("⚡", b.x, b.y);
+                b.y -= 12; 
+                cCtx.fillStyle = '#ff0055'; cCtx.shadowColor = '#ff0055';
+                cCtx.fillRect(b.x - 2, b.y - 8, 4, 16);
                 if(b.y < 0) bullets.splice(bi, 1); 
             });
 
+            // Enemies Logic
             objects.forEach((o, oi) => {
-                o.y += 3.5;
-                cCtx.font = "32px Arial"; cCtx.fillText("👾", o.x, o.y);
-                if(o.y > 410) { gameOver(); } 
-                if(Math.abs(pX - o.x) < 28 && Math.abs(pY - o.y) < 28) { createExplosion(pX, pY, '#ff3300'); gameOver(); }
+                o.y += o.speed;
+                cCtx.fillStyle = '#9933ff'; cCtx.shadowColor = '#9933ff';
+                cCtx.beginPath(); cCtx.arc(o.x, o.y, 12, 0, Math.PI*2); cCtx.fill();
+                
+                if(o.y > 410 || (Math.abs(pX - o.x) < 25 && Math.abs(pY - o.y) < 25)) { createExplosion(o.x, o.y, '#ff3300'); gameOver(); }
                 
                 bullets.forEach((b, bi) => {
-                    if(Math.abs(b.x - o.x) < 24 && Math.abs(b.y - o.y) < 24) { 
+                    if(Math.abs(b.x - o.x) < 18 && Math.abs(b.y - o.y) < 18) { 
                         createExplosion(o.x, o.y, '#ffaa00');
-                        objects.splice(oi, 1); bullets.splice(bi, 1); score += 20; updateScoreBar(); 
-                        playSound(500, 'square', 0.05);
+                        objects.splice(oi, 1); bullets.splice(bi, 1); score += 20; updateScoreBar(); playSound(550, 'square', 0.04);
                     }
                 });
             });
+            cCtx.shadowBlur = 0;
         }
 
-        // 5. MOTO HILL OVERDRIVE
-        function renderBikeRace() {
-            bikeVy += 0.6; bikeY += bikeVy; 
+        // 5. CYBER HILL CLIMB
+        function renderClimbGame() {
+            bikeVy += 0.55; bikeY += bikeVy; 
             if(bikeY > 280) { bikeY = 280; bikeVy = 0; } 
             
-            if (Math.random() < 0.04) objects.push({x: 430, y: 295}); 
-            cCtx.fillStyle = '#030612'; cCtx.fillRect(0,0,400,400);
+            if (Math.random() < 0.03) objects.push({x: 430, y: 285, size: 20}); 
             
-            // Cyber Horizon Mountain style line
-            cCtx.fillStyle = '#1b120c'; cCtx.fillRect(0, 310, 400, 90);
-            cCtx.strokeStyle = '#ffaa00'; cCtx.lineWidth = 4;
-            cCtx.beginPath(); cCtx.moveTo(0,310); cCtx.lineTo(400,310); cCtx.stroke();
-            
-            updateParticles();
-            cCtx.font = "36px Arial"; cCtx.fillText("🏍️", pX, bikeY);
-            
-            objects.forEach((o, i) => {
-                o.x -= 7;
-                cCtx.font = "26px Arial"; cCtx.fillText("🚧", o.x, o.y);
-                if(o.x < -30) { objects.splice(i, 1); score += 15; updateScoreBar(); playSound(700, 'sine', 0.05); }
-                if(Math.abs(pX - o.x) < 28 && Math.abs(bikeY - o.y) < 25) { createExplosion(pX, bikeY, '#ff0000'); gameOver(); }
-            });
-        }
-    </script>
-</body>
-</html>
+            // Neon Ground line
+            cCtx
