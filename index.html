@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arcade Hub Fixed - All Games Working</title>
+    <title>Arcade Hub - All Games Unlocked</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -11,88 +11,36 @@
             min-height: 100vh; margin: 0; background: #0b132b; color: white; padding: 20px; box-sizing: border-box;
             user-select: none; -webkit-user-select: none;
         }
-
-        .stats-bar {
-            background: rgba(255, 255, 255, 0.1); padding: 10px 25px; border-radius: 30px;
-            font-size: 1.5rem; font-weight: bold; color: #ffea00; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-        }
-
         .menu-container, .game-screen { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 450px; }
         .game-screen { display: none; }
-
         .menu-title { font-size: 2rem; margin-bottom: 20px; color: #1e90ff; font-weight: bold; }
         .games-list { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-
         .game-item {
-            background: rgba(255, 255, 255, 0.05); border: 2px solid #444; border-radius: 12px;
+            background: rgba(46, 213, 115, 0.1); border: 2px solid #2ed573; border-radius: 12px;
             padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
         }
-        .game-item.unlocked { border-color: #2ed573; background: rgba(46, 213, 115, 0.1); }
         .game-name { font-size: 1.2rem; font-weight: bold; }
-
-        .action-btn {
-            padding: 8px 16px; font-size: 1rem; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;
-        }
-        .btn-play { background: #2ed573; color: white; }
-        .btn-lock { background: #ffea00; color: #111; }
-
+        .btn-play { background: #2ed573; color: white; padding: 8px 16px; font-size: 1rem; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; }
         .controls { margin-bottom: 15px; display: flex; gap: 10px; width: 100%; justify-content: center; }
-        select, .btn-back, .btn-reset { padding: 10px 15px; font-size: 1rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; }
-        .btn-reset { background: #ff4757; color: white; }
-        .btn-back { background: #57606f; color: white; }
-
-        /* Tic Tac Toe UI */
-        .board { display: grid; grid-template-columns: repeat(3, 90px); grid-template-rows: repeat(3, 90px); gap: 8px; padding: 10px; }
-        .cell {
-            width: 90px; height: 90px; background: white; border-radius: 10px;
-            font-size: 2.5rem; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #333;
-        }
-        .cell[data-user="X"] { color: #2ed573; }
-        .cell[data-user="O"] { color: #1e90ff; }
-        .cell.winner { background: #ffea00 !important; }
-
-        /* Canvas Arena */
+        .btn-back { padding: 10px 15px; font-size: 1rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; background: #57606f; color: white; }
         canvas.game-canvas { background: #111; border: 4px solid #333; border-radius: 10px; width: 100%; max-width: 400px; height: 400px; }
-        
-        /* Gamepad Controls */
         .mobile-controls { display: none; flex-direction: column; align-items: center; gap: 10px; margin-top: 15px; width: 100%; }
         .pad-row { display: flex; gap: 20px; }
         .d-btn { width: 55px; height: 55px; background: #333; color: white; border: none; font-size: 1.3rem; font-weight: bold; border-radius: 50%; }
         .action-shoot-btn { width: 120px; height: 45px; background: #ff4757; color: white; border: none; font-weight: bold; border-radius: 8px; font-size: 1.1rem; margin-top: 5px; }
-
-        #fxCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
     </style>
 </head>
 <body>
 
-    <canvas id="fxCanvas"></canvas>
-    <div class="stats-bar">🪙 Coins: <span id="coinCount">0</span></div>
-
     <div class="menu-container" id="menuScreen">
-        <div class="menu-title">🎮 ARCADE HUB</div>
+        <div class="menu-title">🎮 ARCADE HUB (FREE PLAY)</div>
         <div class="games-list">
-            <div class="game-item" id="card-1"><span class="game-name">1. Snake</span><button class="action-btn btn-lock" id="btn-1" onclick="buyGame(1, 100)">🪙 100</button></div>
-            <div class="game-item" id="card-2"><span class="game-name">2. Car Race</span><button class="action-btn btn-lock" id="btn-2" onclick="buyGame(2, 200)">🪙 200</button></div>
-            <div class="game-item" id="card-3"><span class="game-name">3. Block Blast</span><button class="action-btn btn-lock" id="btn-3" onclick="buyGame(3, 300)">🪙 300</button></div>
-            <div class="game-item" id="card-4"><span class="game-name">4. Free Fire</span><button class="action-btn btn-lock" id="btn-4" onclick="buyGame(4, 400)">🪙 400</button></div>
-            <div class="game-item" id="card-5"><span class="game-name">5. Bike Race</span><button class="action-btn btn-lock" id="btn-5" onclick="buyGame(5, 500)">🪙 500</button></div>
-            <div class="game-item unlocked"><span class="game-name">6. Tic Tac Toe</span><button class="action-btn btn-play" onclick="switchScreen('tttScreen')">PLAY</button></div>
+            <div class="game-item"><span class="game-name">1. Snake</span><button class="btn-play" onclick="startCanvasGame(1)">PLAY</button></div>
+            <div class="game-item"><span class="game-name">2. Car Race</span><button class="btn-play" onclick="startCanvasGame(2)">PLAY</button></div>
+            <div class="game-item"><span class="game-name">3. Block Blast</span><button class="btn-play" onclick="startCanvasGame(3)">PLAY</button></div>
+            <div class="game-item"><span class="game-name">4. Free Fire</span><button class="btn-play" onclick="startCanvasGame(4)">PLAY</button></div>
+            <div class="game-item"><span class="game-name">5. Bike Race</span><button class="btn-play" onclick="startCanvasGame(5)">PLAY</button></div>
         </div>
-    </div>
-
-    <div class="game-screen" id="tttScreen">
-        <div class="controls">
-            <button class="btn-back" onclick="switchScreen('menuScreen')">⬅ Menu</button>
-            <select id="gameMode" onchange="handleModeChange()"><option value="computer">Vs Computer</option><option value="friend">Vs Friend</option></select>
-            <select id="levelSelect" onchange="resetTTT()"><option value="1">Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option></select>
-            <button class="btn-reset" onclick="resetTTT()">Reset</button>
-        </div>
-        <div class="board">
-            <div class="cell" data-index="0"></div><div class="cell" data-index="1"></div><div class="cell" data-index="2"></div>
-            <div class="cell" data-index="3"></div><div class="cell" data-index="4"></div><div class="cell" data-index="5"></div>
-            <div class="cell" data-index="6"></div><div class="cell" data-index="7"></div><div class="cell" data-index="8"></div>
-        </div>
-        <div id="status">Turn: X</div><div id="countdown"></div>
     </div>
 
     <div class="game-screen" id="canvasScreen">
@@ -114,187 +62,63 @@
     </div>
 
     <script>
-        let coins = 0;
-        let unlockedGames = [false, false, false, false, false, false, true];
         let activeCanvasGame = null, canvasInterval = null;
+        let pX, pY, score, objects, bullets, playerSpeed = 15;
+        let snake, food, dx, dy; let bikeY, bikeVy;
 
-        // TTT Variables
-        let currentPlayer = 'X', gameState = ["","","","","","","","",""], isGameActive = true, nextLevelTimeout, countdownInterval;
-        const winningConditions = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-
-        const coinCountDisplay = document.getElementById('coinCount');
-        const fxCanvas = document.getElementById('fxCanvas');
-        const fxCtx = fxCanvas.getContext('2d');
         const cCanvas = document.getElementById('mainGameCanvas');
         const cCtx = cCanvas.getContext('2d');
 
-        function resFx() { fxCanvas.width = window.innerWidth; fxCanvas.height = window.innerHeight; }
-        window.addEventListener('resize', resFx); resFx();
-
         function switchScreen(screenId) {
-            clearInterval(canvasInterval); 
+            clearInterval(canvasInterval);
             document.getElementById('menuScreen').style.display = 'none';
-            document.getElementById('tttScreen').style.display = 'none';
             document.getElementById('canvasScreen').style.display = 'none';
             document.getElementById(screenId).style.display = 'flex';
-            if(screenId === 'tttScreen') resetTTT();
         }
-
-        function buyGame(id, cost) {
-            if (coins >= cost) {
-                coins -= cost; coinCountDisplay.innerText = coins;
-                unlockedGames[id] = true;
-                
-                // Visual & Function Reset Fix
-                const card = document.getElementById(`card-${id}`);
-                const btn = document.getElementById(`btn-${id}`);
-                card.classList.add('unlocked');
-                btn.innerText = "PLAY"; 
-                btn.className = "action-btn btn-play";
-                
-                // Directly overwriting click bug
-                btn.onclick = function() { startCanvasGame(id); };
-                
-                alert("Game Successfully Unlocked! 🎉");
-            } else { alert("Coins kam hain! Tic Tac Toe jeet kar coins kamao. 🪙"); }
-        }
-
-        // --- TIC TAC TOE ENGINE ---
-        document.querySelectorAll('.cell').forEach(c => c.addEventListener('click', e => {
-            const idx = parseInt(e.target.getAttribute('data-index'));
-            if (gameState[idx] !== "" || !isGameActive || (document.getElementById('gameMode').value === 'computer' && currentPlayer === 'O')) return;
-            makeTTTMove(idx, currentPlayer);
-            if (isGameActive && document.getElementById('gameMode').value === 'computer') setTimeout(computerTTTMove, 400);
-        }));
-
-        function makeTTTMove(idx, player) {
-            gameState[idx] = player;
-            const cell = document.querySelector(`[data-index='${idx}']`);
-            if(cell) { cell.innerText = player; cell.setAttribute('data-user', player); }
-            if (checkTTTResult()) return;
-            currentPlayer = currentPlayer === "X" ? "O" : "X";
-            document.getElementById('status').innerText = `Turn: ${currentPlayer}`;
-        }
-
-        function computerTTTMove() {
-            if (!isGameActive) return;
-            let lvl = document.getElementById('levelSelect').value;
-            let move = (lvl === '3') ? (getTTTBest('O') || getTTTBest('X') || getTTTRand()) : getTTTRand();
-            if (move !== undefined) makeTTTMove(move, 'O');
-        }
-
-        function getTTTBest(p) {
-            for (let cond of winningConditions) {
-                let cnt = 0, emp = -1;
-                for (let i of cond) { if (gameState[i] === p) cnt++; else if (gameState[i] === "") emp = i; }
-                if (cnt === 2 && emp !== -1) return emp;
-            }
-            return null;
-        }
-        function getTTTRand() {
-            let emp = []; gameState.forEach((v, i) => { if (v === "") emp.push(i); });
-            return emp[Math.floor(Math.random() * emp.length)];
-        }
-
-        function checkTTTResult() {
-            let won = false, line = [];
-            for (let cond of winningConditions) {
-                if (gameState[cond[0]]!='' && gameState[cond[0]]===gameState[cond[1]] && gameState[cond[1]]===gameState[cond[2]]) { won = true; line = cond; break; }
-            }
-            if (won) {
-                isGameActive = false; line.forEach(i => document.querySelector(`[data-index='${i}']`).classList.add('winner'));
-                if (currentPlayer === 'X') {
-                    document.getElementById('status').innerText = "You Win! 🎉 (+100)";
-                    coins += 100; startFx();
-                    if (document.getElementById('gameMode').value === 'computer' && document.getElementById('levelSelect').value !== '3') startNextTTTLevel();
-                } else {
-                    document.getElementById('status').innerText = "Computer Wins! 🤖 (-100)";
-                    coins = Math.max(0, coins - 100);
-                }
-                coinCountDisplay.innerText = coins; return true;
-            }
-            if (!gameState.includes("")) { document.getElementById('status').innerText = "Draw! 🤝"; isGameActive = false; return true; }
-            return false;
-        }
-
-        function startNextTTTLevel() {
-            let tl = 4; const nxt = parseInt(document.getElementById('levelSelect').value) + 1;
-            clearInterval(countdownInterval);
-            countdownInterval = setInterval(() => {
-                tl--; if(tl > 0) document.getElementById('countdown').innerText = `Level ${nxt} in ${tl}s...`;
-                else clearInterval(countdownInterval);
-            }, 1000);
-            nextLevelTimeout = setTimeout(() => { document.getElementById('levelSelect').value = nxt.toString(); resetTTT(); }, 4000);
-        }
-
-        function handleModeChange() {
-            document.getElementById('levelSelect').style.display = (document.getElementById('gameMode').value === 'friend') ? 'none' : 'inline-block';
-            resetTTT();
-        }
-
-        function resetTTT() {
-            clearTimeout(nextLevelTimeout); clearInterval(countdownInterval);
-            currentPlayer = 'X'; gameState = ["","","","","","","","",""]; isGameActive = true;
-            document.getElementById('status').innerText = `Turn: ${currentPlayer}`; document.getElementById('countdown').innerText = "";
-            document.querySelectorAll('.cell').forEach(c => { c.innerText = ""; c.removeAttribute('data-user'); c.classList.remove('winner'); });
-        }
-
-        // --- MULTI CANVAS ARCADE SYSTEM ---
-        let pX, pY, score, objects, bullets, playerSpeed = 15;
-        let snake, food, dx, dy; 
-        let bikeY, bikeVy; 
 
         function startCanvasGame(gameId) {
-            clearInterval(canvasInterval); 
+            clearInterval(canvasInterval);
             switchScreen('canvasScreen');
             activeCanvasGame = gameId;
             document.getElementById('mobControls').style.display = 'flex';
             document.getElementById('shootBtn').style.display = (gameId === 4) ? 'block' : 'none';
             score = 0; objects = []; bullets = [];
 
-            if (gameId === 1) { 
+            if (gameId === 1) {
                 document.getElementById('canvasGameTitle').innerText = "Snake Game";
                 snake = [{x: 200, y: 200}]; food = {x: 80, y: 80}; dx = 20; dy = 0;
                 canvasInterval = setInterval(renderSnake, 130);
-            } 
-            else if (gameId === 2) { 
+            } else if (gameId === 2) {
                 document.getElementById('canvasGameTitle').innerText = "Car Race";
                 pX = 180; pY = 320;
                 canvasInterval = setInterval(renderCarRace, 40);
-            } 
-            else if (gameId === 3) { 
+            } else if (gameId === 3) {
                 document.getElementById('canvasGameTitle').innerText = "Block Blast";
                 pX = 180; pY = 350;
                 canvasInterval = setInterval(renderBlockBlast, 40);
-            } 
-            else if (gameId === 4) { 
+            } else if (gameId === 4) {
                 document.getElementById('canvasGameTitle').innerText = "Free Fire 2D";
                 pX = 180; pY = 340;
                 canvasInterval = setInterval(renderFreeFire, 40);
-            } 
-            else if (gameId === 5) { 
+            } else if (gameId === 5) {
                 document.getElementById('canvasGameTitle').innerText = "Bike Race";
                 pX = 50; bikeY = 260; bikeVy = 0;
                 canvasInterval = setInterval(renderBikeRace, 40);
             }
         }
 
-        function exitCanvasGame() { 
-            clearInterval(canvasInterval); 
-            activeCanvasGame = null; 
-            switchScreen('menuScreen'); 
-        }
+        function exitCanvasGame() { clearInterval(canvasInterval); activeCanvasGame = null; switchScreen('menuScreen'); }
 
         function changeDir(dir) {
             if (!activeCanvasGame) return;
-            if (activeCanvasGame === 1) { 
+            if (activeCanvasGame === 1) {
                 if (dir === 'LEFT' && dx === 0) { dx = -20; dy = 0; }
                 if (dir === 'RIGHT' && dx === 0) { dx = 20; dy = 0; }
                 if (dir === 'UP' && dy === 0) { dx = 0; dy = -20; }
                 if (dir === 'DOWN' && dy === 0) { dx = 0; dy = 20; }
-            } else if (activeCanvasGame === 5) { 
-                if ((dir === 'UP' || dir === 'RIGHT') && bikeY === 260) bikeVy = -7; 
-            } else { 
+            } else if (activeCanvasGame === 5) {
+                if ((dir === 'UP' || dir === 'RIGHT') && bikeY === 260) bikeVy = -7;
+            } else {
                 if (dir === 'LEFT') pX = Math.max(10, pX - playerSpeed);
                 if (dir === 'RIGHT') pX = Math.min(350, pX + playerSpeed);
                 if (dir === 'UP' && activeCanvasGame === 4) pY = Math.max(150, pY - playerSpeed);
@@ -302,30 +126,13 @@
             }
         }
 
-        function triggerAction() { 
-            if (activeCanvasGame === 4) { bullets.push({x: pX + 18, y: pY - 10}); }
-        }
+        function triggerAction() { if (activeCanvasGame === 4) bullets.push({x: pX + 18, y: pY - 10}); }
 
-        window.addEventListener('keydown', e => {
-            if (e.key === 'ArrowLeft' || e.key === 'a') changeDir('LEFT');
-            if (e.key === 'ArrowRight' || e.key === 'd') changeDir('RIGHT');
-            if (e.key === 'ArrowUp' || e.key === 'w') changeDir('UP');
-            if (e.key === 'ArrowDown' || e.key === 's') changeDir('DOWN');
-            if (e.key === ' ' || e.key === 'f') triggerAction();
-        });
+        function gameOver() { clearInterval(canvasInterval); alert(`Game Over! Score: ${score}`); exitCanvasGame(); }
 
-        function gameOver(rewardDivider) {
-            clearInterval(canvasInterval);
-            let reward = Math.floor(score / rewardDivider);
-            alert(`Game Over! Score: ${score}. Earned ${reward} Coins! 🪙`);
-            coins += reward; coinCountDisplay.innerText = coins; 
-            exitCanvasGame();
-        }
-
-        // 1. SNAKE Engine
         function renderSnake() {
             const head = {x: snake[0].x + dx, y: snake[0].y + dy};
-            if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400 || snake.some(s => s.x === head.x && s.y === head.y)) { gameOver(2); return; }
+            if (head.x < 0 || head.x >= 400 || head.y < 0 || head.y >= 400 || snake.some(s => s.x === head.x && s.y === head.y)) { gameOver(); return; }
             snake.unshift(head);
             if (head.x === food.x && head.y === food.y) { score += 10; food = {x: Math.floor(Math.random()*19)*20, y: Math.floor(Math.random()*19)*20}; } else { snake.pop(); }
             cCtx.fillStyle = '#111'; cCtx.fillRect(0,0,400,400);
@@ -333,40 +140,55 @@
             cCtx.fillStyle = '#ff4757'; cCtx.fillRect(food.x, food.y, 18, 18);
         }
 
-        // 2. CAR RACE Engine
         function renderCarRace() {
             if (Math.random() < 0.05) objects.push({x: Math.random()*260 + 50, y: -50, w: 35, h: 60, speed: 6});
             cCtx.fillStyle = '#222'; cCtx.fillRect(0,0,400,400);
             cCtx.fillStyle = 'gray'; cCtx.fillRect(50, 0, 300, 400); 
             cCtx.fillStyle = '#ffea00'; cCtx.fillRect(pX, pY, 35, 60); 
-            
-            cCtx.fillStyle = '#ff4757';
             objects.forEach((o, i) => {
-                o.y += o.speed; cCtx.fillRect(o.x, o.y, o.w, o.h);
+                o.y += o.speed; cCtx.fillStyle = '#ff4757'; cCtx.fillRect(o.x, o.y, o.w, o.h);
                 if(o.y > 400) { objects.splice(i,1); score += 10; }
-                if(pX < o.x + o.w && pX + 35 > o.x && pY < o.y + o.h && pY + 60 > o.y) { gameOver(10); }
+                if(pX < o.x + o.w && pX + 35 > o.x && pY < o.y + o.h && pY + 60 > o.y) gameOver();
             });
         }
 
-        // 3. BLOCK BLAST Engine
         function renderBlockBlast() {
             if (Math.random() < 0.08) objects.push({x: Math.random()*360, y: 0, w: 30, h: 30, speed: 5});
             cCtx.fillStyle = '#111'; cCtx.fillRect(0,0,400,400);
             cCtx.fillStyle = '#1e90ff'; cCtx.fillRect(pX, pY, 40, 20); 
-            
-            cCtx.fillStyle = '#ffea00';
             objects.forEach((o, i) => {
-                o.y += o.speed; cCtx.fillRect(o.x, o.y, o.w, o.h);
+                o.y += o.speed; cCtx.fillStyle = '#ffea00'; cCtx.fillRect(o.x, o.y, o.w, o.h);
                 if (o.y > 400) { objects.splice(i, 1); score += 5; }
-                if (o.x < pX + 40 && o.x + o.w > pX && o.y < pY + 20 && o.y + o.h > pY) { gameOver(5); }
+                if (o.x < pX + 40 && o.x + o.w > pX && o.y < pY + 20 && o.y + o.h > pY) gameOver();
             });
         }
 
-        // 4. FREE FIRE Engine (2D Survival Shooter)
         function renderFreeFire() {
             if (Math.random() < 0.04) objects.push({x: Math.random()*360, y: 0, w: 30, h: 30});
             cCtx.fillStyle = '#1c2541'; cCtx.fillRect(0,0,400,400);
             cCtx.fillStyle = '#2ed573'; cCtx.fillRect(pX, pY, 35, 35); 
+            bullets.forEach((b, bi) => { b.y -= 8; cCtx.fillStyle = '#ffea00'; cCtx.fillRect(b.x, b.y, 4, 10); if(b.y < 0) bullets.splice(bi, 1); });
+            objects.forEach((o, oi) => {
+                o.y += 3; cCtx.fillStyle = '#ff4757'; cCtx.fillRect(o.x, o.y, o.w, o.h);
+                if(o.y > 400) { objects.splice(oi, 1); gameOver(); } 
+                bullets.forEach((b, bi) => {
+                    if(b.x > o.x && b.x < o.x + o.w && b.y > o.y && b.y < o.y + o.h) { objects.splice(oi, 1); bullets.splice(bi, 1); score += 20; }
+                });
+            });
+        }
 
-            bullets.forEach((b, bi) => {
-                b.y -= 8; cCtx.fillStyle = '#ffea00'; cCtx.fillRect(b.x, 
+        function renderBikeRace() {
+            bikeVy += 0.4; bikeY += bikeVy; if(bikeY > 260) { bikeY = 260; bikeVy = 0; } 
+            if (Math.random() < 0.03) objects.push({x: 400, y: 265, w: 20, h: 25}); 
+            cCtx.fillStyle = '#0b132b'; cCtx.fillRect(0,0,400,400);
+            cCtx.fillStyle = '#57606f'; cCtx.fillRect(0, 285, 400, 120);
+            cCtx.fillStyle = '#2ed573'; cCtx.fillRect(pX, bikeY, 35, 25);
+            objects.forEach((o, i) => {
+                o.x -= 5; cCtx.fillStyle = '#ff4757'; cCtx.fillRect(o.x, o.y, o.w, o.h);
+                if(o.x < -20) { objects.splice(i, 1); score += 15; }
+                if(pX < o.x + o.w && pX + 35 > o.x && bikeY + 25 > o.y) gameOver();
+            });
+        }
+    </script>
+</body>
+</html>
