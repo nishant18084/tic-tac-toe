@@ -2,80 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mega Arcade Pro - Absolute 10/10 Fixed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mega Arcade Pro - Perfect 10/10 Edition</title>
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; }
         body {
             font-family: 'Segoe UI', Roboto, sans-serif;
-            background: #040714; color: white; margin: 0; padding: 10px;
+            background: #020510; color: white; padding: 10px;
             display: flex; justify-content: center; align-items: flex-start;
             min-height: 100vh; overflow-x: hidden; user-select: none; -webkit-user-select: none;
         }
         
         .arcade-wrapper {
-            width: 100%; max-width: 420px; background: #090f26;
-            border: 3px solid #16224f; border-radius: 32px; padding: 20px 15px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
-            display: flex; flex-direction: column; gap: 15px; margin-top: 10px;
+            width: 100%; max-width: 410px; background: linear-gradient(180deg, #090f26 0%, #050917 100%);
+            border: 3px solid #1c2e6e; border-radius: 36px; padding: 24px 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9), inset 0 0 15px rgba(0,255,204,0.15);
+            display: flex; flex-direction: column; gap: 15px; margin-top: 5px;
         }
 
         .menu-screen, .game-screen { display: flex; flex-direction: column; width: 100%; }
         .game-screen { display: none; }
 
         .main-title {
-            font-size: 2.2rem; font-weight: 900; text-align: center; margin: 5px 0;
+            font-size: 2.3rem; font-weight: 900; text-align: center; margin: 5px 0;
             background: linear-gradient(90deg, #00ffcc, #00aaff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 15px rgba(0,255,204,0.4); letter-spacing: 1px;
+            text-shadow: 0 0 20px rgba(0,255,204,0.5); letter-spacing: 1.5px;
         }
         .alltime-badge {
-            align-self: center; background: rgba(255, 0, 128, 0.15); border: 1px solid #ff0077;
-            padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;
-            color: #ff3399; text-shadow: 0 0 8px rgba(255,0,119,0.5); margin-bottom: 15px;
+            align-self: center; background: rgba(255, 0, 128, 0.2); border: 1px solid #ff0077;
+            padding: 6px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 800;
+            color: #ff3399; text-shadow: 0 0 10px rgba(255,0,119,0.6); margin-bottom: 20px;
         }
 
         .game-card {
-            background: linear-gradient(145deg, #10183b, #070b1e);
-            border: 2px solid #1d2b63; border-radius: 22px; padding: 15px 20px;
+            background: linear-gradient(135deg, #121b44 0%, #080d24 100%);
+            border: 2px solid #20337a; border-radius: 24px; padding: 16px 20px;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.4); margin-bottom: 12px;
-            transition: 0.25s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5); margin-bottom: 14px;
+            transition: all 0.2s ease;
         }
-        .game-card:hover { border-color: #00ffcc; }
+        .game-card:active { border-color: #00ffcc; transform: scale(0.98); }
         .card-info { display: flex; flex-direction: column; gap: 4px; }
-        .card-title { font-size: 1.25rem; font-weight: 800; color: #ffffff; }
-        .card-subtitle { font-size: 0.75rem; color: #8fa0dd; }
+        .card-title { font-size: 1.3rem; font-weight: 800; color: #ffffff; letter-spacing: 0.3px; }
+        .card-subtitle { font-size: 0.75rem; color: #8196e6; font-weight: 500; }
         
         .play-btn {
             background: linear-gradient(90deg, #ff0055, #ff00aa); color: white;
-            padding: 10px 24px; font-size: 0.95rem; font-weight: 800; border: none;
-            border-radius: 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(255,0,85,0.3);
+            padding: 12px 26px; font-size: 1rem; font-weight: 900; border: none;
+            border-radius: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(255,0,85,0.4);
         }
-        .play-btn:active { transform: scale(0.92); }
 
-        .hud-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .back-btn { padding: 8px 16px; font-size: 0.9rem; font-weight: bold; border-radius: 10px; border: 1px solid #ff0055; background: rgba(255,0,85,0.1); color: #ff3377; cursor: pointer; }
-        .game-tag-title { font-size: 1.2rem; font-weight: bold; color: #00ffcc; }
-        .live-score { font-size: 1.05rem; font-weight: bold; color: #ffff00; }
+        .hud-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; width: 100%; }
+        .back-btn { padding: 8px 18px; font-size: 0.95rem; font-weight: 800; border-radius: 12px; border: 1px solid #ff0055; background: rgba(255,0,85,0.15); color: #ff4588; cursor: pointer; }
+        .game-tag-title { font-size: 1.25rem; font-weight: 800; color: #00ffcc; text-shadow: 0 0 10px rgba(0,255,204,0.3); }
+        .live-score { font-size: 1.1rem; font-weight: bold; color: #ffff00; text-shadow: 0 0 5px rgba(255,255,0,0.3); }
 
         canvas#arcadeCanvas {
-            background: #02040b; border: 3px solid #00ffcc; border-radius: 20px;
-            width: 100%; height: auto; aspect-ratio: 1/1;
+            background: #01030a; border: 3px solid #00ffcc; border-radius: 24px;
+            width: 100%; height: auto; aspect-ratio: 1/1; display: block;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.2);
         }
 
-        .console-controls { display: none; flex-direction: column; align-items: center; gap: 5px; margin-top: 15px; }
-        .dpad-row { display: flex; gap: 35px; }
+        .console-controls { display: none; flex-direction: column; align-items: center; gap: 8px; margin-top: 20px; width: 100%; }
+        .dpad-row { display: flex; gap: 40px; align-items: center; }
         .ctrl-btn {
-            width: 62px; height: 62px; background: #131c3d; color: #00ffcc; border: 2px solid #1f2f6c;
-            font-size: 1.5rem; font-weight: bold; border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; cursor: pointer; -webkit-tap-highlight-color: transparent;
+            width: 66px; height: 66px; background: linear-gradient(135deg, #162452 0%, #0d1633 100%); 
+            color: #00ffcc; border: 2px solid #253b80; font-size: 1.6rem; font-weight: bold; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; box-shadow: 0 6px 12px rgba(0,0,0,0.4); -webkit-tap-highlight-color: transparent;
         }
-        .ctrl-btn:active { background: #00ffcc; color: #000; border-color: #00ffcc; }
+        .ctrl-btn:active { background: #00ffcc; color: #01030a; border-color: #00ffcc; box-shadow: 0 0 20px #00ffcc; }
+        
         .shoot-action-btn {
-            width: 170px; height: 50px; background: linear-gradient(90deg, #ff2a00, #ff0066);
-            color: white; border: none; font-weight: 900; border-radius: 25px; font-size: 1.2rem;
-            margin-top: 10px; cursor: pointer;
+            width: 180px; height: 52px; background: linear-gradient(90deg, #ff2a00, #ff0066);
+            color: white; border: none; font-weight: 900; border-radius: 26px; font-size: 1.25rem;
+            margin-top: 12px; cursor: pointer; box-shadow: 0 6px 20px rgba(255,42,0,0.4); letter-spacing: 0.5px;
         }
+        .shoot-action-btn:active { transform: scale(0.95); background: #ff0055; }
     </style>
 </head>
 <body>
@@ -88,7 +91,7 @@
             <div class="game-card">
                 <div class="card-info">
                     <span class="card-title">Neon Snake 3D</span>
-                    <span class="card-subtitle">Retro Nibble Arcade Mode</span>
+                    <span class="card-subtitle">Retro Nibble Mode</span>
                 </div>
                 <button class="play-btn" onclick="launchGame(1)">PLAY</button>
             </div>
@@ -96,7 +99,7 @@
             <div class="game-card">
                 <div class="card-info">
                     <span class="card-title">Asphalt Nitro Pro</span>
-                    <span class="card-subtitle">2D Hyper Cyber Racer</span>
+                    <span class="card-subtitle">2D Cyber Racer</span>
                 </div>
                 <button class="play-btn" onclick="launchGame(2)">PLAY</button>
             </div>
@@ -104,7 +107,7 @@
             <div class="game-card">
                 <div class="card-info">
                     <span class="card-title">Diamond Block Blast</span>
-                    <span class="card-subtitle">Classic Falling Puzzle Grid</span>
+                    <span class="card-subtitle">Classic Grid Puzzle</span>
                 </div>
                 <button class="play-btn" onclick="launchGame(3)">PLAY</button>
             </div>
@@ -112,7 +115,7 @@
             <div class="game-card">
                 <div class="card-info">
                     <span class="card-title">Squad Survival 2D</span>
-                    <span class="card-subtitle">Alpha Laser Bullet Shooter</span>
+                    <span class="card-subtitle">Laser Bullet Shooter</span>
                 </div>
                 <button class="play-btn" onclick="launchGame(4)">PLAY</button>
             </div>
@@ -120,7 +123,7 @@
             <div class="game-card">
                 <div class="card-info">
                     <span class="card-title">Moto Hill Overdrive</span>
-                    <span class="card-subtitle">Physics Side Hill Climber</span>
+                    <span class="card-subtitle">Physics Hill Climber</span>
                 </div>
                 <button class="play-btn" onclick="launchGame(5)">PLAY</button>
             </div>
@@ -164,7 +167,7 @@
                 let vol = soundEngine.createGain();
                 osc.type = type; osc.frequency.value = f;
                 osc.connect(vol); vol.connect(soundEngine.destination);
-                osc.start(); vol.gain.setValueAtTime(0.15, soundEngine.currentTime);
+                osc.start(); vol.gain.setValueAtTime(0.08, soundEngine.currentTime);
                 vol.gain.exponentialRampToValueAtTime(0.00001, soundEngine.currentTime + d);
                 osc.stop(soundEngine.currentTime + d);
             } catch(e){}
@@ -173,7 +176,7 @@
         function refreshGlobalBest() {
             let maxScore = 0;
             for(let i=1; i<=5; i++) {
-                let val = localStorage.getItem('arcade_v2_best_' + i) || 0;
+                let val = localStorage.getItem('arcade_v4_best_' + i) || 0;
                 if(parseInt(val) > maxScore) maxScore = val;
             }
             let el = document.getElementById('bestAllTime');
@@ -182,9 +185,9 @@
 
         function syncScore() {
             document.getElementById('hudScore').innerText = score;
-            let currentBest = localStorage.getItem('arcade_v2_best_' + currentGame) || 0;
+            let currentBest = localStorage.getItem('arcade_v4_best_' + currentGame) || 0;
             if (score > parseInt(currentBest)) {
-                localStorage.setItem('arcade_v2_best_' + currentGame, score);
+                localStorage.setItem('arcade_v4_best_' + currentGame, score);
             }
         }
 
@@ -196,12 +199,13 @@
             
             currentGame = id; score = 0; objects = []; bullets = []; particles = [];
             syncScore();
+            triggerSound(520, 'sine', 0.08);
 
             if(id === 1) {
-                document.getElementById('hudTitle').innerText = "Neon Snake 3D";
+                document.getElementById('hudTitle').innerText = "Neon Snake";
                 snake = [{x:200, y:200}, {x:180, y:200}, {x:160, y:200}]; food = {x:100, y:100}; sDx = 20; sDy = 0;
             } else if(id === 2) {
-                document.getElementById('hudTitle').innerText = "Asphalt Nitro Pro";
+                document.getElementById('hudTitle').innerText = "Asphalt Nitro";
                 pX = 200; pY = 340;
             } else if(id === 3) {
                 document.getElementById('hudTitle').innerText = "Block Blast";
@@ -239,33 +243,34 @@
         function handlePad(dir) {
             if(!currentGame) return;
             if(currentGame === 1) {
-                if(dir==='LEFT' && sDx===0) { sDx = -20; sDy = 0; triggerSound(300, 'square', 0.04); }
-                if(dir==='RIGHT' && sDx===0) { sDx = 20; sDy = 0; triggerSound(300, 'square', 0.04); }
-                if(dir==='UP' && sDy===0) { sDx = 0; sDy = -20; triggerSound(300, 'square', 0.04); }
-                if(dir==='DOWN' && sDy===0) { sDx = 0; sDy = 20; triggerSound(300, 'square', 0.04); }
+                if(dir==='LEFT' && sDx===0) { sDx = -20; sDy = 0; triggerSound(350, 'sine', 0.03); }
+                if(dir==='RIGHT' && sDx===0) { sDx = 20; sDy = 0; triggerSound(350, 'sine', 0.03); }
+                if(dir==='UP' && sDy===0) { sDx = 0; sDy = -20; triggerSound(350, 'sine', 0.03); }
+                if(dir==='DOWN' && sDy===0) { sDx = 0; sDy = 20; triggerSound(350, 'sine', 0.03); }
             } else if(currentGame === 5) {
-                if((dir==='UP' || dir==='RIGHT') && hillBikeY === 280) { hillBikeVy = -11; triggerSound(180, 'sawtooth', 0.1); }
+                if((dir==='UP' || dir==='RIGHT') && hillBikeY === 280) { hillBikeVy = -11.5; triggerSound(200, 'sawtooth', 0.08); }
             } else {
-                if(dir==='LEFT') pX = Math.max(30, pX - 20);
-                if(dir==='RIGHT') pX = Math.min(370, pX + 20);
-                if(dir==='UP' && currentGame === 4) pY = Math.max(160, pY - 20);
-                if(dir==='DOWN' && currentGame === 4) pY = Math.min(360, pY + 20);
+                if(dir==='LEFT') pX = Math.max(30, pX - 25);
+                if(dir==='RIGHT') pX = Math.min(370, pX + 25);
+                if(dir==='UP' && currentGame === 4) pY = Math.max(160, pY - 25);
+                if(dir==='DOWN' && currentGame === 4) pY = Math.min(360, pY + 25);
+                triggerSound(400, 'sine', 0.02);
             }
         }
 
         function handleAction() {
-            if(currentGame === 4) { bullets.push({x: pX, y: pY - 20}); triggerSound(700, 'triangle', 0.05); }
+            if(currentGame === 4) { bullets.push({x: pX, y: pY - 20}); triggerSound(650, 'triangle', 0.04); }
         }
 
         function triggerBlast(x, y, color) {
-            for(let i=0; i<10; i++) {
+            for(let i=0; i<12; i++) {
                 particles.push({x:x, y:y, dx:(Math.random()-0.5)*6, dy:(Math.random()-0.5)*6, r:Math.random()*2.5+1, a:1, c:color});
             }
         }
 
         function triggerGameOver() {
-            triggerSound(90, 'sawtooth', 0.4);
-            alert(`🎮 Match Concluded!\nYour Score: ${score}`);
+            triggerSound(100, 'sawtooth', 0.3);
+            alert(`🎮 Match Concluded!\nScore: ${score}`);
             closeGame();
         }
 
@@ -273,12 +278,14 @@
             if(!currentGame) return;
             ctx.fillStyle = '#030612'; ctx.fillRect(0,0,400,400);
 
-            ctx.strokeStyle = 'rgba(0,255,204,0.03)'; ctx.lineWidth = 1;
+            // Futuristic Neon Grid Layout
+            ctx.strokeStyle = 'rgba(0,255,204,0.04)'; ctx.lineWidth = 1;
             for(let i=0; i<=400; i+=20) {
                 ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,400); ctx.stroke();
                 ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(400,i); ctx.stroke();
             }
 
+            // Explosion Effect Processor
             particles.forEach((p, i) => {
                 p.x += p.dx; p.y += p.dy; p.a -= 0.04;
                 ctx.save(); ctx.globalAlpha = p.a; ctx.fillStyle = p.c;
@@ -286,53 +293,58 @@
                 if(p.a <= 0) particles.splice(i, 1);
             });
 
+            // 1. NEON SNAKE
             if(currentGame === 1) {
-                if(timestamp - snakeTimer > 120) {
+                if(timestamp - snakeTimer > 115) {
                     let h = {x: snake[0].x + sDx, y: snake[0].y + sDy};
                     if(h.x < 10 || h.x >= 390 || h.y < 10 || h.y >= 390 || snake.some(s=>s.x===h.x && s.y===h.y)) { triggerGameOver(); return; }
                     snake.unshift(h);
                     if(Math.abs(h.x - food.x) < 15 && Math.abs(h.y - food.y) < 15) {
-                        score += 10; syncScore(); triggerSound(800, 'sine', 0.06); triggerBlast(food.x, food.y, '#ff00aa');
+                        score += 10; syncScore(); triggerSound(880, 'sine', 0.05); triggerBlast(food.x, food.y, '#ff00aa');
                         food = {x: Math.floor(Math.random()*18)*20+20, y: Math.floor(Math.random()*18)*20+20};
                     } else { snake.pop(); }
                     snakeTimer = timestamp;
                 }
-                ctx.fillStyle = '#ff0077'; ctx.beginPath(); ctx.arc(food.x, food.y, 7, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = '#ff0077'; ctx.shadowBlur = 10; ctx.shadowColor = '#ff0077';
+                ctx.beginPath(); ctx.arc(food.x, food.y, 7, 0, Math.PI*2); ctx.fill(); ctx.shadowBlur = 0;
                 snake.forEach((s, idx) => { ctx.fillStyle = idx===0?'#00ffcc':'#00aa99'; ctx.fillRect(s.x-8, s.y-8, 16, 16); });
             }
             
+            // 2. ASPHALT NITRO RACER
             else if(currentGame === 2) {
-                if(Math.random() < 0.04) objects.push({x:Math.random()*200+100, y:-40, spd:Math.random()*2+5});
+                if(Math.random() < 0.05) objects.push({x:Math.random()*200+100, y:-40, spd:Math.random()*2.5+5.5});
                 ctx.fillStyle = '#0b1026'; ctx.fillRect(80, 0, 240, 400);
                 ctx.fillStyle = '#ff00aa'; ctx.fillRect(pX-12, pY-20, 24, 40);
                 ctx.fillStyle = '#00ffcc'; ctx.fillRect(pX-10, pY-12, 20, 8); 
 
                 objects.forEach((o, i) => {
                     o.y += o.spd; ctx.fillStyle = '#3366ff'; ctx.fillRect(o.x-12, o.y-20, 24, 40);
-                    if(o.y > 440) { objects.splice(i,1); score += 10; syncScore(); triggerSound(400, 'sine', 0.03); }
+                    if(o.y > 440) { objects.splice(i,1); score += 10; syncScore(); triggerSound(450, 'sine', 0.02); }
                     if(Math.abs(pX - o.x) < 22 && Math.abs(pY - o.y) < 35) { triggerBlast(o.x, o.y, '#ff0055'); triggerGameOver(); }
                 });
             }
 
+            // 3. DIAMOND BLOCK BLAST
             else if(currentGame === 3) {
-                if(Math.random() < 0.06) objects.push({x:Math.random()*340+30, y:-20, spd:4});
-                ctx.fillStyle = '#00ffcc'; ctx.fillRect(pX-30, pY-8, 60, 16);
+                if(Math.random() < 0.07) objects.push({x:Math.random()*340+30, y:-20, spd:4.5});
+                ctx.fillStyle = '#00ffcc'; ctx.fillRect(pX-32, pY-8, 64, 16);
 
                 objects.forEach((o, i) => {
                     o.y += o.spd; ctx.fillStyle = '#ffaa00'; ctx.fillRect(o.x-10, o.y-10, 20, 20);
                     if(o.y > 420) { triggerBlast(o.x, 390, '#ff3300'); triggerGameOver(); }
-                    if(Math.abs(pX - o.x) < 40 && Math.abs(pY - o.y) < 16) {
-                        triggerBlast(o.x, o.y, '#00ffff'); objects.splice(i,1); score += 10; syncScore(); triggerSound(900, 'sine', 0.04);
+                    if(Math.abs(pX - o.x) < 42 && Math.abs(pY - o.y) < 16) {
+                        triggerBlast(o.x, o.y, '#00ffff'); objects.splice(i,1); score += 10; syncScore(); triggerSound(950, 'sine', 0.03);
                     }
                 });
             }
 
+            // 4. SQUAD SURVIVAL
             else if(currentGame === 4) {
-                if(Math.random() < 0.05) objects.push({x:Math.random()*340+30, y:-20, spd:2.5});
+                if(Math.random() < 0.06) objects.push({x:Math.random()*340+30, y:-20, spd:3});
                 ctx.fillStyle = '#00ffcc'; ctx.beginPath(); ctx.moveTo(pX, pY-18); ctx.lineTo(pX-14, pY+12); ctx.lineTo(pX+14, pY+12); ctx.closePath(); ctx.fill();
 
                 bullets.forEach((b, bi) => {
-                    b.y -= 10; ctx.fillStyle = '#ff0055'; ctx.fillRect(b.x-2, b.y-6, 4, 12);
+                    b.y -= 12; ctx.fillStyle = '#ff0055'; ctx.fillRect(b.x-2, b.y-6, 4, 12);
                     if(b.y < 0) bullets.splice(bi, 1);
                 });
 
@@ -341,16 +353,17 @@
                     if(o.y > 410 || (Math.abs(pX - o.x) < 24 && Math.abs(pY - o.y) < 24)) { triggerBlast(o.x, o.y, '#ff3300'); triggerGameOver(); }
                     bullets.forEach((b, bi) => {
                         if(Math.abs(b.x - o.x) < 18 && Math.abs(b.y - o.y) < 18) {
-                            triggerBlast(o.x, o.y, '#ffaa00'); objects.splice(oi,1); bullets.splice(bi,1); score += 20; syncScore(); triggerSound(550, 'square', 0.04);
+                            triggerBlast(o.x, o.y, '#ffaa00'); objects.splice(oi,1); bullets.splice(bi,1); score += 20; syncScore(); triggerSound(600, 'square', 0.03);
                         }
                     });
                 });
             }
 
+            // 5. MOTO HILL OVERDRIVE
             else if(currentGame === 5) {
-                hillBikeVy += 0.55; hillBikeY += hillBikeVy;
+                hillBikeVy += 0.58; hillBikeY += hillBikeVy;
                 if(hillBikeY > 280) { hillBikeY = 280; hillBikeVy = 0; }
-                if(Math.random() < 0.03) objects.push({x:430, y:285});
+                if(Math.random() < 0.035) objects.push({x:430, y:285});
 
                 ctx.fillStyle = '#0e132c'; ctx.fillRect(0, 300, 400, 100);
                 ctx.strokeStyle = '#00ffcc'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(0,300); ctx.lineTo(400,300); ctx.stroke();
@@ -359,17 +372,5 @@
                 ctx.fillRect(pX-10, hillBikeY-5, 20, 10);
 
                 objects.forEach((o, i) => {
-                    o.x -= 6; ctx.fillStyle = '#ff3300';
-                    ctx.beginPath(); ctx.moveTo(o.x, o.y+15); ctx.lineTo(o.x-10, o.y-8); ctx.lineTo(o.x+10, o.y-8); ctx.closePath(); ctx.fill();
-                    if(o.x < -30) { objects.splice(i,1); score += 15; syncScore(); triggerSound(700, 'sine', 0.04); }
-                    if(Math.abs(pX - o.x) < 24 && Math.abs(hillBikeY - o.y) < 20) { triggerBlast(pX, hillBikeY, '#ff0000'); triggerGameOver(); }
-                });
-            }
-
-            loopRef = requestAnimationFrame(engineLoop);
-        }
-
-        window.onload = refreshGlobalBest;
-    </script>
-</body>
-</html>
+                    o.x -= 6.5; ctx.fillStyle = '#ff3300';
+                    ctx.beginPath(); ctx.moveTo(o.x, o.y+15); ctx.lineTo(o.x-10, o.y-8); ctx.lineTo(o.x+10, o.y-8); c
