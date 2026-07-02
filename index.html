@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mega Arcade Pro - Widescreen 16:9 Fixed</title>
+    <title>Mega Arcade Pro - 16:9 100% Fixed</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; touch-action: none; }
         body {
@@ -14,6 +14,7 @@
             user-select: none; -webkit-user-select: none;
         }
         
+        /* 16:9 Responsive Console Wrapper */
         .arcade-wrapper {
             width: 95vw; max-width: 960px; 
             aspect-ratio: 16/9;
@@ -24,8 +25,9 @@
             position: relative;
         }
 
+        /* SCREEN VISIBILITY FIXED (CRITICAL) */
         .screen { display: none; flex-direction: column; width: 100%; height: 100%; justify-content: center; align-items: center; }
-        .active-screen { display: flex; }
+        .screen.active-screen { display: flex !important; }
 
         .main-title {
             font-size: 2.8rem; font-weight: 900; text-align: center; margin-bottom: 5px;
@@ -370,5 +372,4 @@
                 snake.forEach((s, idx) => { ctx.fillStyle = idx===0?'#00ffcc':'#00aa99'; ctx.fillRect(s.x-8, s.y-8, 16, 16); });
             }
             
-            else if(currentGame === 2) {
-                if(Math.random() < obstacleSpawnRate) objects.push({x:Math.random()*20
+            else if(
