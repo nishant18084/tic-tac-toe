@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mega Arcade Pro - 16:9 Cinematic Edition</title>
+    <title>Mega Arcade Pro - Widescreen 16:9 Fixed</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; touch-action: none; }
         body {
@@ -14,7 +14,6 @@
             user-select: none; -webkit-user-select: none;
         }
         
-        /* 16:9 Responsive Console Wrapper */
         .arcade-wrapper {
             width: 95vw; max-width: 960px; 
             aspect-ratio: 16/9;
@@ -25,50 +24,50 @@
             position: relative;
         }
 
-        .screen { display: none; flex-direction: column; width: 100%; height: 100%; justify-content: center; }
+        .screen { display: none; flex-direction: column; width: 100%; height: 100%; justify-content: center; align-items: center; }
         .active-screen { display: flex; }
 
         .main-title {
             font-size: 2.8rem; font-weight: 900; text-align: center; margin-bottom: 5px;
             background: linear-gradient(90deg, #00ffcc, #00aaff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-shadow: 0 0 20px rgba(0,255,204,0.4); letter-spacing: 2px;
+            width: 100%;
         }
 
         /* START SCREEN */
-        #startView { align-items: center; gap: 25px; }
+        #startView { gap: 25px; }
         .big-start-btn {
             background: linear-gradient(90deg, #00ffcc, #00aaff); color: #020510;
             padding: 16px 50px; font-size: 1.5rem; font-weight: 900; border: none;
             border-radius: 50px; cursor: pointer; box-shadow: 0 0 25px rgba(0,255,204,0.4);
-            transition: transform 0.2s;
         }
-        .big-start-btn:active { transform: scale(0.95); }
 
-        /* GAME SELECTION MENU (2 COLUMNS FOR 16:9) */
-        #menuView { justify-content: flex-start; }
+        /* GAME SELECTION MENU */
+        #menuView { justify-content: flex-start; align-items: center; }
         .menu-layout {
             display: grid; grid-template-columns: 1fr 1fr; gap: 12px; 
-            max-height: 280px; overflow-y: auto; padding-right: 5px;
+            width: 100%; max-height: 260px; overflow-y: auto; padding: 5px;
         }
         .alltime-badge {
-            align-self: center; background: rgba(255, 0, 128, 0.15); border: 1px solid #ff0077;
+            background: rgba(255, 0, 128, 0.15); border: 1px solid #ff0077;
             padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: 800;
-            color: #ff3399; margin-bottom: 15px;
+            color: #ff3399; margin-bottom: 15px; text-align: center;
         }
         .game-card {
             background: linear-gradient(135deg, #121b44 0%, #080d24 100%);
             border: 2px solid #20337a; border-radius: 16px; padding: 12px 16px;
             display: flex; justify-content: space-between; align-items: center;
         }
+        .card-info { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; }
         .card-title { font-size: 1.1rem; font-weight: 800; color: #ffffff; }
         .card-subtitle { font-size: 0.7rem; color: #8196e6; }
         .play-btn {
             background: linear-gradient(90deg, #ff0055, #ff00aa); color: white;
-            padding: 8px 16px; font-size: 0.85rem; font-weight: 900; border: none; border-radius: 10px;
+            padding: 8px 16px; font-size: 0.85rem; font-weight: 900; border: none; border-radius: 10px; cursor: pointer;
         }
 
         /* DIFFICULTY SELECTION */
-        #difficultyView { align-items: center; gap: 15px; }
+        #difficultyView { gap: 15px; }
         .diff-container { display: flex; gap: 20px; width: 80%; justify-content: center; }
         .diff-btn {
             flex: 1; max-width: 180px; padding: 15px; font-size: 1.1rem; font-weight: 900;
@@ -80,12 +79,12 @@
 
         /* WIDESCREEN GAMEPLAY LAYOUT */
         #gameView { flex-direction: row; gap: 20px; align-items: center; justify-content: space-between; }
-        .game-left-panel { flex: 1; display: flex; flex-direction: column; height: 100%; justify-content: space-between; }
+        .game-left-panel { flex: 1; display: flex; flex-direction: column; height: 100%; justify-content: space-between; align-items: flex-start; }
         .game-main-area { display: flex; justify-content: center; align-items: center; }
         
         canvas#arcadeCanvas {
             background: #01030a; border: 3px solid #00ffcc; border-radius: 16px;
-            height: 72vw; max-height: 380px; aspect-ratio: 1/1; display: block;
+            height: 340px; width: 340px; display: block;
             box-shadow: 0 0 25px rgba(0, 255, 204, 0.2);
         }
 
@@ -94,18 +93,18 @@
         .game-tag-title { font-size: 1.5rem; font-weight: 800; color: #00ffcc; }
         .live-score { font-size: 1.3rem; font-weight: bold; color: #ffff00; }
 
-        /* Side Controls for Landscape Mode */
+        /* Side Controls */
         .console-controls { display: none; flex-direction: column; align-items: center; gap: 10px; }
         .dpad-row { display: flex; gap: 30px; }
         .ctrl-btn {
             width: 58px; height: 58px; background: linear-gradient(135deg, #162452 0%, #0d1633 100%); 
             color: #00ffcc; border: 2px solid #253b80; font-size: 1.4rem; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
         .ctrl-btn:active { background: #00ffcc; color: #01030a; }
         .shoot-action-btn {
             width: 130px; height: 48px; background: linear-gradient(90deg, #ff2a00, #ff0066);
-            color: white; border: none; font-weight: 900; border-radius: 24px; font-size: 1.1rem;
+            color: white; border: none; font-weight: 900; border-radius: 24px; font-size: 1.1rem; cursor: pointer;
         }
     </style>
 </head>
@@ -249,7 +248,6 @@
             loopRef = requestAnimationFrame(engineLoop);
         }
 
-        // Tic Tac Toe Tap System Fixed
         canvas.addEventListener('click', function(e) {
             if(currentGame !== 0 || tttGameOver) return;
             const rect = canvas.getBoundingClientRect();
@@ -262,7 +260,7 @@
             let row = Math.floor(y / 133);
             let index = row * 3 + col;
 
-            if(tttGrid[index] === "" && tttTurn === "X") {
+            if(index >= 0 && index < 9 && tttGrid[index] === "" && tttTurn === "X") {
                 tttGrid[index] = "X";
                 checkTTTState();
                 if(!tttGameOver) {
@@ -318,7 +316,7 @@
                 if(activeDir==='LEFT') pX = Math.max(30, pX - 15);
                 if(activeDir==='RIGHT') pX = Math.min(370, pX + 15);
                 if(activeDir==='UP' && currentGame === 4) pY = Math.max(160, pY - 15);
-                if(activeDir==='DOWN' && currentGame === 4) pY = Math.min(360, pY - 15);
+                if(activeDir==='DOWN' && currentGame === 4) pY = Math.min(360, pY + 15);
             }
         }
 
@@ -373,4 +371,4 @@
             }
             
             else if(currentGame === 2) {
-                if(Math.random() < obstacleSpawnRate) objects.push({x:
+                if(Math.random() < obstacleSpawnRate) objects.push({x:Math.random()*20
