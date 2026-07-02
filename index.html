@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mega Arcade Pro - 16:9 100% Fixed</title>
+    <title>Mega Arcade Pro - Mobile & PC Edition</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; touch-action: none; }
         body {
@@ -14,26 +14,25 @@
             user-select: none; -webkit-user-select: none;
         }
         
-        /* 16:9 Responsive Console Wrapper */
+        /* Universal Responsive Console Wrapper */
         .arcade-wrapper {
             width: 95vw; max-width: 960px; 
-            aspect-ratio: 16/9;
+            height: 90vh; max-height: 540px;
             background: linear-gradient(180deg, #090f26 0%, #050917 100%);
-            border: 4px solid #1c2e6e; border-radius: 24px; padding: 20px;
+            border: 4px solid #1c2e6e; border-radius: 24px; padding: 15px;
             box-shadow: 0 25px 60px rgba(0,0,0,0.9), inset 0 0 30px rgba(0,255,204,0.1);
             display: flex; flex-direction: column; justify-content: space-between;
-            position: relative;
+            position: relative; overflow: hidden;
         }
 
-        /* SCREEN VISIBILITY FIXED (CRITICAL) */
+        /* SCREEN VISIBILITY */
         .screen { display: none; flex-direction: column; width: 100%; height: 100%; justify-content: center; align-items: center; }
         .screen.active-screen { display: flex !important; }
 
         .main-title {
-            font-size: 2.8rem; font-weight: 900; text-align: center; margin-bottom: 5px;
+            font-size: 2.2rem; font-weight: 900; text-align: center; margin-bottom: 10px;
             background: linear-gradient(90deg, #00ffcc, #00aaff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0,255,204,0.4); letter-spacing: 2px;
-            width: 100%;
+            text-shadow: 0 0 20px rgba(0,255,204,0.4); letter-spacing: 2px; width: 100%;
         }
 
         /* START SCREEN */
@@ -44,69 +43,80 @@
             border-radius: 50px; cursor: pointer; box-shadow: 0 0 25px rgba(0,255,204,0.4);
         }
 
-        /* GAME SELECTION MENU */
+        /* GAME SELECTION MENU (Responsive Grid) */
         #menuView { justify-content: flex-start; align-items: center; }
         .menu-layout {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 12px; 
-            width: 100%; max-height: 260px; overflow-y: auto; padding: 5px;
+            display: grid; grid-template-columns: 1fr; gap: 10px; 
+            width: 100%; max-height: 70%; overflow-y: auto; padding: 5px;
         }
+        @media(min-width: 600px) { .menu-layout { grid-template-columns: 1fr 1fr; } }
+        
         .alltime-badge {
             background: rgba(255, 0, 128, 0.15); border: 1px solid #ff0077;
-            padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: 800;
-            color: #ff3399; margin-bottom: 15px; text-align: center;
+            padding: 4px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 800;
+            color: #ff3399; margin-bottom: 10px; text-align: center;
         }
         .game-card {
             background: linear-gradient(135deg, #121b44 0%, #080d24 100%);
-            border: 2px solid #20337a; border-radius: 16px; padding: 12px 16px;
+            border: 2px solid #20337a; border-radius: 16px; padding: 10px 15px;
             display: flex; justify-content: space-between; align-items: center;
         }
         .card-info { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; }
-        .card-title { font-size: 1.1rem; font-weight: 800; color: #ffffff; }
+        .card-title { font-size: 1rem; font-weight: 800; color: #ffffff; }
         .card-subtitle { font-size: 0.7rem; color: #8196e6; }
         .play-btn {
             background: linear-gradient(90deg, #ff0055, #ff00aa); color: white;
-            padding: 8px 16px; font-size: 0.85rem; font-weight: 900; border: none; border-radius: 10px; cursor: pointer;
+            padding: 6px 14px; font-size: 0.8rem; font-weight: 900; border: none; border-radius: 10px; cursor: pointer;
         }
 
         /* DIFFICULTY SELECTION */
         #difficultyView { gap: 15px; }
-        .diff-container { display: flex; gap: 20px; width: 80%; justify-content: center; }
+        .diff-container { display: flex; flex-direction: column; gap: 10px; width: 80%; justify-content: center; }
+        @media(min-width: 500px) { .diff-container { flex-direction: row; } }
         .diff-btn {
-            flex: 1; max-width: 180px; padding: 15px; font-size: 1.1rem; font-weight: 900;
+            flex: 1; padding: 12px; font-size: 1rem; font-weight: 900;
             border: none; border-radius: 14px; color: white; cursor: pointer;
         }
         .easy-btn { background: linear-gradient(90deg, #00ff88, #00aa55); }
         .normal-btn { background: linear-gradient(90deg, #ffaa00, #d47a00); }
         .hard-btn { background: linear-gradient(90deg, #ff0055, #cc0044); }
 
-        /* WIDESCREEN GAMEPLAY LAYOUT */
-        #gameView { flex-direction: row; gap: 20px; align-items: center; justify-content: space-between; }
-        .game-left-panel { flex: 1; display: flex; flex-direction: column; height: 100%; justify-content: space-between; align-items: flex-start; }
-        .game-main-area { display: flex; justify-content: center; align-items: center; }
+        /* FLEXIBLE GAMEPLAY LAYOUT */
+        #gameView { flex-direction: column; gap: 10px; align-items: center; justify-content: space-between; }
+        @media(min-width: 700px) { #gameView { flex-direction: row; } }
+
+        .game-left-panel { display: flex; width: 100%; justify-content: space-between; align-items: center; }
+        @media(min-width: 700px) { .game-left-panel { flex-direction: column; height: 100%; width: auto; align-items: flex-start; } }
+
+        .hud-bar { display: flex; gap: 10px; align-items: center; }
+        @media(min-width: 700px) { .hud-bar { flex-direction: column; align-items: flex-start; gap: 15px; } }
+
+        .back-btn { padding: 6px 12px; font-size: 0.8rem; font-weight: 800; border-radius: 10px; border: 1px solid #ff0055; background: rgba(255,0,85,0.15); color: #ff4588; cursor: pointer; }
+        .game-tag-title { font-size: 1.2rem; font-weight: 800; color: #00ffcc; }
+        .live-score { font-size: 1.1rem; font-weight: bold; color: #ffff00; }
+
+        .game-main-area { display: flex; justify-content: center; align-items: center; max-height: 55%; }
         
         canvas#arcadeCanvas {
             background: #01030a; border: 3px solid #00ffcc; border-radius: 16px;
-            height: 340px; width: 340px; display: block;
+            max-height: 260px; aspect-ratio: 1/1; display: block;
             box-shadow: 0 0 25px rgba(0, 255, 204, 0.2);
         }
 
-        .hud-bar { display: flex; flex-direction: column; gap: 15px; align-items: flex-start; }
-        .back-btn { padding: 8px 16px; font-size: 0.9rem; font-weight: 800; border-radius: 10px; border: 1px solid #ff0055; background: rgba(255,0,85,0.15); color: #ff4588; cursor: pointer; }
-        .game-tag-title { font-size: 1.5rem; font-weight: 800; color: #00ffcc; }
-        .live-score { font-size: 1.3rem; font-weight: bold; color: #ffff00; }
+        /* Responsive Controls */
+        .console-controls { display: none; flex-direction: row; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+        @media(min-width: 700px) { .console-controls { flex-direction: column; width: auto; } }
 
-        /* Side Controls */
-        .console-controls { display: none; flex-direction: column; align-items: center; gap: 10px; }
-        .dpad-row { display: flex; gap: 30px; }
+        .dpad-row { display: flex; gap: 5px; }
         .ctrl-btn {
-            width: 58px; height: 58px; background: linear-gradient(135deg, #162452 0%, #0d1633 100%); 
-            color: #00ffcc; border: 2px solid #253b80; font-size: 1.4rem; border-radius: 50%;
+            width: 44px; height: 44px; background: linear-gradient(135deg, #162452 0%, #0d1633 100%); 
+            color: #00ffcc; border: 2px solid #253b80; font-size: 1.1rem; border-radius: 50%;
             display: flex; align-items: center; justify-content: center; cursor: pointer;
         }
         .ctrl-btn:active { background: #00ffcc; color: #01030a; }
         .shoot-action-btn {
-            width: 130px; height: 48px; background: linear-gradient(90deg, #ff2a00, #ff0066);
-            color: white; border: none; font-weight: 900; border-radius: 24px; font-size: 1.1rem; cursor: pointer;
+            padding: 10px 20px; background: linear-gradient(90deg, #ff2a00, #ff0066);
+            color: white; border: none; font-weight: 900; border-radius: 20px; font-size: 0.9rem; cursor: pointer;
         }
     </style>
 </head>
@@ -133,7 +143,7 @@
         </div>
 
         <div class="screen" id="difficultyView">
-            <div class="main-title" style="font-size:2rem;">SELECT DIFFICULTY</div>
+            <div class="main-title" style="font-size:1.8rem;">DIFFICULTY</div>
             <div class="diff-container">
                 <button class="diff-btn easy-btn" onclick="launchGame('easy')">EASY</button>
                 <button class="diff-btn normal-btn" onclick="launchGame('normal')">NORMAL</button>
@@ -155,12 +165,10 @@
             </div>
 
             <div class="console-controls" id="padConsole">
+                <button class="ctrl-btn" onmousedown="startMove('LEFT')" ontouchstart="startMove('LEFT')">◀</button>
                 <button class="ctrl-btn" onmousedown="startMove('UP')" ontouchstart="startMove('UP')">▲</button>
-                <div class="dpad-row">
-                    <button class="ctrl-btn" onmousedown="startMove('LEFT')" ontouchstart="startMove('LEFT')">◀</button>
-                    <button class="ctrl-btn" onmousedown="startMove('RIGHT')" ontouchstart="startMove('RIGHT')">▶</button>
-                </div>
                 <button class="ctrl-btn" onmousedown="startMove('DOWN')" ontouchstart="startMove('DOWN')">▼</button>
+                <button class="ctrl-btn" onmousedown="startMove('RIGHT')" ontouchstart="startMove('RIGHT')">▶</button>
                 <button class="shoot-action-btn" id="consoleActionBtn" style="display:none;" onmousedown="handleAction()" ontouchstart="handleAction()">💥 SHOOT</button>
             </div>
         </div>
@@ -282,26 +290,14 @@
             }
         }
 
-        function checkTTTState() {
-            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-            for(let combo of wins) {
-                if(tttGrid[combo[0]] && tttGrid[combo[0]] === tttGrid[combo[1]] && tttGrid[combo[0]] === tttGrid[combo[2]]) {
-                    tttGameOver = true;
-                    if(tttGrid[combo[0]] === "X") { score = 100; syncScore(); triggerGameOver("You Defeated AI! +100"); }
-                    else { triggerGameOver("AI Won!"); }
-                    return;
-                }
-            }
-            if(!tttGrid.includes("")) { tttGameOver = true; score = 30; syncScore(); triggerGameOver("Draw Match! +30"); }
-        }
+        document.addEventListener('mouseup', () => clearInterval(moveInterval));
+        document.addEventListener('touchend', () => clearInterval(moveInterval));
 
         function startMove(dir) {
             activeDir = dir; executeMove();
             if(moveInterval) clearInterval(moveInterval);
             moveInterval = setInterval(executeMove, 50);
         }
-        window.addEventListener('mouseup', () => clearInterval(moveInterval));
-        window.addEventListener('touchend', () => clearInterval(moveInterval));
 
         function executeMove() {
             if(!currentGame || !activeDir) return;
@@ -372,4 +368,6 @@
                 snake.forEach((s, idx) => { ctx.fillStyle = idx===0?'#00ffcc':'#00aa99'; ctx.fillRect(s.x-8, s.y-8, 16, 16); });
             }
             
-            else if(
+            else if(currentGame === 2) {
+                if(Math.random() < obstacleSpawnRate) objects.push({x:Math.random()*200+100, y:-40, spd:enemySpeed});
+                ctx.fillSty
