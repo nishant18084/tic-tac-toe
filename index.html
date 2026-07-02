@@ -162,3 +162,92 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Tic Tac Toe</title>
+    <style>
+        body { background: #0a0e29; color: white; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .box { width: 90vw; max-width: 340px; text-align: center; background: #12183a; padding: 20px; border-radius: 15px; border: 2px solid #00ffcc; }
+        h2 { color: #00ffcc; margin-bottom: 5px; }
+        #status { color: #ffff00; font-weight: bold; margin-bottom: 15px; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; background: #334477; padding: 5px; border-radius: 10px; }
+        .cell { background: #050714; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; font-weight: bold; cursor: pointer; min-height: 85px; }
+        .btn { background: #ff0077; color: white; border: none; padding: 10px 25px; font-size: 1rem; border-radius: 20px; cursor: pointer; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>TIC TAC TOE</h2>
+        <div id="status">Aapki Baari (X)</div>
+        
+        <div class="grid">
+            <div class="cell" onclick="tap(0)" id="c0"></div>
+            <div class="cell" onclick="tap(1)" id="c1"></div>
+            <div class="cell" onclick="tap(2)" id="c2"></div>
+            <div class="cell" onclick="tap(3)" id="c3"></div>
+            <div class="cell" onclick="tap(4)" id="c4"></div>
+            <div class="cell" onclick="tap(5)" id="c5"></div>
+            <div class="cell" onclick="tap(6)" id="c6"></div>
+            <div class="cell" onclick="tap(7)" id="c7"></div>
+            <div class="cell" onclick="tap(8)" id="c8"></div>
+        </div>
+        
+        <button class="btn" onclick="resetGame()">Reset Game</button>
+    </div>
+
+    <script>
+        let board = ["","","","","","","","",""];
+        let active = true;
+
+        function tap(i) {
+            if(board[i] !== "" || !active) return;
+            board[i] = "X";
+            document.getElementById('c'+i).innerText = "X";
+            document.getElementById('c'+i).style.color = "#00ffcc";
+            
+            if(!check()) {
+                active = false;
+                document.getElementById('status').innerText = "🤖 AI Soch raha hai...";
+                setTimeout(bot, 400);
+            }
+        }
+
+        function bot() {
+            let empty = board.map((v,idx) => v===""?idx:null).filter(v => v!==null);
+            if(empty.length > 0) {
+                let move = empty[Math.floor(Math.random() * empty.length)];
+                board[move] = "O";
+                document.getElementById('c'+move).innerText = "O";
+                document.getElementById('c'+move).style.color = "#ff0077";
+                check();
+                if(active) document.getElementById('status').innerText = "Aapki Baari (X)";
+            }
+        }
+
+        function check() {
+            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            for(let c of wins) {
+                if(board[c[0]] && board[c[0]]===board[c[1]] && board[c[0]]===board[c[2]]) {
+                    document.getElementById('status').innerText = board[c[0]] === "X" ? "🎉 Aap Jeet Gaye!" : "🤖 AI Jeet Gaya!";
+                    active = false;
+                    return true;
+                }
+            }
+            if(!board.includes("")) { document.getElementById('status').innerText = "🤝 Match Draw!"; active = false; return true; }
+            active = true;
+            return false;
+        }
+
+        function resetGame() {
+            board = ["","","","","","","","",""];
+            active = true;
+            document.getElementById('status').innerText = "Aapki Baari (X)";
+            for(let i=0; i<9; i++) document.getElementById('c'+i).innerText = "";
+        }
+    </script>
+</body>
+</html>
