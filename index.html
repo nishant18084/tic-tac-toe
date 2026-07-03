@@ -3,94 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Ultimate Gaming Hub</title>
+    <title>⚡ Ultimate Arcade Hub ⚡</title>
     <style>
+        /* Neon Cyberpunk Theme */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #0b0c10;
+            color: #c5c6c7;
             margin: 0;
-            padding: 20px;
-            text-align: center;
-        }
-        h1 { color: #00ff88; }
-        #searchBar {
-            padding: 10px;
-            width: 60%;
-            max-width: 400px;
-            border-radius: 5px;
-            border: none;
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-        .game-container {
+            padding: 0;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
+            flex-direction: column;
+            align-items: center;
         }
-        .game-card {
-            background-color: #1e1e1e;
-            padding: 15px;
-            border-radius: 8px;
-            cursor: pointer;
+        header {
+            width: 100%;
+            background: linear-gradient(135deg, #1f2833, #0b0c10);
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 3px solid #66fcf1;
+            box-shadow: 0px 4px 20px rgba(102, 252, 241, 0.3);
+        }
+        h1 {
+            color: #66fcf1;
+            margin: 0 0 15px 0;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px #66fcf1;
+        }
+        #searchBar {
+            padding: 12px 20px;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 25px;
+            border: 2px solid #45f3ff;
+            background-color: #1f2833;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
             transition: 0.3s;
-            border: 1px solid #333;
-            min-width: 120px;
         }
-        .game-card:hover {
-            background-color: #00ff88;
-            color: #000;
-            transform: scale(1.05);
+        #searchBar:focus {
+            box-shadow: 0 0 15px #45f3ff;
+        }
+        /* Game Arena (Iframe Container) */
+        #arenaContainer {
+            display: none;
+            width: 90%;
+            max-width: 960px;
+            margin: 20px 0;
+            background: #1f2833;
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px solid #66fcf1;
         }
         #gameScreen {
             width: 100%;
-            max-width: 800px;
-            height: 600px;
-            border: 2px solid #00ff88;
+            height: 550px;
+            border: none;
+            border-radius: 8px;
+        }
+        .close-btn {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 10px;
+            float: right;
+        }
+        /* Grid Layout for Thousands of Games */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            width: 90%;
+            max-width: 1200px;
+            padding: 30px 0;
+        }
+        .game-card {
+            background-color: #1f2833;
             border-radius: 10px;
-            display: none;
-            margin: 20px auto;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #45f3ff;
+            text-align: center;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(69, 243, 255, 0.5);
+        }
+        .game-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        .game-title {
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     </style>
 </head>
 <body>
 
-    <h1>🎮 My Gaming Hub 🎮</h1>
-    <input type="text" id="searchBar" placeholder="Search games..." onkeyup="searchGames()">
+    <header>
+        <h1>🎮 NEON ARCADE HUB 🎮</h1>
+        <input type="text" id="searchBar" placeholder="🔍 Hazaron games mein se apna pasandida game dhoondhein..." oninput="filterGames()">
+    </header>
 
-    <div class="game-container" id="gameList">
-        <div class="game-card" onclick="playGame('https://play.pacman.com/')">Pac-Man</div>
-        <div class="game-card" onclick="playGame('https://browsercraft.org/')">Minecraft (Clone)</div>
-        <div class="game-card" onclick="playGame('https://tetris.com/play-tetris')">Tetris</div>
-        <div class="game-card" onclick="playGame('https://2048game.com/')">2048</div>
+    <div id="arenaContainer">
+        <button class="close-btn" onclick="closeGame()">❌ Close Game</button>
+        <iframe id="gameScreen" src="" allowfullscreen></iframe>
     </div>
 
-    <iframe id="gameScreen" src="" frameborder="0" allowfullscreen></iframe>
+    <div class="game-grid" id="gameGrid">
+        <div style="color: #66fcf1; grid-column: 1/-1; text-align: center;">Games load ho rahe hain, kripya intezar karein...</div>
+    </div>
 
     <script>
-        // Game chalane ke liye function
-        function playGame(url) {
-            const iframe = document.getElementById('gameScreen');
-            iframe.src = url;
-            iframe.style.display = 'block';
-            window.scrollTo({ top: iframe.offsetTop, behavior: 'smooth' });
-        }
+        let allGames = [];
 
-        // Search karne ke liye function
-        function searchGames() {
-            let input = document.getElementById('searchBar').value.toLowerCase();
-            let cards = document.getElementsByClassName('game-card');
-            
-            for (let i = 0; i < cards.length; i++) {
-                if (cards[i].innerText.toLowerCase().includes(input)) {
-                    cards[i].style.display = "";
-                } else {
-                    cards[i].style.display = "none";
-                }
+        // GamePix ka Free Open API Feed use kar rahe hain jismein hazaron games hain
+        const apiURL = "https://api.gamepix.com/v3/games?collection=featured";
+
+        async function fetchGames() {
+            try {
+                const response = await fetch(apiURL);
+                const data = await response.json();
+                
+                // Data format ke hisab se games array nikalna
+                allGames = data.data || data; 
+                
+                displayGames(allGames);
+            } catch (error) {
+                console.error("Games load karne mein dikkat aayi:", error);
+                document.getElementById('gameGrid').innerHTML = "<p style='color:red;'>Games load nahi ho paye. Ek baar refresh karein.</p>";
             }
         }
+
+        function displayGames(gamesList) {
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = ""; // Purana loading text hatane ke liye
+
+            gamesList.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                // Game ko play karne ke liye URL pass karna
+                card.onclick = () => playGame(game.url);
+
+                card.innerHTML = `
+                    <img src="${game.thumbnailUrl || 'https://via.placeholder.com/150'}" alt="${game.title}">
+                    <div class="game-title">${game.title}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function playGame(url) {
+            const container = document.getElementById('arenaContainer');
+            const iframe = document.getElementById('gameScreen');
+            iframe.src = url;
+            container.style.display = 'block';
+            window.scrollTo({ top: container.offsetTop - 20, behavior: 'smooth' });
+        }
+
+        function closeGame() {
+            const container = document.getElementById('arenaContainer');
+            const iframe = document.getElementById('gameScreen');
+            iframe.src = "";
+            container.style.display = 'none';
+        }
+
+        function filterGames() {
+            const query = document.getElementById('searchBar').value.toLowerCase();
+            const filtered = allGames.filter(game => game.title.toLowerCase().includes(query));
+            displayGames(filtered);
+        }
+
+        // Page load hote hi games fetch karein
+        window.onload = fetchGames;
     </script>
 </body>
 </html>
