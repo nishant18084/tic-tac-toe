@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ Neon Mega Arcade Hub ⚡</title>
+    <title>⚡ Neon Arcade Hub & Login ⚡</title>
     <style>
-        /* Cyberpunk Neon Arcade Theme */
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             background-color: #0b0c10;
@@ -15,8 +14,62 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        /* Login Form Styling */
+        #loginContainer {
+            background: #1f2833;
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid #66fcf1;
+            box-shadow: 0px 0px 20px rgba(102, 252, 241, 0.4);
+            text-align: center;
+            width: 90%;
+            max-width: 350px;
+        }
+        #loginContainer h2 {
+            color: #66fcf1;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #66fcf1;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            border: 1px solid #45f3ff;
+            background: #0b0c10;
+            color: #fff;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            border: none;
+            background: #66fcf1;
+            color: #0b0c10;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 0 10px #66fcf1;
+            transition: 0.3s;
+        }
+        .login-btn:hover {
+            background: #45f3ff;
+            box-shadow: 0 0 20px #45f3ff;
+        }
+
+        /* Main Arcade Styling (Hidden by default) */
+        #mainArcade {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
         }
         header {
             width: 100%;
@@ -24,37 +77,158 @@
             padding: 15px 0;
             text-align: center;
             border-bottom: 3px solid #66fcf1;
-            box-shadow: 0px 4px 20px rgba(102, 252, 241, 0.3);
         }
-        h1 {
+        header h1 {
             color: #66fcf1;
             margin: 0;
-            font-size: 2rem;
-            text-shadow: 0 0 10px #66fcf1;
-            letter-spacing: 2px;
         }
-        .arcade-container {
-            width: 100%;
-            height: calc(100vh - 70px); /* Full screen layout */
-            background-color: #121212;
+        .welcome-text {
+            color: #45f3ff;
+            margin-top: 10px;
+            font-weight: bold;
         }
-        /* Poora catalog bina error ke chalega */
-        #megaArcadeStore {
+        #arenaContainer {
+            display: none;
+            width: 90%;
+            max-width: 960px;
+            margin: 20px 0;
+            background: #1f2833;
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px solid #66fcf1;
+        }
+        #gameScreen {
             width: 100%;
-            height: 100%;
+            height: 550px;
             border: none;
+        }
+        .close-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            float: right;
+        }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            width: 90%;
+            max-width: 1200px;
+            padding: 30px 0;
+        }
+        .game-card {
+            background-color: #1f2833;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid #45f3ff;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(69, 243, 255, 0.5);
+        }
+        .game-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        .game-title {
+            padding: 10px;
+            font-size: 14px;
+            color: #fff;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>🎮 NEON MEGA ARCADE (1000+ GAMES) 🎮</h1>
-    </header>
-
-    <div class="arcade-container">
-        <iframe id="megaArcadeStore" src="https://www.gamepix.com/embed" allowfullscreen></iframe>
+    <div id="loginContainer">
+        <h2>🎮 Gamer Login 🎮</h2>
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Username daalein">
+        </div>
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Password daalein">
+        </div>
+        <button class="login-btn" onclick="handleLogin()">Let's Play</button>
     </div>
 
+    <div id="mainArcade">
+        <header>
+            <h1>⚡ MY OWN ARCADE HUB ⚡</h1>
+            <div class="welcome-text" id="welcomeUser"></div>
+        </header>
+
+        <div id="arenaContainer">
+            <button class="close-btn" onclick="closeGame()">❌ Close Game</button>
+            <iframe id="gameScreen" src="" allowfullscreen></iframe>
+        </div>
+
+        <div class="game-grid" id="gameGrid"></div>
+    </div>
+
+    <script>
+        // Aapke apne games ki clean list bina kisi branding ke
+        const myCleanGames = [
+            { title: "Minecraft Classic", url: "https://classic.minecraft.net/", thumbnailUrl: "https://images.unsplash.com/photo-1605901309584-818e25960a8f?w=150" },
+            { title: "Tetris Game", url: "https://tetris.com/play-tetris", thumbnailUrl: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=150" },
+            { title: "2048 Arcade", url: "https://2048game.com/", thumbnailUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150" },
+            { title: "Flappy Bird", url: "https://flappybird.io/", thumbnailUrl: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150" },
+            { title: "Google Snake", url: "https://www.google.com/fbx?fbx=snake_arcade", thumbnailUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=150" }
+        ];
+
+        // Login handle karne ka function
+        function handleLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            if(user.trim() !== "" && pass.trim() !== "") {
+                // Login successful hone par form gayab aur games chalu
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('mainArcade').style.display = 'flex';
+                document.getElementById('welcomeUser').innerText = `Welcome, Player: ${user} 🎮`;
+                
+                // Games display karna
+                displayGames(myCleanGames);
+            } else {
+                alert("Kripya sahi Username aur Password daalein!");
+            }
+        }
+
+        function displayGames(gamesList) {
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = ""; 
+            gamesList.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.onclick = () => playGame(game.url);
+                card.innerHTML = `
+                    <img src="${game.thumbnailUrl}" alt="${game.title}">
+                    <div class="game-title">${game.title}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function playGame(url) {
+            const container = document.getElementById('arenaContainer');
+            const iframe = document.getElementById('gameScreen');
+            iframe.src = url;
+            container.style.display = 'block';
+            window.scrollTo({ top: container.offsetTop - 20, behavior: 'smooth' });
+        }
+
+        function closeGame() {
+            const container = document.getElementById('arenaContainer');
+            const iframe = document.getElementById('gameScreen');
+            iframe.src = "";
+            container.style.display = 'none';
+        }
+    </script>
 </body>
 </html>
