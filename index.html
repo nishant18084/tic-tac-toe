@@ -2,252 +2,114 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mobile Tic Tac Toe Arcade</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>My 3D Shooter Game</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; touch-action: none; }
-        body {
-            font-family: Arial, sans-serif;
-            background: #0a0e29; color: white;
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; width: 100vw; overflow: hidden;
+        body { margin: 0; overflow: hidden; background: #000; font-family: Arial, sans-serif; user-select: none; }
+        canvas { display: block; }
+        
+        /* Mobile Touch Controls */
+        .control-panel {
+            position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: space-between; padding: 0 40px; box-sizing: border-box; pointer-events: none;
         }
-        .arcade-container {
-            width: 90vw; max-width: 380px; height: 85vh;
-            background: #12183a; border: 3px solid #00ffcc; border-radius: 20px;
-            padding: 15px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;
-            box-shadow: 0 10px 30px rgba(0,255,204,0.3);
+        .btn {
+            width: 80px; height: 80px; border-radius: 50%; color: white; font-weight: bold; font-size: 16px;
+            display: flex; align-items: center; justify-content: center; pointer-events: auto; background: rgba(255,255,255,0.3);
         }
-        .screen { display: none; width: 100%; height: 100%; flex-direction: column; justify-content: center; align-items: center; }
-        .active-screen { display: flex !important; }
-        
-        h1 { font-size: 2rem; color: #00ffcc; text-shadow: 0 0 10px rgba(0,255,204,0.5); text-align: center; margin-bottom: 20px; }
-        
-        /* Start Button */
-        .start-btn {
-            background: #ff0077; color: white; border: none; padding: 15px 40px;
-            font-size: 1.4rem; font-weight: bold; border-radius: 30px; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255,0,119,0.4);
-        }
-        
-        /* Grid Layout */
-        .menu-grid { display: grid; grid-template-columns: 1fr; gap: 10px; width: 100%; }
-        .game-card { background: #1a224d; border: 1px solid #00aaff; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .play-btn { background: #00ffcc; color: #0a0e29; border: none; padding: 8px 15px; font-weight: bold; border-radius: 8px; cursor: pointer; }
-        
-        /* Game Screen */
-        canvas { background: #050714; border: 2px solid #ff0077; border-radius: 12px; max-width: 100%; aspect-ratio: 1/1; }
-        .back-btn { background: none; border: 1px solid #ff0077; color: #ff0077; padding: 6px 12px; border-radius: 8px; margin-bottom: 10px; align-self: flex-start; cursor: pointer; }
+        #moveBtn { background: rgba(0, 255, 0, 0.4); }
+        #shootBtn { background: rgba(255, 0, 0, 0.6); }
     </style>
 </head>
 <body>
 
-    <div class="arcade-container">
-        <div class="screen active-screen" id="startView">
-            <h1>MEGA ARCADE</h1>
-            <button class="start-btn" onclick="goScreen('menuView')">START</button>
-        </div>
-
-        <div class="screen" id="menuView">
-            <h1>SELECT GAME</h1>
-            <div class="menu-grid">
-                <div class="game-card">
-                    <div>
-                        <p style="font-weight:bold;">Tic Tac Toe</p>
-                        <p style="font-size:0.8rem; color:#8196e6;">Retro X vs O</p>
-                    </div>
-                    <button class="play-btn" onclick="startGame()">PLAY</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="screen" id="gameView">
-            <button class="back-btn" onclick="goScreen('menuView')">⬅ Menu</button>
-            <canvas id="gameCanvas" width="300" height="300"></canvas>
-            <p style="margin-top:15px; color:#ffff00; font-weight:bold;">Score: <span id="scoreText">0</span></p>
-        </div>
+    <div class="control-panel">
+        <div class="btn" id="moveBtn">RUN</div>
+        <div class="btn" id="shootBtn">FIRE</div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        let grid = ["","","","","","","","",""];
-        let gameOver = false;
-        let score = 0;
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
+        // 1. Scene aur Camera Setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x222222);
 
-        function goScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-            document.getElementById(id).classList.add('active-screen');
-        }
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-        function startGame() {
-            goScreen('gameView');
-            grid = ["","","","","","","","",""];
-            gameOver = false;
-            drawBoard();
-        }
+        // Light
+        const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
+        scene.add(light);
 
-        function drawBoard() {
-            ctx.clearRect(0, 0, 300, 300);
-            ctx.strokeStyle = '#334477'; ctx.lineWidth = 4;
-            // Lines
-            ctx.beginPath();
-            ctx.moveTo(100, 10); ctx.lineTo(100, 290);
-            ctx.moveTo(200, 10); ctx.lineTo(200, 290);
-            ctx.moveTo(10, 100); ctx.lineTo(290, 100);
-            ctx.moveTo(10, 200); ctx.lineTo(290, 200);
-            ctx.stroke();
+        // 2. 3D Map (Green Ground)
+        const groundGeo = new THREE.PlaneGeometry(50, 100);
+        const groundMat = new THREE.MeshBasicMaterial({ color: 0x1b5e20 });
+        const ground = new THREE.Mesh(groundGeo, groundMat);
+        ground.rotation.x = -Math.PI / 2;
+        scene.add(ground);
 
-            // Draw X and O
-            grid.forEach((val, i) => {
-                let row = Math.floor(i / 3);
-                let col = i % 3;
-                let x = col * 100 + 50;
-                let y = row * 100 + 50;
-                if(val === "X") {
-                    ctx.strokeStyle = '#00ffcc'; ctx.lineWidth = 6;
-                    ctx.beginPath(); ctx.moveTo(x-20, y-20); ctx.lineTo(x+20, y+20); ctx.moveTo(x+20, y-20); ctx.lineTo(x-20, y+20); ctx.stroke();
-                } else if(val === "O") {
-                    ctx.strokeStyle = '#ff0077'; ctx.lineWidth = 6;
-                    ctx.beginPath(); ctx.arc(x, y, 20, 0, Math.PI*2); ctx.stroke();
-                }
-            });
-        }
+        // 3. 3D Player Character
+        const playerGeo = new THREE.CapsuleGeometry(0.4, 1, 4, 8);
+        const playerMat = new THREE.MeshBasicMaterial({ color: 0x2196f3 });
+        const player = new THREE.Mesh(playerGeo, playerMat);
+        player.position.y = 0.9;
+        scene.add(player);
 
-        canvas.addEventListener('click', function(e) {
-            if(gameOver) return;
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            let col = Math.floor(x / (rect.width / 3));
-            let row = Math.floor(y / (rect.height / 3));
-            let index = row * 3 + col;
+        // Camera Angle (Third-Person View)
+        camera.position.set(0, 4, 5);
 
-            if(grid[index] === "") {
-                grid[index] = "X";
-                drawBoard();
-                checkGame();
-                if(!gameOver) {
-                    setTimeout(botMove, 300);
-                }
-            }
+        // Game Variables
+        let isMoving = false;
+        let bullets = [];
+
+        // Mobile Touch Logic
+        document.getElementById('moveBtn').addEventListener('touchstart', () => isMoving = true);
+        document.getElementById('moveBtn').addEventListener('touchend', () => isMoving = false);
+
+        document.getElementById('shootBtn').addEventListener('touchstart', () => {
+            // Fire 3D Bullet
+            const bulletGeo = new THREE.SphereGeometry(0.1, 8, 8);
+            const bulletMat = new THREE.MeshBasicMaterial({ color: 0xffeb3b });
+            const bullet = new THREE.Mesh(bulletGeo, bulletMat);
+            bullet.position.set(player.position.x, player.position.y + 0.3, player.position.z - 0.5);
+            scene.add(bullet);
+            bullets.push(bullet);
         });
 
-        function botMove() {
-            let empties = grid.map((v,i) => v===""?i:null).filter(v => v!==null);
-            if(empties.length > 0) {
-                let move = empties[Math.floor(Math.random() * empties.length)];
-                grid[move] = "O";
-                drawBoard();
-                checkGame();
-            }
-        }
+        // 4. Main Game Loop
+        function animate() {
+            requestAnimationFrame(animate);
 
-        function checkGame() {
-            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-            for(let combo of wins) {
-                if(grid[combo[0]] && grid[combo[0]]===grid[combo[1]] && grid[combo[0]]===grid[combo[2]]) {
-                    gameOver = true;
-                    if(grid[combo[0]] === "X") {
-                        score += 10; document.getElementById('scoreText').innerText = score;
-                        alert("🎉 Aap Jeet Gaye!");
-                    } else {
-                        alert("🤖 AI Jeet Gaya!");
-                    }
-                    return;
+            // Player movement
+            if (isMoving) {
+                player.position.z -= 0.15;
+            }
+
+            // Bullet movement
+            bullets.forEach((b, i) => {
+                b.position.z -= 0.4;
+                if (b.position.z < player.position.z - 30) {
+                    scene.remove(b);
+                    bullets.splice(i, 1);
                 }
-            }
-            if(!grid.includes("")) { gameOver = true; alert("🤝 Match Draw!"); }
-        }
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Direct Tic Tac Toe</title>
-    <style>
-        body { background: #0a0e29; color: white; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .box { width: 90vw; max-width: 340px; text-align: center; background: #12183a; padding: 20px; border-radius: 15px; border: 2px solid #00ffcc; }
-        h2 { color: #00ffcc; margin-bottom: 5px; }
-        #status { color: #ffff00; font-weight: bold; margin-bottom: 15px; }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; background: #334477; padding: 5px; border-radius: 10px; }
-        .cell { background: #050714; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; font-size: 2.5rem; font-weight: bold; cursor: pointer; min-height: 85px; }
-        .btn { background: #ff0077; color: white; border: none; padding: 10px 25px; font-size: 1rem; border-radius: 20px; cursor: pointer; margin-top: 20px; font-weight: bold; }
-    </style>
-</head>
-<body>
+            });
 
-    <div class="box">
-        <h2>TIC TAC TOE</h2>
-        <div id="status">Aapki Baari (X)</div>
-        
-        <div class="grid">
-            <div class="cell" onclick="tap(0)" id="c0"></div>
-            <div class="cell" onclick="tap(1)" id="c1"></div>
-            <div class="cell" onclick="tap(2)" id="c2"></div>
-            <div class="cell" onclick="tap(3)" id="c3"></div>
-            <div class="cell" onclick="tap(4)" id="c4"></div>
-            <div class="cell" onclick="tap(5)" id="c5"></div>
-            <div class="cell" onclick="tap(6)" id="c6"></div>
-            <div class="cell" onclick="tap(7)" id="c7"></div>
-            <div class="cell" onclick="tap(8)" id="c8"></div>
-        </div>
-        
-        <button class="btn" onclick="resetGame()">Reset Game</button>
-    </div>
+            // Camera following player
+            camera.position.z = player.position.z + 5;
+            camera.lookAt(player.position.x, player.position.y + 1, player.position.z);
 
-    <script>
-        let board = ["","","","","","","","",""];
-        let active = true;
-
-        function tap(i) {
-            if(board[i] !== "" || !active) return;
-            board[i] = "X";
-            document.getElementById('c'+i).innerText = "X";
-            document.getElementById('c'+i).style.color = "#00ffcc";
-            
-            if(!check()) {
-                active = false;
-                document.getElementById('status').innerText = "🤖 AI Soch raha hai...";
-                setTimeout(bot, 400);
-            }
+            renderer.render(scene, camera);
         }
 
-        function bot() {
-            let empty = board.map((v,idx) => v===""?idx:null).filter(v => v!==null);
-            if(empty.length > 0) {
-                let move = empty[Math.floor(Math.random() * empty.length)];
-                board[move] = "O";
-                document.getElementById('c'+move).innerText = "O";
-                document.getElementById('c'+move).style.color = "#ff0077";
-                check();
-                if(active) document.getElementById('status').innerText = "Aapki Baari (X)";
-            }
-        }
+        animate();
 
-        function check() {
-            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-            for(let c of wins) {
-                if(board[c[0]] && board[c[0]]===board[c[1]] && board[c[0]]===board[c[2]]) {
-                    document.getElementById('status').innerText = board[c[0]] === "X" ? "🎉 Aap Jeet Gaye!" : "🤖 AI Jeet Gaya!";
-                    active = false;
-                    return true;
-                }
-            }
-            if(!board.includes("")) { document.getElementById('status').innerText = "🤝 Match Draw!"; active = false; return true; }
-            active = true;
-            return false;
-        }
-
-        function resetGame() {
-            board = ["","","","","","","","",""];
-            active = true;
-            document.getElementById('status').innerText = "Aapki Baari (X)";
-            for(let i=0; i<9; i++) document.getElementById('c'+i).innerText = "";
-        }
+        // Resize screen handling
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
     </script>
 </body>
 </html>
