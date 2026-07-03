@@ -120,45 +120,18 @@
         <iframe id="gameScreen" src="" allowfullscreen></iframe>
     </div>
 
-    <div class="game-grid" id="gameGrid">
-        <div style="color: #66fcf1; grid-column: 1/-1; text-align: center;">Games load ho rahe hain...</div>
-    </div>
+    <div class="game-grid" id="gameGrid"></div>
 
     <script>
-        // BACKUP GAMES LIST: Agar API block ho jaye, toh yeh games hamesha chalenge!
-        // Aap yahan jitne chahein utne HTML5 games ke links add kar sakte hain.
-        const backupGames = [
-            { title: "Pac-Man", url: "https://play.pacman.com/", thumbnailUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo_5f0XpLofK_NAs6M8uH74LgC0W0tqg64aA&s" },
-            { title: "Minecraft Classic", url: "https://classic.minecraft.net/", thumbnailUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqZqCgby94nZ5R6K5fQ2v-TeeG6C-f6vXitg&s" },
-            { title: "Tetris", url: "https://tetris.com/play-tetris", thumbnailUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTf_z68PqjRREq02Z16-I9Xw0WpizgU5C4Z-g&s" },
-            { title: "2048", url: "https://2048game.com/", thumbnailUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR06qD8n9EwzYf_6Zc9L0g2Bypv5F2C8r-xDA&s" },
-            { title: "Flappy Bird", url: "https://flappybird.io/", thumbnailUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT37E9V6wZ5q-Vq5N9vG2r8X8K7rR7p1V9zYQ&s" },
-            { title: "Snake Game", url: "https://www.google.com/fbx?fbx=snake_arcade", thumbnailUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3y3Z9lG8XvB6n-T1O_pXgL6mP9Q8-7_Xk8g&s" }
+        // Seedhe links daal diye hain, ab koi error nahi aa sakta!
+        const allGames = [
+            { title: "Pac-Man", url: "https://play.pacman.com/", thumbnailUrl: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=150" },
+            { title: "Minecraft Classic", url: "https://classic.minecraft.net/", thumbnailUrl: "https://images.unsplash.com/photo-1605901309584-818e25960a8f?w=150" },
+            { title: "Tetris", url: "https://tetris.com/play-tetris", thumbnailUrl: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=150" },
+            { title: "2048 Game", url: "https://2048game.com/", thumbnailUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150" },
+            { title: "Flappy Bird", url: "https://flappybird.io/", thumbnailUrl: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150" },
+            { title: "Google Snake", url: "https://www.google.com/fbx?fbx=snake_arcade", thumbnailUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=150" }
         ];
-
-        let allGames = [];
-
-        async function fetchGames() {
-            try {
-                // Ek open source public high-speed API try kar rahe hain
-                const response = await fetch("https://cors-anywhere.herokuapp.com/https://api.gamepix.com/v3/games?collection=featured", {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                });
-                
-                if (!response.ok) throw new Error("API network issue");
-                const data = await response.json();
-                allGames = data.data || data;
-                
-                // Agar API se kam games mile toh backup wale bhi jod do
-                allGames = [...allGames, ...backupGames];
-                displayGames(allGames);
-            } catch (error) {
-                console.log("API block hui, local backup games load kar rahe hain...");
-                // Agar koi bhi API crash ho jaye, toh humare backup games chal jayenge
-                allGames = backupGames;
-                displayGames(allGames);
-            }
-        }
 
         function displayGames(gamesList) {
             const grid = document.getElementById('gameGrid');
@@ -170,7 +143,7 @@
                 card.onclick = () => playGame(game.url);
 
                 card.innerHTML = `
-                    <img src="${game.thumbnailUrl || 'https://via.placeholder.com/150'}" alt="${game.title}">
+                    <img src="${game.thumbnailUrl}" alt="${game.title}">
                     <div class="game-title">${game.title}</div>
                 `;
                 grid.appendChild(card);
@@ -198,7 +171,8 @@
             displayGames(filtered);
         }
 
-        window.onload = fetchGames;
+        // Page load hote hi display karein
+        window.onload = () => displayGames(allGames);
     </script>
 </body>
 </html>
