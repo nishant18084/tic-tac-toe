@@ -1,105 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mega GameHub - 1000+ Games</title>
+    <title>My Ultimate Gaming Hub</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: white; padding: 20px; text-align: center; }
-        
-        h1 { margin-bottom: 10px; color: #ffeb3b; text-transform: uppercase; letter-spacing: 2px; }
-        p { color: #aaa; margin-bottom: 30px; }
-
-        /* Search Bar */
-        .search-box { width: 90%; max-width: 500px; padding: 12px 20px; border-radius: 25px; border: none; background: #222; color: white; font-size: 16px; margin-bottom: 30px; outline: none; border: 2px solid #333; }
-        .search-box:focus { border-color: #ffeb3b; }
-
-        /* Games Grid */
-        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
-        
-        .game-card { background: #1e1e1e; border-radius: 15px; padding: 15px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid #2d2d2d; }
-        .game-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(255, 235, 59, 0.2); border-color: #ffeb3b; }
-        
-        .game-icon { width: 70px; height: 70px; background: linear-gradient(135deg, #ff9800, #e91e63); border-radius: 12px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 30px; }
-        .game-title { font-size: 14px; font-weight: bold; color: #fff; }
-
-        /* Fullscreen Game Player Modal */
-        .game-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; flex-direction: column; }
-        .close-btn { background: #ff3333; color: white; border: none; padding: 10px 20px; font-size: 16px; font-weight: bold; cursor: pointer; align-self: flex-end; margin: 10px; border-radius: 5px; }
-        iframe { width: 100%; height: 100%; border: none; background: white; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 { color: #00ff88; }
+        #searchBar {
+            padding: 10px;
+            width: 60%;
+            max-width: 400px;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        .game-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .game-card {
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid #333;
+            min-width: 120px;
+        }
+        .game-card:hover {
+            background-color: #00ff88;
+            color: #000;
+            transform: scale(1.05);
+        }
+        #gameScreen {
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            display: none;
+            margin: 20px auto;
+        }
     </style>
 </head>
 <body>
 
-    <h1>🎮 Mega GameHub 🎮</h1>
-    <p>Apna pasandida game chuno aur turant khelo!</p>
+    <h1>🎮 My Gaming Hub 🎮</h1>
+    <input type="text" id="searchBar" placeholder="Search games..." onkeyup="searchGames()">
 
-    <input type="text" class="search-box" id="search" placeholder="Search games...">
-
-    <div class="games-grid" id="gamesGrid">
-        </div>
-
-    <div class="game-container" id="gamePlayer">
-        <button class="close-btn" onclick="closeGame()">❌ Close Game</button>
-        <iframe id="gameFrame" src=""></iframe>
+    <div class="game-container" id="gameList">
+        <div class="game-card" onclick="playGame('https://play.pacman.com/')">Pac-Man</div>
+        <div class="game-card" onclick="playGame('https://browsercraft.org/')">Minecraft (Clone)</div>
+        <div class="game-card" onclick="playGame('https://tetris.com/play-tetris')">Tetris</div>
+        <div class="game-card" onclick="playGame('https://2048game.com/')">2048</div>
     </div>
 
+    <iframe id="gameScreen" src="" frameborder="0" allowfullscreen></iframe>
+
     <script>
-        // Yahan aap hazaron games ki list add kar sakte hain
-        // Examples ke liye kuch popular free open HTML5 games ke links:
-        const gamesList = [
-            { title: "2048 Puzzle", icon: "🔢", url: "https://gabrielecirulli.github.io/2048/" },
-            { title: "Hextris", icon: "🔷", url: "https://hextris.github.io/hextris/" },
-            { title: "Flappy Bird", icon: "🐦", url: "https://wayou.github.io/a-flappy-bird/" },
-            { title: "Snake Game", icon: "🐍", url: "https://poki.com/en/g/blocky-snakes" },
-            { title: "Tower Blocks", icon: "🏢", url: "https://www.htmlgames.com/html5/towerblocks/" },
-            { title: "Pacman Classic", icon: "🟡", url: "https://www.google.com/logos/2010/pacman10-i.html" },
-            { title: "Color Pixel", icon: "🎨", url: "https://html5games.com/Game/Color-Pixel-Art-Classic/5264" }
-        ];
-
-        const gamesGrid = document.getElementById('gamesGrid');
-        const gamePlayer = document.getElementById('gamePlayer');
-        const gameFrame = document.getElementById('gameFrame');
-        const searchInput = document.getElementById('search');
-
-        // Function to display games on screen
-        function loadGames(games) {
-            gamesGrid.innerHTML = "";
-            games.forEach(game => {
-                const card = document.createElement('div');
-                card.className = 'game-card';
-                card.onclick = () => playGame(game.url);
-                
-                card.innerHTML = `
-                    <div class="game-icon">${game.icon}</div>
-                    <div class="game-title">${game.title}</div>
-                `;
-                gamesGrid.appendChild(card);
-            });
-        }
-
-        // Click karne par game shuru karne ka function
+        // Game chalane ke liye function
         function playGame(url) {
-            gameFrame.src = url;
-            gamePlayer.style.display = 'flex';
+            const iframe = document.getElementById('gameScreen');
+            iframe.src = url;
+            iframe.style.display = 'block';
+            window.scrollTo({ top: iframe.offsetTop, behavior: 'smooth' });
         }
 
-        // Game band karne ka function
-        function closeGame() {
-            gamePlayer.style.display = 'none';
-            gameFrame.src = ""; // Stop game background music/process
+        // Search karne ke liye function
+        function searchGames() {
+            let input = document.getElementById('searchBar').value.toLowerCase();
+            let cards = document.getElementsByClassName('game-card');
+            
+            for (let i = 0; i < cards.length; i++) {
+                if (cards[i].innerText.toLowerCase().includes(input)) {
+                    cards[i].style.display = "";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
         }
-
-        // Search filtering logic
-        searchInput.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = gamesList.filter(g => g.title.toLowerCase().includes(term));
-            loadGames(filtered);
-        });
-
-        // Initial Load
-        loadGames(gamesList);
     </script>
 </body>
 </html>
