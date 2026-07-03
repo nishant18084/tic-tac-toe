@@ -2,114 +2,104 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>My 3D Shooter Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mega GameHub - 1000+ Games</title>
     <style>
-        body { margin: 0; overflow: hidden; background: #000; font-family: Arial, sans-serif; user-select: none; }
-        canvas { display: block; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: white; padding: 20px; text-align: center; }
         
-        /* Mobile Touch Controls */
-        .control-panel {
-            position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: space-between; padding: 0 40px; box-sizing: border-box; pointer-events: none;
-        }
-        .btn {
-            width: 80px; height: 80px; border-radius: 50%; color: white; font-weight: bold; font-size: 16px;
-            display: flex; align-items: center; justify-content: center; pointer-events: auto; background: rgba(255,255,255,0.3);
-        }
-        #moveBtn { background: rgba(0, 255, 0, 0.4); }
-        #shootBtn { background: rgba(255, 0, 0, 0.6); }
+        h1 { margin-bottom: 10px; color: #ffeb3b; text-transform: uppercase; letter-spacing: 2px; }
+        p { color: #aaa; margin-bottom: 30px; }
+
+        /* Search Bar */
+        .search-box { width: 90%; max-width: 500px; padding: 12px 20px; border-radius: 25px; border: none; background: #222; color: white; font-size: 16px; margin-bottom: 30px; outline: none; border: 2px solid #333; }
+        .search-box:focus { border-color: #ffeb3b; }
+
+        /* Games Grid */
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        
+        .game-card { background: #1e1e1e; border-radius: 15px; padding: 15px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid #2d2d2d; }
+        .game-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(255, 235, 59, 0.2); border-color: #ffeb3b; }
+        
+        .game-icon { width: 70px; height: 70px; background: linear-gradient(135deg, #ff9800, #e91e63); border-radius: 12px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+        .game-title { font-size: 14px; font-weight: bold; color: #fff; }
+
+        /* Fullscreen Game Player Modal */
+        .game-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; flex-direction: column; }
+        .close-btn { background: #ff3333; color: white; border: none; padding: 10px 20px; font-size: 16px; font-weight: bold; cursor: pointer; align-self: flex-end; margin: 10px; border-radius: 5px; }
+        iframe { width: 100%; height: 100%; border: none; background: white; }
     </style>
 </head>
 <body>
 
-    <div class="control-panel">
-        <div class="btn" id="moveBtn">RUN</div>
-        <div class="btn" id="shootBtn">FIRE</div>
+    <h1>🎮 Mega GameHub 🎮</h1>
+    <p>Apna pasandida game chuno aur turant khelo!</p>
+
+    <input type="text" class="search-box" id="search" placeholder="Search games...">
+
+    <div class="games-grid" id="gamesGrid">
+        </div>
+
+    <div class="game-container" id="gamePlayer">
+        <button class="close-btn" onclick="closeGame()">❌ Close Game</button>
+        <iframe id="gameFrame" src=""></iframe>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // 1. Scene aur Camera Setup
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x222222);
+        // Yahan aap hazaron games ki list add kar sakte hain
+        // Examples ke liye kuch popular free open HTML5 games ke links:
+        const gamesList = [
+            { title: "2048 Puzzle", icon: "🔢", url: "https://gabrielecirulli.github.io/2048/" },
+            { title: "Hextris", icon: "🔷", url: "https://hextris.github.io/hextris/" },
+            { title: "Flappy Bird", icon: "🐦", url: "https://wayou.github.io/a-flappy-bird/" },
+            { title: "Snake Game", icon: "🐍", url: "https://poki.com/en/g/blocky-snakes" },
+            { title: "Tower Blocks", icon: "🏢", url: "https://www.htmlgames.com/html5/towerblocks/" },
+            { title: "Pacman Classic", icon: "🟡", url: "https://www.google.com/logos/2010/pacman10-i.html" },
+            { title: "Color Pixel", icon: "🎨", url: "https://html5games.com/Game/Color-Pixel-Art-Classic/5264" }
+        ];
 
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+        const gamesGrid = document.getElementById('gamesGrid');
+        const gamePlayer = document.getElementById('gamePlayer');
+        const gameFrame = document.getElementById('gameFrame');
+        const searchInput = document.getElementById('search');
 
-        // Light
-        const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
-        scene.add(light);
-
-        // 2. 3D Map (Green Ground)
-        const groundGeo = new THREE.PlaneGeometry(50, 100);
-        const groundMat = new THREE.MeshBasicMaterial({ color: 0x1b5e20 });
-        const ground = new THREE.Mesh(groundGeo, groundMat);
-        ground.rotation.x = -Math.PI / 2;
-        scene.add(ground);
-
-        // 3. 3D Player Character
-        const playerGeo = new THREE.CapsuleGeometry(0.4, 1, 4, 8);
-        const playerMat = new THREE.MeshBasicMaterial({ color: 0x2196f3 });
-        const player = new THREE.Mesh(playerGeo, playerMat);
-        player.position.y = 0.9;
-        scene.add(player);
-
-        // Camera Angle (Third-Person View)
-        camera.position.set(0, 4, 5);
-
-        // Game Variables
-        let isMoving = false;
-        let bullets = [];
-
-        // Mobile Touch Logic
-        document.getElementById('moveBtn').addEventListener('touchstart', () => isMoving = true);
-        document.getElementById('moveBtn').addEventListener('touchend', () => isMoving = false);
-
-        document.getElementById('shootBtn').addEventListener('touchstart', () => {
-            // Fire 3D Bullet
-            const bulletGeo = new THREE.SphereGeometry(0.1, 8, 8);
-            const bulletMat = new THREE.MeshBasicMaterial({ color: 0xffeb3b });
-            const bullet = new THREE.Mesh(bulletGeo, bulletMat);
-            bullet.position.set(player.position.x, player.position.y + 0.3, player.position.z - 0.5);
-            scene.add(bullet);
-            bullets.push(bullet);
-        });
-
-        // 4. Main Game Loop
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Player movement
-            if (isMoving) {
-                player.position.z -= 0.15;
-            }
-
-            // Bullet movement
-            bullets.forEach((b, i) => {
-                b.position.z -= 0.4;
-                if (b.position.z < player.position.z - 30) {
-                    scene.remove(b);
-                    bullets.splice(i, 1);
-                }
+        // Function to display games on screen
+        function loadGames(games) {
+            gamesGrid.innerHTML = "";
+            games.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.onclick = () => playGame(game.url);
+                
+                card.innerHTML = `
+                    <div class="game-icon">${game.icon}</div>
+                    <div class="game-title">${game.title}</div>
+                `;
+                gamesGrid.appendChild(card);
             });
-
-            // Camera following player
-            camera.position.z = player.position.z + 5;
-            camera.lookAt(player.position.x, player.position.y + 1, player.position.z);
-
-            renderer.render(scene, camera);
         }
 
-        animate();
+        // Click karne par game shuru karne ka function
+        function playGame(url) {
+            gameFrame.src = url;
+            gamePlayer.style.display = 'flex';
+        }
 
-        // Resize screen handling
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+        // Game band karne ka function
+        function closeGame() {
+            gamePlayer.style.display = 'none';
+            gameFrame.src = ""; // Stop game background music/process
+        }
+
+        // Search filtering logic
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = gamesList.filter(g => g.title.toLowerCase().includes(term));
+            loadGames(filtered);
         });
+
+        // Initial Load
+        loadGames(gamesList);
     </script>
 </body>
 </html>
