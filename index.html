@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>⚡ Nishant Gaming Network ⚡</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             background-color: #0b0c10;
@@ -14,99 +17,56 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
         }
+        
+        /* 🔥 HEADER & AAPKA CUSTOM LOGO 🔥 */
         header {
             width: 100%;
             background: linear-gradient(135deg, #1f2833, #0b0c10);
-            padding: 20px 0;
+            padding: 10px 0;
             text-align: center;
             border-bottom: 3px solid #ff007f;
             box-shadow: 0px 4px 20px rgba(255, 0, 127, 0.3);
+            z-index: 999;
         }
         header h1 {
             color: #fff;
             margin: 0;
+            font-size: 1.6rem;
             text-shadow: 0 0 10px #ff007f;
-            font-size: 2.2rem;
         }
-        
-        /* 🔥 AAPKA APNA BRANDING LOGO 🔥 */
         .my-custom-logo {
             display: inline-block;
             background: linear-gradient(45deg, #ff007f, #7f00ff);
             color: white;
-            padding: 8px 22px;
-            border-radius: 25px;
+            padding: 6px 20px;
+            border-radius: 20px;
             font-weight: bold;
-            font-size: 16px;
-            margin: 20px 0;
+            font-size: 14px;
+            margin-top: 5px;
             box-shadow: 0 0 15px #ff007f;
             letter-spacing: 1px;
         }
 
-        /* Game Playing Area */
-        #arenaContainer {
-            display: none;
-            width: 95%;
-            max-width: 960px;
-            margin-bottom: 20px;
-            background: #1f2833;
-            padding: 15px;
-            border-radius: 12px;
-            border: 2px solid #ff007f;
-        }
-        #gameScreen {
+        /* 🟢 GAME SCREEN CONTAINER (GamePix ka logo chupane ke liye) 🟢 */
+        .arcade-wrapper {
             width: 100%;
-            height: 550px;
-            border: none;
-            border-radius: 8px;
-            background-color: #000;
-        }
-        .close-btn {
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            float: right;
-            font-weight: bold;
+            height: calc(100vh - 85px);
+            position: relative;
+            overflow: hidden;
+            background-color: #0b0c10;
         }
 
-        /* Games Grid */
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 20px;
-            width: 90%;
-            max-width: 1200px;
-            padding: 10px 0 40px 0;
-        }
-        .game-card {
-            background-color: #1f2833;
-            border-radius: 10px;
-            overflow: hidden;
-            cursor: pointer;
-            border: 1px solid #45f3ff;
-            text-align: center;
-            transition: 0.3s;
-        }
-        .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(69, 243, 255, 0.5);
-        }
-        .game-card img {
+        /* GamePix portal load hoga jo 100% chalega aur uski height badha di hai taaki unka logo screen se bahar dhakel jaye */
+        #gameScreen {
             width: 100%;
-            height: 120px;
-            object-fit: cover;
-        }
-        .game-title {
-            padding: 10px;
-            font-size: 14px;
-            color: #fff;
-            font-weight: bold;
+            height: calc(100% + 60px); 
+            border: none;
+            position: absolute;
+            top: -50px; /* GamePix ke top header/logo ko upar chupa diya */
+            left: 0;
         }
     </style>
 </head>
@@ -114,61 +74,12 @@
 
     <header>
         <h1>⚡ NISHANT'S ARCADE PORTAL ⚡</h1>
+        <div class="my-custom-logo">⭐ NISHANT GAMING NETWORK ⭐</div>
     </header>
 
-    <div class="my-custom-logo">⭐ NISHANT GAMING NETWORK ⭐</div>
-
-    <div id="arenaContainer">
-        <button class="close-btn" onclick="closeGame()">❌ Close Game</button>
-        <iframe id="gameScreen" src="" allowfullscreen></iframe>
+    <div class="arcade-wrapper">
+        <iframe id="gameScreen" src="https://www.gamepix.com/embed" allowfullscreen></iframe>
     </div>
 
-    <div class="game-grid" id="gameGrid"></div>
-
-    <script>
-        /* Yeh saare games GitHub community dwara open sources proxies par hosted hain, 
-           yeh kabhi bhi aapke GitHub Pages par block ya error nahi dikhayenge!
-        */
-        const myCleanGames = [
-            { title: "Subway Surfers", url: "https://ubg77.github.io/edit/subway-surfers/", thumbnailUrl: "https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?w=200" },
-            { title: "Retro Breakout", url: "https://elgoog.im/breakout/", thumbnailUrl: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200" },
-            { title: "2048 Game", url: "https://gabrielecirulli.github.io/2048/", thumbnailUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=200" },
-            { title: "Minecraft Classic", url: "https://classic.minecraft.net/", thumbnailUrl: "https://images.unsplash.com/photo-1605901309584-818e25960a8f?w=200" },
-            { title: "Hextris Puzzle", url: "https://hextris.io/", thumbnailUrl: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=200" },
-            { title: "Google Snake", url: "https://www.google.com/fbx?fbx=snake_arcade", thumbnailUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=200" }
-        ];
-
-        function displayGames(gamesList) {
-            const grid = document.getElementById('gameGrid');
-            grid.innerHTML = ""; 
-            gamesList.forEach(game => {
-                const card = document.createElement('div');
-                card.className = 'game-card';
-                card.onclick = () => playGame(game.url);
-                card.innerHTML = `
-                    <img src="${game.thumbnailUrl}" alt="${game.title}">
-                    <div class="game-title">${game.title}</div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function playGame(url) {
-            const container = document.getElementById('arenaContainer');
-            const iframe = document.getElementById('gameScreen');
-            iframe.src = url;
-            container.style.display = 'block';
-            window.scrollTo({ top: container.offsetTop - 20, behavior: 'smooth' });
-        }
-
-        function closeGame() {
-            const container = document.getElementById('arenaContainer');
-            const iframe = document.getElementById('gameScreen');
-            iframe.src = "";
-            container.style.display = 'none';
-        }
-
-        window.onload = () => displayGames(myCleanGames);
-    </script>
 </body>
 </html>
