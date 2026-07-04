@@ -1,85 +1,170 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ Nishant Gaming Network ⚡</title>
+    <title>Nishant Gaming Network</title>
     <style>
+        /* --- GLOBAL STYLES --- */
         * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #0b0c10;
-            color: #c5c6c7;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0d0d13;
+            color: #ffffff;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
         }
-        
-        /* 🔥 HEADER & AAPKA CUSTOM LOGO 🔥 */
+
+        /* --- HEADER & BANNER --- */
         header {
-            width: 100%;
-            background: linear-gradient(135deg, #1f2833, #0b0c10);
-            padding: 10px 0;
+            margin-bottom: 40px;
             text-align: center;
-            border-bottom: 3px solid #ff007f;
-            box-shadow: 0px 4px 20px rgba(255, 0, 127, 0.3);
-            z-index: 999;
+            width: 100%;
+            max-width: 1200px;
         }
-        header h1 {
-            color: #fff;
-            margin: 0;
-            font-size: 1.6rem;
-            text-shadow: 0 0 10px #ff007f;
-        }
-        .my-custom-logo {
+
+        .banner {
             display: inline-block;
             background: linear-gradient(45deg, #ff007f, #7f00ff);
             color: white;
-            padding: 6px 20px;
-            border-radius: 20px;
+            padding: 12px 35px;
+            font-size: 1.4rem;
             font-weight: bold;
-            font-size: 14px;
-            margin-top: 5px;
-            box-shadow: 0 0 15px #ff007f;
-            letter-spacing: 1px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+            animation: pulse 2s infinite;
         }
 
-        /* 🟢 GAME SCREEN CONTAINER (GamePix ka logo chupane ke liye) 🟢 */
-        .arcade-wrapper {
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px rgba(255, 0, 127, 0.6); }
+            50% { box-shadow: 0 0 35px rgba(127, 0, 255, 0.9); }
+            100% { box-shadow: 0 0 20px rgba(255, 0, 127, 0.6); }
+        }
+
+        /* --- RESPONSIVE GAME GRID --- */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
             width: 100%;
-            height: calc(100vh - 85px);
+            max-width: 1200px;
+            padding: 10px;
+        }
+
+        /* --- GAME CARD STYLES --- */
+        .game-card {
+            background-color: #1a1a24;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Image Wrapper to maintain 16:9 ratio */
+        .image-container {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #23232f, #141419);
             position: relative;
             overflow: hidden;
-            background-color: #0b0c10;
         }
 
-        /* GamePix portal load hoga jo 100% chalega aur uski height badha di hai taaki unka logo screen se bahar dhakel jaye */
-        #gameScreen {
+        .image-container img {
             width: 100%;
-            height: calc(100% + 60px); 
-            border: none;
-            position: absolute;
-            top: -50px; /* GamePix ke top header/logo ko upar chupa diya */
-            left: 0;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Game Title Styling */
+        .game-title {
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            background-color: #16161f;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            letter-spacing: 0.5px;
+        }
+
+        /* --- HOVER EFFECTS (The 10/10 Touch) --- */
+        .game-card:hover {
+            transform: translateY(-8px);
+            border-color: #ff007f;
+            box-shadow: 0 12px 25px rgba(255, 0, 127, 0.4);
+        }
+
+        .game-card:hover .game-title {
+            color: #ff007f;
+            background-color: #1c1c27;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>⚡ NISHANT'S ARCADE PORTAL ⚡</h1>
-        <div class="my-custom-logo">⭐ NISHANT GAMING NETWORK ⭐</div>
+        <div class="banner">⭐ Nishant Gaming Network ⭐</div>
     </header>
 
-    <div class="arcade-wrapper">
-        <iframe id="gameScreen" src="https://www.gamepix.com/embed" allowfullscreen></iframe>
-    </div>
+    <main class="games-grid">
+
+        <a href="#" class="game-card">
+            <div class="image-container">
+                <img src="subway-surfers.jpg" alt="Subway Surfers" onerror="this.style.display='none';">
+            </div>
+            <div class="game-title">Subway Surfers</div>
+        </a>
+
+        <a href="#" class="game-card">
+            <div class="image-container">
+                <img src="retro-breakout.jpg" alt="Retro Breakout" onerror="this.style.display='none';">
+            </div>
+            <div class="game-title">Retro Breakout</div>
+        </a>
+
+        <a href="#" class="game-card">
+            <div class="image-container">
+                <img src="2048.jpg" alt="2048 Game" onerror="this.style.display='none';">
+            </div>
+            <div class="game-title">2048 Game</div>
+        </a>
+
+        <a href="#" class="game-card">
+            <div class="image-container">
+                <img src="minecraft.jpg" alt="Minecraft Classic" onerror="this.style.display='none';">
+            </div>
+            <div class="game-title">Minecraft Classic</div>
+        </a>
+
+        <a href="#" class="game-card">
+            <div class="image-container">
+                <img src="hextris.jpg" alt="Hextris Puzzle" onerror="this.style.display='none';">
+            </div>
+            <div class="game-title">Hextris Puzzle</div>
+        </a>
+
+        <a href="#" class="game-card">
+            <div class="image-container">
+                <img src="google-snake.jpg" alt="Google Snake" onerror="this.style.display='none';">
+            </div>
+            <div class="game-title">Google Snake</div>
+        </a>
+
+    </main>
 
 </body>
 </html>
