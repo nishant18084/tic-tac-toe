@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ Neon Arcade Hub & Login ⚡</title>
+    <title>⚡ Neon Custom Arcade Hub ⚡</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -14,10 +14,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             min-height: 100vh;
         }
-        /* Login Form Styling */
+        /* Login Box */
         #loginContainer {
             background: #1f2833;
             padding: 40px;
@@ -27,6 +26,7 @@
             text-align: center;
             width: 90%;
             max-width: 350px;
+            margin-top: 10vh;
         }
         #loginContainer h2 {
             color: #66fcf1;
@@ -64,7 +64,7 @@
             box-shadow: 0 0 20px #45f3ff;
         }
 
-        /* Main Arcade Styling (Hidden by default) */
+        /* Main Game Hub Section */
         #mainArcade {
             display: none;
             width: 100%;
@@ -74,18 +74,32 @@
         header {
             width: 100%;
             background: linear-gradient(135deg, #1f2833, #0b0c10);
-            padding: 15px 0;
+            padding: 20px 0;
             text-align: center;
             border-bottom: 3px solid #66fcf1;
+            box-shadow: 0px 4px 20px rgba(102, 252, 241, 0.3);
         }
         header h1 {
             color: #66fcf1;
             margin: 0;
+            text-shadow: 0 0 10px #66fcf1;
         }
         .welcome-text {
             color: #45f3ff;
-            margin-top: 10px;
+            margin-top: 8px;
             font-weight: bold;
+        }
+        #searchBar {
+            padding: 12px 20px;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 25px;
+            border: 2px solid #45f3ff;
+            background-color: #1f2833;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            margin-top: 15px;
         }
         #arenaContainer {
             display: none;
@@ -111,6 +125,7 @@
             cursor: pointer;
             margin-bottom: 10px;
             float: right;
+            font-weight: bold;
         }
         .game-grid {
             display: grid;
@@ -142,6 +157,10 @@
             padding: 10px;
             font-size: 14px;
             color: #fff;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     </style>
 </head>
@@ -160,8 +179,9 @@
 
     <div id="mainArcade">
         <header>
-            <h1>⚡ MY OWN ARCADE HUB ⚡</h1>
+            <h1>⚡ NISHANT'S ARCADE HUB ⚡</h1>
             <div class="welcome-text" id="welcomeUser"></div>
+            <input type="text" id="searchBar" placeholder="🔍 Game search karein..." oninput="filterGames()">
         </header>
 
         <div id="arenaContainer">
@@ -173,30 +193,39 @@
     </div>
 
     <script>
-        // Aapke apne games ki clean list bina kisi branding ke
+        // Badi Clean list jismein koi external logo ya company feed nahi hai!
         const myCleanGames = [
             { title: "Minecraft Classic", url: "https://classic.minecraft.net/", thumbnailUrl: "https://images.unsplash.com/photo-1605901309584-818e25960a8f?w=150" },
             { title: "Tetris Game", url: "https://tetris.com/play-tetris", thumbnailUrl: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=150" },
             { title: "2048 Arcade", url: "https://2048game.com/", thumbnailUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150" },
             { title: "Flappy Bird", url: "https://flappybird.io/", thumbnailUrl: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150" },
-            { title: "Google Snake", url: "https://www.google.com/fbx?fbx=snake_arcade", thumbnailUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=150" }
+            { title: "Google Snake", url: "https://www.google.com/fbx?fbx=snake_arcade", thumbnailUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=150" },
+            { title: "Space Invaders", url: "https://freeinvaders.org/", thumbnailUrl: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=150" },
+            { title: "Asteroids", url: "https://www.playclassic.games/games/8-bit-atari-400-800-games-online/play-asteroids-online/", thumbnailUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" },
+            { title: "Cut The Rope", url: "https://www.gamee.com/games/cut-the-rope", thumbnailUrl: "https://images.unsplash.com/photo-1614680376593-902f74fa0d41?w=150" },
+            { title: "Paper.io 2", url: "https://paper-io.com/", thumbnailUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=150" },
+            { title: "Slither.io", url: "https://slither.io/", thumbnailUrl: "https://images.unsplash.com/photo-1527474305487-b87b222841cc?w=150" },
+            { title: "Hill Climb Racing", url: "https://www.crazygames.com/game/hill-climb-racing", thumbnailUrl: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=150" },
+            { title: "Subway Surfers Clone", url: "https://www.crazygames.com/game/subway-surfers", thumbnailUrl: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150" },
+            { title: "Temple Run Clone", url: "https://www.crazygames.com/game/temple-run-2", thumbnailUrl: "https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=150" },
+            { title: "Chess Online", url: "https://lichess.org/embed/game", thumbnailUrl: "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=150" },
+            { title: "Sudoku Classic", url: "https://sudoku.com/", thumbnailUrl: "https://images.unsplash.com/photo-1603481588273-2f908a9a7a1b?w=150" },
+            { title: "Moto X3M Bike", url: "https://www.crazygames.com/game/moto-x3m", thumbnailUrl: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=150" },
+            { title: "Little Alchemy", url: "https://littlealchemy.com/", thumbnailUrl: "https://images.unsplash.com/photo-1532187863486-abf9d39d6618?w=150" },
+            { title: "Dino Chrome", url: "https://chromedino.com/", thumbnailUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150" }
         ];
 
-        // Login handle karne ka function
         function handleLogin() {
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
 
             if(user.trim() !== "" && pass.trim() !== "") {
-                // Login successful hone par form gayab aur games chalu
                 document.getElementById('loginContainer').style.display = 'none';
                 document.getElementById('mainArcade').style.display = 'flex';
                 document.getElementById('welcomeUser').innerText = `Welcome, Player: ${user} 🎮`;
-                
-                // Games display karna
                 displayGames(myCleanGames);
             } else {
-                alert("Kripya sahi Username aur Password daalein!");
+                alert("Kripya Username aur Password daalein!");
             }
         }
 
@@ -228,6 +257,12 @@
             const iframe = document.getElementById('gameScreen');
             iframe.src = "";
             container.style.display = 'none';
+        }
+
+        function filterGames() {
+            const query = document.getElementById('searchBar').value.toLowerCase();
+            const filtered = myCleanGames.filter(game => game.title.toLowerCase().includes(query));
+            displayGames(filtered);
         }
     </script>
 </body>
