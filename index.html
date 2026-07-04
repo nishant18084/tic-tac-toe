@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ Neon Custom Arcade Hub ⚡</title>
+    <title>⚡ Nishant Arcade Hub ⚡</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -26,7 +26,7 @@
             text-align: center;
             width: 90%;
             max-width: 350px;
-            margin-top: 10vh;
+            margin-top: 15vh;
         }
         #loginContainer h2 {
             color: #66fcf1;
@@ -101,20 +101,39 @@
             outline: none;
             margin-top: 15px;
         }
+        
+        /* Game Arena Container */
         #arenaContainer {
             display: none;
-            width: 90%;
+            width: 95%;
             max-width: 960px;
             margin: 20px 0;
             background: #1f2833;
-            padding: 10px;
+            padding: 15px;
             border-radius: 12px;
             border: 2px solid #66fcf1;
+            position: relative;
         }
+        
+        /* 🔥 AAPKA APNA LOGO (Game ke upar dikhega) 🔥 */
+        .my-custom-logo {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff007f, #7f00ff);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 10px;
+            box-shadow: 0 0 10px #ff007f;
+        }
+
         #gameScreen {
             width: 100%;
             height: 550px;
             border: none;
+            border-radius: 8px;
+            background-color: #000;
         }
         .close-btn {
             background: #ff4757;
@@ -127,9 +146,11 @@
             float: right;
             font-weight: bold;
         }
+
+        /* Grid Layout */
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 20px;
             width: 90%;
             max-width: 1200px;
@@ -185,6 +206,7 @@
         </header>
 
         <div id="arenaContainer">
+            <div class="my-custom-logo">⭐ NISHANT GAMING CO. ⭐</div>
             <button class="close-btn" onclick="closeGame()">❌ Close Game</button>
             <iframe id="gameScreen" src="" allowfullscreen></iframe>
         </div>
@@ -193,26 +215,20 @@
     </div>
 
     <script>
-        // Badi Clean list jismein koi external logo ya company feed nahi hai!
+        // Subway Surfers aur baaki saare premium trending games ki custom list
         const myCleanGames = [
-            { title: "Minecraft Classic", url: "https://classic.minecraft.net/", thumbnailUrl: "https://images.unsplash.com/photo-1605901309584-818e25960a8f?w=150" },
-            { title: "Tetris Game", url: "https://tetris.com/play-tetris", thumbnailUrl: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=150" },
-            { title: "2048 Arcade", url: "https://2048game.com/", thumbnailUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=150" },
-            { title: "Flappy Bird", url: "https://flappybird.io/", thumbnailUrl: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150" },
-            { title: "Google Snake", url: "https://www.google.com/fbx?fbx=snake_arcade", thumbnailUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=150" },
-            { title: "Space Invaders", url: "https://freeinvaders.org/", thumbnailUrl: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=150" },
-            { title: "Asteroids", url: "https://www.playclassic.games/games/8-bit-atari-400-800-games-online/play-asteroids-online/", thumbnailUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" },
-            { title: "Cut The Rope", url: "https://www.gamee.com/games/cut-the-rope", thumbnailUrl: "https://images.unsplash.com/photo-1614680376593-902f74fa0d41?w=150" },
-            { title: "Paper.io 2", url: "https://paper-io.com/", thumbnailUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=150" },
-            { title: "Slither.io", url: "https://slither.io/", thumbnailUrl: "https://images.unsplash.com/photo-1527474305487-b87b222841cc?w=150" },
-            { title: "Hill Climb Racing", url: "https://www.crazygames.com/game/hill-climb-racing", thumbnailUrl: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=150" },
-            { title: "Subway Surfers Clone", url: "https://www.crazygames.com/game/subway-surfers", thumbnailUrl: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=150" },
-            { title: "Temple Run Clone", url: "https://www.crazygames.com/game/temple-run-2", thumbnailUrl: "https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=150" },
-            { title: "Chess Online", url: "https://lichess.org/embed/game", thumbnailUrl: "https://images.unsplash.com/photo-1529699211952-734e80c4d42b?w=150" },
-            { title: "Sudoku Classic", url: "https://sudoku.com/", thumbnailUrl: "https://images.unsplash.com/photo-1603481588273-2f908a9a7a1b?w=150" },
-            { title: "Moto X3M Bike", url: "https://www.crazygames.com/game/moto-x3m", thumbnailUrl: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=150" },
-            { title: "Little Alchemy", url: "https://littlealchemy.com/", thumbnailUrl: "https://images.unsplash.com/photo-1532187863486-abf9d39d6618?w=150" },
-            { title: "Dino Chrome", url: "https://chromedino.com/", thumbnailUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150" }
+            { title: "Subway Surfers", url: "https://images-opensocial.googleusercontent.com/gadgets/ifr?url=https://cdn.jsdelivr.net/gh/gertdaj/se9@266de077b960b7193f2f81ef69c366ff1cc9e403/subway-surfers/subway-surfers.xml", thumbnailUrl: "https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?w=200" },
+            { title: "Temple Run 2", url: "https://www.crazygames.com/embed/temple-run-2", thumbnailUrl: "https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=200" },
+            { title: "Moto X3M Bike Racing", url: "https://www.crazygames.com/embed/moto-x3m", thumbnailUrl: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=200" },
+            { title: "Minecraft Classic", url: "https://classic.minecraft.net/", thumbnailUrl: "https://images.unsplash.com/photo-1605901309584-818e25960a8f?w=200" },
+            { title: "Tunnel Rush", url: "https://www.crazygames.com/embed/tunnel-rush", thumbnailUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=200" },
+            { title: "Cyber Cars Racing", url: "https://www.crazygames.com/embed/cyber-cars-punk-racing", thumbnailUrl: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=200" },
+            { title: "Stickman Fighting", url: "https://www.crazygames.com/embed/stickman-street-fighting", thumbnailUrl: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=200" },
+            { title: "Google Snake", url: "https://www.google.com/fbx?fbx=snake_arcade", thumbnailUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=200" },
+            { title: "Tetris Arcade", url: "https://tetris.com/play-tetris", thumbnailUrl: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=200" },
+            { title: "2048 Game", url: "https://2048game.com/", thumbnailUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=200" },
+            { title: "Slither.io", url: "https://slither.io/", thumbnailUrl: "https://images.unsplash.com/photo-1527474305487-b87b222841cc?w=200" },
+            { title: "Paper.io 2", url: "https://paper-io.com/", thumbnailUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200" }
         ];
 
         function handleLogin() {
