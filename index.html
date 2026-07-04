@@ -1,46 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nishant Gaming Network</title>
+    <style>
+        /* --- GLOBAL STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0d0d13;
+            color: #ffffff;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- HEADER & BANNER --- */
+        header {
+            margin-bottom: 40px;
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 20px;
+        }
+
+        .banner {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff007f, #7f00ff);
+            color: white;
+            padding: 12px 35px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px rgba(255, 0, 127, 0.6); }
+            50% { box-shadow: 0 0 35px rgba(127, 0, 255, 0.9); }
+            100% { box-shadow: 0 0 20px rgba(255, 0, 127, 0.6); }
+        }
+
+        /* --- RESPONSIVE GAME GRID --- */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 10px;
+        }
+
+        /* --- GAME CARD STYLES --- */
+        .game-card {
+            background-color: #1a1a24;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Image Wrapper */
+        .image-container {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #141419;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Game Title Styling */
+        .game-title {
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            background-color: #16161f;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        /* --- HOVER EFFECTS --- */
+        .game-card:hover {
+            transform: translateY(-8px);
+            border-color: #ff007f;
+            box-shadow: 0 12px 25px rgba(255, 0, 127, 0.4);
+        }
+
+        .game-card:hover .game-title {
+            color: #ff007f;
+            background-color: #1c1c27;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="banner">⭐ Nishant Gaming Network ⭐</div>
+    </header>
+
     <main class="games-grid">
 
         <a href="#" class="game-card">
             <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1627856013091-fed6e4e30025?w=500&auto=format&fit=crop" alt="Subway Surfers" onerror="this.style.display='none';">
+                <img src="https://images.unsplash.com/photo-1627856013091-fed6e4e30025?w=500&auto=format&fit=crop" alt="Subway Surfers">
             </div>
             <div class="game-title">Subway Surfers</div>
         </a>
 
         <a href="#" class="game-card">
             <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop" alt="Retro Breakout" onerror="this.style.display='none';">
+                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop" alt="Retro Breakout">
             </div>
             <div class="game-title">Retro Breakout</div>
         </a>
 
         <a href="#" class="game-card">
             <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1611195974226-a6a9be9dd763?w=500&auto=format&fit=crop" alt="2048 Game" onerror="this.style.display='none';">
+                <img src="https://images.unsplash.com/photo-1611195974226-a6a9be9dd763?w=500&auto=format&fit=crop" alt="2048 Game">
             </div>
             <div class="game-title">2048 Game</div>
         </a>
 
         <a href="#" class="game-card">
             <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1605899435973-ca2d1a8861cf?w=500&auto=format&fit=crop" alt="Minecraft Classic" onerror="this.style.display='none';">
+                <img src="https://images.unsplash.com/photo-1605899435973-ca2d1a8861cf?w=500&auto=format&fit=crop" alt="Minecraft Classic">
             </div>
             <div class="game-title">Minecraft Classic</div>
         </a>
 
         <a href="#" class="game-card">
             <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=500&auto=format&fit=crop" alt="Hextris Puzzle" onerror="this.style.display='none';">
+                <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=500&auto=format&fit=crop" alt="Hextris Puzzle">
             </div>
             <div class="game-title">Hextris Puzzle</div>
         </a>
 
         <a href="#" class="game-card">
             <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1628277613967-6abca504d0ac?w=500&auto=format&fit=crop" alt="Google Snake" onerror="this.style.display='none';">
+                <img src="https://images.unsplash.com/photo-1628277613967-6abca504d0ac?w=500&auto=format&fit=crop" alt="Google Snake">
             </div>
             <div class="game-title">Google Snake</div>
         </a>
 
     </main>
-    
+
+</body>
+</html>
