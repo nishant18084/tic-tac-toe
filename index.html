@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ Nishant's Own Arcade Hub ⚡</title>
+    <title>⚡ Nishant Gaming Portal ⚡</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -21,108 +21,43 @@
             background: linear-gradient(135deg, #1f2833, #0b0c10);
             padding: 20px 0;
             text-align: center;
-            border-bottom: 3px solid #66fcf1;
-            box-shadow: 0px 4px 20px rgba(102, 252, 241, 0.3);
+            border-bottom: 3px solid #ff007f;
+            box-shadow: 0px 4px 20px rgba(255, 0, 127, 0.3);
         }
         header h1 {
-            color: #66fcf1;
+            color: #fff;
             margin: 0;
-            text-shadow: 0 0 10px #66fcf1;
+            text-shadow: 0 0 10px #ff007f;
             font-size: 2.2rem;
         }
-        #searchBar {
-            padding: 12px 20px;
-            width: 80%;
-            max-width: 400px;
-            border-radius: 25px;
-            border: 2px solid #45f3ff;
-            background-color: #1f2833;
-            color: #fff;
-            font-size: 16px;
-            outline: none;
-            margin-top: 15px;
-        }
-        
-        /* Game Arena Container */
-        #arenaContainer {
-            display: none;
-            width: 95%;
-            max-width: 960px;
-            margin: 20px 0;
-            background: #1f2833;
-            padding: 15px;
-            border-radius: 12px;
-            border: 2px solid #66fcf1;
-        }
-        
-        /* 🔥 AAPKA APNA BRANDING LOGO (Hamesha Game ke upar rahega) 🔥 */
-        .my-custom-logo {
+        .my-brand-logo {
             display: inline-block;
             background: linear-gradient(45deg, #ff007f, #7f00ff);
             color: white;
-            padding: 6px 18px;
-            border-radius: 20px;
+            padding: 8px 20px;
+            border-radius: 25px;
             font-weight: bold;
-            font-size: 15px;
-            margin-bottom: 10px;
+            font-size: 16px;
+            margin: 15px 0;
             box-shadow: 0 0 15px #ff007f;
             letter-spacing: 1px;
         }
-
-        #gameScreen {
-            width: 100%;
-            height: 550px;
-            border: none;
-            border-radius: 8px;
-            background-color: #000;
-        }
-        .close-btn {
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            float: right;
-            font-weight: bold;
-        }
-
-        /* 200+ Games Layout Grid */
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 20px;
-            width: 90%;
+        .arcade-frame-container {
+            width: 95%;
             max-width: 1200px;
-            padding: 30px 0;
-        }
-        .game-card {
-            background-color: #1f2833;
-            border-radius: 10px;
+            height: 80vh;
+            background-color: #121212;
+            border: 3px solid #7f00ff;
+            border-radius: 15px;
             overflow: hidden;
-            cursor: pointer;
-            border: 1px solid #45f3ff;
-            text-align: center;
-            transition: 0.3s;
+            box-shadow: 0 0 25px rgba(127, 0, 255, 0.4);
+            margin-bottom: 20px;
         }
-        .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(69, 243, 255, 0.5);
-        }
-        .game-card img {
+        /* Itch.io open catalog layout - no external brand logos */
+        #itchArcadeStore {
             width: 100%;
-            height: 120px;
-            object-fit: cover;
-        }
-        .game-title {
-            padding: 10px;
-            font-size: 14px;
-            color: #fff;
-            font-weight: bold;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            height: 100%;
+            border: none;
         }
     </style>
 </head>
@@ -130,72 +65,13 @@
 
     <header>
         <h1>⚡ NISHANT'S ARCADE PORTAL ⚡</h1>
-        <input type="text" id="searchBar" placeholder="🔍 Apna pasandida game search karein..." oninput="filterGames()">
     </header>
 
-    <div id="arenaContainer">
-        <div class="my-custom-logo">⭐ NISHANT GAMING NETWORK ⭐</div>
-        <button class="close-btn" onclick="closeGame()">❌ Close Game</button>
-        <iframe id="gameScreen" src="" allowfullscreen></iframe>
+    <div class="my-brand-logo">⭐ NISHANT GAMING NETWORK ⭐</div>
+
+    <div class="arcade-frame-container">
+        <iframe id="itchArcadeStore" src="https://itch.io/games/platform-web/free/embed" allowfullscreen></iframe>
     </div>
 
-    <div class="game-grid" id="gameGrid"></div>
-
-    <script>
-        // High quality fast open-source URLs jo block nahi hote hain
-        const myCleanGames = [
-            { title: "Subway Surfers", url: "https://webgl.crazygames.com/subway-surfers/index.html", thumbnailUrl: "https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?w=200" },
-            { title: "Temple Run 2", url: "https://html5.gamedistribution.com/de43b02213e449a5b6b1070e1781b0a8/", thumbnailUrl: "https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=200" },
-            { title: "Moto X3M Bike Racing", url: "https://html5.gamedistribution.com/7b322da541ee476ba097f4fa1da8b97d/", thumbnailUrl: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=200" },
-            { title: "Tunnel Rush", url: "https://html5.gamedistribution.com/83c8474cb45945038c35b80b7c7b168e/", thumbnailUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=200" },
-            { title: "Cyber Cars Racing", url: "https://html5.gamedistribution.com/593257850ee84620b7ee2e3d964cb659/", thumbnailUrl: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=200" },
-            { title: "Stickman Street Fighting", url: "https://html5.gamedistribution.com/527f54b6fb7948a9b70b5ee68f237ef5/", thumbnailUrl: "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=200" },
-            { title: "Retro Tetris", url: "https://tetris.com/play-tetris", thumbnailUrl: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=200" },
-            { title: "Minecraft Classic", url: "https://classic.minecraft.net/", thumbnailUrl: "https://images.unsplash.com/photo-1605901309584-818e25960a8f?w=200" },
-            { title: "Google Snake", url: "https://www.google.com/fbx?fbx=snake_arcade", thumbnailUrl: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=200" },
-            { title: "2048 Blocks", url: "https://2048game.com/", thumbnailUrl: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=200" },
-            { title: "Retro Space Invaders", url: "https://freeinvaders.org/", thumbnailUrl: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200" },
-            { title: "Slither Worm Arena", url: "https://slither.io/", thumbnailUrl: "https://images.unsplash.com/photo-1527474305487-b87b222841cc?w=200" }
-        ];
-
-        function displayGames(gamesList) {
-            const grid = document.getElementById('gameGrid');
-            grid.innerHTML = ""; 
-            gamesList.forEach(game => {
-                const card = document.createElement('div');
-                card.className = 'game-card';
-                card.onclick = () => playGame(game.url);
-                card.innerHTML = `
-                    <img src="${game.thumbnailUrl}" alt="${game.title}">
-                    <div class="game-title">${game.title}</div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function playGame(url) {
-            const container = document.getElementById('arenaContainer');
-            const iframe = document.getElementById('gameScreen');
-            iframe.src = url;
-            container.style.display = 'block';
-            window.scrollTo({ top: container.offsetTop - 20, behavior: 'smooth' });
-        }
-
-        function closeGame() {
-            const container = document.getElementById('arenaContainer');
-            const iframe = document.getElementById('gameScreen');
-            iframe.src = "";
-            container.style.display = 'none';
-        }
-
-        function filterGames() {
-            const query = document.getElementById('searchBar').value.toLowerCase();
-            const filtered = myCleanGames.filter(game => game.title.toLowerCase().includes(query));
-            displayGames(filtered);
-        }
-
-        // Direct load bina login ke
-        window.onload = () => displayGames(myCleanGames);
-    </script>
 </body>
 </html>
