@@ -56,8 +56,7 @@
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            text-decoration: none;
-            color: #ffffff;
+            cursor: pointer;
             display: flex;
             flex-direction: column;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
@@ -98,6 +97,58 @@
             color: #ff007f;
             background-color: #1c1c27;
         }
+
+        /* --- GAME OVERLAY/MODAL POP-UP --- */
+        .game-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .popup-content {
+            position: relative;
+            width: 90%;
+            max-width: 960px;
+            height: 70vh;
+            background-color: #141419;
+            border: 2px solid #ff007f;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.5);
+        }
+
+        .popup-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -45px;
+            right: 0;
+            background-color: #ff007f;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .close-btn:hover {
+            background-color: #7f00ff;
+        }
     </style>
 </head>
 <body>
@@ -108,49 +159,54 @@
 
     <main class="games-grid">
 
-        <a href="#" class="game-card">
-            <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1627856013091-fed6e4e30025?w=500&auto=format&fit=crop" alt="Subway Surfers">
-            </div>
-            <div class="game-title">Subway Surfers</div>
-        </a>
-
-        <a href="#" class="game-card">
-            <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop" alt="Retro Breakout">
-            </div>
-            <div class="game-title">Retro Breakout</div>
-        </a>
-
-        <a href="#" class="game-card">
+        <div class="game-card" onclick="openGame('https://play2048.co/')">
             <div class="image-container">
                 <img src="https://images.unsplash.com/photo-1611195974226-a6a9be9dd763?w=500&auto=format&fit=crop" alt="2048 Game">
             </div>
             <div class="game-title">2048 Game</div>
-        </a>
+        </div>
 
-        <a href="#" class="game-card">
-            <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1605899435973-ca2d1a8861cf?w=500&auto=format&fit=crop" alt="Minecraft Classic">
-            </div>
-            <div class="game-title">Minecraft Classic</div>
-        </a>
-
-        <a href="#" class="game-card">
+        <div class="game-card" onclick="openGame('https://hextris.io/')">
             <div class="image-container">
                 <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=500&auto=format&fit=crop" alt="Hextris Puzzle">
             </div>
             <div class="game-title">Hextris Puzzle</div>
-        </a>
+        </div>
 
-        <a href="#" class="game-card">
+        <div class="game-card" onclick="openGame('https://elgoog.im/breakout/')">
             <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1628277613967-6abca504d0ac?w=500&auto=format&fit=crop" alt="Google Snake">
+                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop" alt="Retro Breakout">
             </div>
-            <div class="game-title">Google Snake</div>
-        </a>
+            <div class="game-title">Retro Breakout</div>
+        </div>
+
+        <div class="game-card" onclick="openGame('https://flappybird.io/')">
+            <div class="image-container">
+                <img src="https://images.unsplash.com/photo-1627856013091-fed6e4e30025?w=500&auto=format&fit=crop" alt="Flappy Bird">
+            </div>
+            <div class="game-title">Flappy Bird</div>
+        </div>
 
     </main>
+
+    <div id="gamePopup" class="game-popup">
+        <div class="popup-content">
+            <button class="close-btn" onclick="closeGame()">CLOSE X</button>
+            <iframe id="gameFrame" src=""></iframe>
+        </div>
+    </div>
+
+    <script>
+        function openGame(gameUrl) {
+            document.getElementById('gameFrame').src = gameUrl;
+            document.getElementById('gamePopup').style.display = 'flex';
+        }
+
+        function closeGame() {
+            document.getElementById('gamePopup').style.display = 'none';
+            document.getElementById('gameFrame').src = ''; // Stop game sound on close
+        }
+    </script>
 
 </body>
 </html>
