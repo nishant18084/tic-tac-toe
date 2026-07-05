@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Player Hub</title>
+    <title>Race Video Player Hub</title>
     <style>
         * {
             margin: 0;
@@ -22,12 +22,80 @@
             min-height: 100vh;
         }
 
-        h1 {
+        /* YouTube जैसा टॉप नेविगेशन बार */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
             margin-bottom: 30px;
-            color: #ff0055;
-            text-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+            padding: 10px 0;
+            border-bottom: 1px solid #2e2e4f;
         }
 
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .home-btn {
+            background: #ff0055;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .home-btn:hover {
+            background: #cc0044;
+        }
+
+        h1 {
+            color: #ff0055;
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+            font-size: 1.5rem;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            width: 40%;
+            max-width: 500px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #2e2e4f;
+            background: #1a1a2e;
+            color: white;
+            border-radius: 20px 0 0 20px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #ff0055;
+        }
+
+        .search-box button {
+            padding: 10px 20px;
+            border: none;
+            background: #2e2e4f;
+            color: white;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+        }
+
+        .search-box button:hover {
+            background: #ff0055;
+        }
+
+        /* वीडियो कार्ड्स की ग्रिड */
         .video-container {
             display: flex;
             flex-wrap: wrap;
@@ -60,6 +128,7 @@
             color: #ffffff;
         }
 
+        /* वीडियो प्लेयर विंडो */
         #player-container {
             display: none;
             width: 100%;
@@ -82,14 +151,24 @@
 </head>
 <body>
 
-    <h1>Race Video Player Hub</h1>
+    <div class="navbar">
+        <div class="logo-section">
+            <button class="home-btn" onclick="goHome()">Home</button>
+            <h1>Race Hub</h1>
+        </div>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" onkeyup="searchVideo()" placeholder="वीडियो सर्च करें...">
+            <button>🔍</button>
+        </div>
+    </div>
 
-    <div class="video-container">
+    <div class="video-container" id="videoContainer">
         <div class="video-card" onclick="playVideo('https://www.youtube.com/embed/tgbNymZ7vqY')">
             <h3>Video Tutorial 1</h3>
         </div>
         <div class="video-card" onclick="playVideo('https://www.youtube.com/embed/dQw4w9WgXcQ')">
-            <h3>Music Video</h3>
+            <h3>Music Video (Despacito)</h3>
         </div>
         <div class="video-card" onclick="playVideo('https://www.youtube.com/embed/kJQP7kiw5Fk')">
             <h3>Gaming Stream</h3>
@@ -101,18 +180,49 @@
     </div>
 
     <script>
+        // वीडियो प्ले करने का फंक्शन
         function playVideo(videoUrl) {
             const container = document.getElementById('player-container');
             const iframe = document.getElementById('video-player');
-            
-            // iframe में नया वीडियो लिंक डालना
             iframe.src = videoUrl;
-            
-            // प्लेयर को शो करना
             container.style.display = 'block';
-            
-            // स्क्रीन को स्मूदली स्क्रॉल करके प्लेयर तक ले जाना
             container.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // होम बटन फंक्शन (प्लेयर बंद करेगा और सब कुछ रीसेट करेगा)
+        function goHome() {
+            const container = document.getElementById('player-container');
+            const iframe = document.getElementById('video-player');
+            const cards = document.getElementsByClassName('video-card');
+            const searchInput = document.getElementById('searchInput');
+            
+            iframe.src = "";
+            container.style.display = 'none';
+            searchInput.value = "";
+            
+            // सारे कार्ड्स वापस दिखाएँ
+            for (let i = 0; i < cards.length; i++) {
+                cards[i].style.display = "block";
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // लाइव सर्च फंक्शन (YouTube से 50% अलग तरीका)
+        function searchVideo() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('video-card');
+            
+            for (let i = 0; i < cards.length; i++) {
+                let title = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+                
+                // अगर नाम मैच करेगा तो दिखेगा, नहीं तो छिप जाएगा
+                if (title.includes(input)) {
+                    cards[i].style.display = "block";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
         }
     </script>
 
