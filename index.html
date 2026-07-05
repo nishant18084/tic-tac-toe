@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nishant Gaming Network</title>
+    <title>Video Player Hub</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #0d0d13;
+            background-color: #0f0f1a;
             color: #ffffff;
             padding: 20px;
             display: flex;
@@ -22,189 +22,97 @@
             min-height: 100vh;
         }
 
-        header {
-            margin: 30px 0;
-            text-align: center;
-            width: 100%;
+        h1 {
+            margin-bottom: 30px;
+            color: #ff0055;
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
         }
 
-        .banner {
-            display: inline-block;
-            background: linear-gradient(45deg, #ff007f, #7f00ff);
-            color: #ffffff;
-            padding: 12px 35px;
-            font-size: 1.4rem;
-            font-weight: bold;
-            border-radius: 50px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
-        }
-
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
+        .video-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
             width: 100%;
             max-width: 1200px;
-            padding: 10px;
         }
 
-        .game-card {
-            background-color: #1a1a24;
-            border-radius: 15px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        .video-card {
+            background: #1a1a2e;
+            padding: 20px;
+            border-radius: 10px;
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-        }
-
-        .image-container {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background-color: #141419;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .game-title {
-            padding: 15px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #2e2e4f;
+            width: 250px;
             text-align: center;
-            background-color: #16161f;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            letter-spacing: 0.5px;
-            transition: color 0.3s ease, background-color 0.3s ease;
         }
 
-        .game-card:hover {
-            transform: translateY(-8px);
-            border-color: #ff007f;
-            box-shadow: 0 12px 25px rgba(255, 0, 127, 0.4);
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 0, 85, 0.4);
+            border-color: #ff0055;
         }
 
-        .game-card:hover .game-title {
-            color: #ff007f;
-            background-color: #1c1c27;
+        .video-card h3 {
+            font-size: 1.2rem;
+            color: #ffffff;
         }
 
-        /* --- GAME OVERLAY/MODAL POP-UP --- */
-        .game-popup {
+        #player-container {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .popup-content {
-            position: relative;
-            width: 90%;
-            max-width: 960px;
-            height: 70vh;
-            background-color: #141419;
-            border: 2px solid #ff007f;
-            border-radius: 15px;
+            max-width: 800px;
+            height: 450px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 0 30px rgba(255, 0, 127, 0.5);
+            background: #000;
+            border: 2px solid #ff0055;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
+            margin-top: 20px;
         }
 
-        .popup-content iframe {
+        iframe {
             width: 100%;
             height: 100%;
             border: none;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: -45px;
-            right: 0;
-            background-color: #ff007f;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .close-btn:hover {
-            background-color: #7f00ff;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="banner">⭐ Nishant Gaming Network ⭐</div>
-    </header>
+    <h1>Race Video Player Hub</h1>
 
-    <main class="games-grid">
-
-        <div class="game-card" onclick="openGame('https://play2048.co/')">
-            <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1611195974226-a6a9be9dd763?w=500&auto=format&fit=crop" alt="2048 Game">
-            </div>
-            <div class="game-title">2048 Game</div>
+    <div class="video-container">
+        <div class="video-card" onclick="playVideo('https://www.youtube.com/embed/tgbNymZ7vqY')">
+            <h3>Video Tutorial 1</h3>
         </div>
-
-        <div class="game-card" onclick="openGame('https://hextris.io/')">
-            <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=500&auto=format&fit=crop" alt="Hextris Puzzle">
-            </div>
-            <div class="game-title">Hextris Puzzle</div>
+        <div class="video-card" onclick="playVideo('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+            <h3>Music Video</h3>
         </div>
-
-        <div class="game-card" onclick="openGame('https://elgoog.im/breakout/')">
-            <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop" alt="Retro Breakout">
-            </div>
-            <div class="game-title">Retro Breakout</div>
-        </div>
-
-        <div class="game-card" onclick="openGame('https://flappybird.io/')">
-            <div class="image-container">
-                <img src="https://images.unsplash.com/photo-1627856013091-fed6e4e30025?w=500&auto=format&fit=crop" alt="Flappy Bird">
-            </div>
-            <div class="game-title">Flappy Bird</div>
-        </div>
-
-    </main>
-
-    <div id="gamePopup" class="game-popup">
-        <div class="popup-content">
-            <button class="close-btn" onclick="closeGame()">CLOSE X</button>
-            <iframe id="gameFrame" src=""></iframe>
+        <div class="video-card" onclick="playVideo('https://www.youtube.com/embed/kJQP7kiw5Fk')">
+            <h3>Gaming Stream</h3>
         </div>
     </div>
 
-    <script>
-        function openGame(gameUrl) {
-            document.getElementById('gameFrame').src = gameUrl;
-            document.getElementById('gamePopup').style.display = 'flex';
-        }
+    <div id="player-container">
+        <iframe id="video-player" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
 
-        function closeGame() {
-            document.getElementById('gamePopup').style.display = 'none';
-            document.getElementById('gameFrame').src = ''; // Stop game sound on close
+    <script>
+        function playVideo(videoUrl) {
+            const container = document.getElementById('player-container');
+            const iframe = document.getElementById('video-player');
+            
+            // iframe में नया वीडियो लिंक डालना
+            iframe.src = videoUrl;
+            
+            // प्लेयर को शो करना
+            container.style.display = 'block';
+            
+            // स्क्रीन को स्मूदली स्क्रॉल करके प्लेयर तक ले जाना
+            container.scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 
