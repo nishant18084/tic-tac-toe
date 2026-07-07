@@ -11,7 +11,7 @@ async function getTrainStatus() {
     resultDiv.innerHTML = "<p style='text-align:center;'>Fetching live status, please wait...</p>";
 
     // Aapki di hui API Key
-    const apiKey = 'Rg_778e58e2c36341869b0cc6f651711c9'; 
+    const apiKey = 'rg_33e8a2e410b445d6b78406e6803e6475'; 
     
     // Railradar/RapidAPI ka endpoint
     const apiUrl = `https://railradar.p.rapidapi.com/v1/trains/${trainNumber}/live`;
