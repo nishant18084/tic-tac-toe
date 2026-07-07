@@ -1,174 +1,170 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Race Player & Downloader</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <title>My Custom Video Player</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #0b0c10;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px;
-            min-height: 100vh;
-        }
-
-        /* टॉप नेविगेशन बार (जैसा आपके स्क्रीनशॉट में था) */
-        .navbar {
-            width: 100%;
-            max-width: 1000px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 20px;
-            background: #1f2833;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .logo {
-            color: #ff4757;
-            font-weight: bold;
-            font-size: 1.3rem;
-        }
-
-        .search-box {
-            display: flex;
-            gap: 8px;
-        }
-
-        input[type="text"] {
-            padding: 10px 14px;
-            border: none;
-            border-radius: 6px;
-            background: #2f3542;
-            color: #fff;
-            outline: none;
-            width: 220px;
-            font-size: 14px;
-        }
-
-        input[type="text"]:focus {
-            border: 1px solid #ff4757;
-        }
-
-        button {
-            padding: 10px 20px;
-            background: #ff4757;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-        button:hover {
-            background: #e84118;
-        }
-
-        /* मुख्य प्लेयर एरिया */
-        .main-content {
-            width: 100%;
-            max-width: 800px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .note {
-            color: #ffb142;
-            font-size: 13px;
-            text-align: center;
-            max-width: 600px;
-            line-height: 1.4;
-        }
-
-        /* वीडियो स्क्रीन विंडो */
+        /* Player Ka Main Container */
         .video-container {
-            width: 100%;
-            aspect-ratio: 16/9; /* परफेक्ट वीडियो साइज (मोबाइल और डेस्कटॉप दोनों के लिए) */
-            background: #000000;
-            border: 2px solid #1f2833;
-            border-radius: 12px;
+            max-width: 800px;
+            margin: 20px auto;
+            position: relative;
+            background-color: #000;
+            font-family: Arial, sans-serif;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
 
         video {
             width: 100%;
-            height: 100%;
-            object-fit: contain; /* वीडियो बिना कटे सही से दिखेगा */
+            display: block;
+        }
+
+        /* Custom Controls Bar */
+        .custom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            gap: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Hover karne par controls dikhenge (Video.js jaisa) */
+        .video-container:hover .custom-controls {
+            opacity: 1;
+        }
+
+        button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            outline: none;
+            padding: 5px 10px;
+        }
+
+        button:hover {
+            color: #00ffcc; /* Video.js skin jaisa neon touch */
+        }
+
+        /* Progress Bar (Seek Bar) */
+        .seek-bar {
+            flex-grow: 1;
+            cursor: pointer;
+            accent-color: #00ffcc;
+        }
+
+        /* Volume Slider */
+        .volume-bar {
+            width: 80px;
+            cursor: pointer;
+            accent-color: #00ffcc;
+        }
+
+        .time-display {
+            color: white;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
 
-    <div class="navbar">
-        <div class="logo">Race Player & Downloader</div>
-        <div class="search-box">
-            <input type="text" id="videoUrl" placeholder="यहाँ वीडियो का लिंक पेस्ट करें..." />
-            <button onclick="playVideo()">Play</button>
+    <div class="video-container">
+        <video id="my-video" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"></video>
+
+        <div class="custom-controls">
+            <button id="play-pause">▶</button>
+            
+            <input type="range" id="seek-bar" class="seek-bar" value="0" min="0" step="0.1">
+            
+            <span id="time-display" class="time-display">0:00</span>
+            
+            <button id="mute-btn">🔊</button>
+            <input type="range" id="volume-bar" class="volume-bar" value="1" min="0" max="1" step="0.1">
         </div>
     </div>
 
-    <div class="main-content">
-        <p class="note">💡 नोट: केवल डायरेक्ट वीडियो लिंक्स (जैसे .mp4, .m3u8, .webm) ही यहाँ प्ले किए जा सकते हैं।</p>
-        
-        <div class="video-container">
-            <video id="myVideo" controls autoplay>
-                आपका ब्राउज़र इस वीडियो टैग को सपोर्ट नहीं करता।
-            </video>
-        </div>
-    </div>
+    <script>
+        const video = document.getElementById('my-video');
+        const playPauseBtn = document.getElementById('play-pause');
+        const seekBar = document.getElementById('seek-bar');
+        const volumeBar = document.getElementById('volume-bar');
+        const muteBtn = document.getElementById('mute-btn');
+        const timeDisplay = document.getElementById('time-display');
 
-<script>
-    function playVideo() {
-        const url = document.getElementById('videoUrl').value.trim();
-        const video = document.getElementById('myVideo');
-
-        if (!url) {
-            alert('कृपया पहले एक वीडियो लिंक डालें!');
-            return;
-        }
-
-        // HLS Streaming (.m3u8) के लिए स्पेशल सपोर्ट
-        if (url.includes('.m3u8')) {
-            if (Hls.isSupported()) {
-                const hls = new Hls();
-                hls.loadSource(url);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play();
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Apple Safari के लिए नेटिव सपोर्ट
-                video.src = url;
+        // Play aur Pause Functionality
+        playPauseBtn.addEventListener('click', () => {
+            if (video.paused) {
                 video.play();
+                playPauseBtn.textContent = '⏸';
             } else {
-                alert('आपका ब्राउज़र इस स्ट्रीमिंग फॉर्मेट को सपोर्ट नहीं करता।');
+                video.pause();
+                playPauseBtn.textContent = '▶';
             }
-        } else {
-            // सामान्य वीडियो फॉर्मेट्स (MP4, WebM आदि) के लिए
-            video.src = url;
-            video.load();
-            video.play().catch(error => {
-                alert('वीडियो प्ले नहीं हो सका। कृपया लिंक की जांच करें कि वह डायरेक्ट वीडियो लिंक है या नहीं।');
-            });
-        }
-    }
-</script>
+        });
+
+        // Video click karne par bhi play/pause ho
+        video.addEventListener('click', () => {
+            playPauseBtn.click();
+        });
+
+        // Video ke sath Progress Bar update hona
+        video.addEventListener('timeupdate', () => {
+            if (!isNaN(video.duration)) {
+                const value = (video.currentTime / video.duration) * 100;
+                seekBar.value = value;
+
+                // Time Display Format (Minutes:Seconds)
+                let mins = Math.floor(video.currentTime / 60);
+                let secs = Math.floor(video.currentTime % 60);
+                if (secs < 10) secs = '0' + secs;
+                timeDisplay.textContent = `${mins}:${secs}`;
+            }
+        });
+
+        // Video track ke duration set hone par seek bar ki max value set karna
+        video.addEventListener('loadedmetadata', () => {
+            seekBar.max = 100;
+        });
+
+        // Seek bar ko aage-piche karne par video badalna
+        seekBar.addEventListener('input', () => {
+            const time = (seekBar.value / 100) * video.duration;
+            video.currentTime = time;
+        });
+
+        // Volume Change
+        volumeBar.addEventListener('input', () => {
+            video.volume = volumeBar.value;
+            if (video.volume === 0) {
+                muteBtn.textContent = '🔇';
+            } else {
+                muteBtn.textContent = '🔊';
+            }
+        });
+
+        // Mute/Unmute Button
+        muteBtn.addEventListener('click', () => {
+            if (video.muted) {
+                video.muted = false;
+                muteBtn.textContent = '🔊';
+                volumeBar.value = video.volume;
+            } else {
+                video.muted = true;
+                muteBtn.textContent = '🔇';
+                volumeBar.value = 0;
+            }
+        });
+    </script>
 
 </body>
 </html>
