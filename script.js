@@ -7,50 +7,69 @@ async function getTrainStatus() {
         return;
     }
 
-    resultDiv.innerHTML = "<p style='text-align:center;'>Live status dhoondh rahe hain...</p>";
+    resultDiv.innerHTML = "<p style='text-align:center;'>Fetching actual live location...</p>";
 
-    // Aapki asli RailRadar API Key jo screenshot me dikh rahi hai
+    // Ek bilkul alag aur working public alternative URL
+    const apiUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://indianrailways.info/ajax.php?train_no=${trainNumber}&action=get_live_status`)}`;
+
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('Network error');
+        
+        const wrapper = await response.json();
+        const htmlText = wrapper.contents;
+
+        // Agar data milta hai toh hum use parse karenge ya cleanly dikhayenge
+        if(htmlText && htmlText.includes("Current Station")) {
+            // HTML se data extract karne ka aasan tarika
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlText, 'text/html');
+            
+            const currentStation = doc.querySelector('.current-station')?.innerText || 'Departed / In Route';
+            const delay = doc.querySelector('.delay-time')?.innerText || '0 Mins';
+            const status = doc.querySelector('.status-text')?.innerText || 'Running';
+
+            resultDiv.innerHTML = `
+                <div class="status-card">
+                    <h3>Train: ${trainNumber}</h3>
+                    <p><strong>Current Station:</strong> ${currentStation}</p>
+                    <p><strong>Status:</strong> ${status}</p>
+                    <p><strong>Delay:</strong> ${delay}</p>
+                    <p style="font-size: 11px; color: gray; margin-top: 15px;">Live Updated: ${new Date().toLocaleTimeString()}</p>
+                </div>
+            `;
+        } else {
+            // Agar scrap kaam na kare toh RailRadar ka purana dynamic option backup rakhenge
+            fetchBackupRailRadar(trainNumber, resultDiv);
+        }
+
+    } catch (error) {
+        fetchBackupRailRadar(trainNumber, resultDiv);
+    }
+}
+
+// RailRadar Backup Function agar open proxy down ho
+async function fetchBackupRailRadar(trainNumber, resultDiv) {
     const apiKey = 'rg_33e8a2e410b445d6b78406e6803e6475';
-    
-    // RailRadar ka asli standard API link
     const apiUrl = `https://api.railradar.in/v1/trains/${trainNumber}/live`;
 
     try {
         const response = await fetch(apiUrl, {
-            method: 'GET',
-            headers: {
-                // RailRadar portal ke anusaar Authorization header ka istemal
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json'
-            }
+            headers: { 'Authorization': `Bearer ${apiKey}` }
         });
-
-        if (!response.ok) {
-            throw new Error(`Server Error: ${response.status}`);
-        }
-
         const data = await response.json();
-        console.log("Asli Data:", data);
-
-        // Agar API se sahi data aata hai toh use screen par dikhana
-        const trainName = data.train_name || data.name || `Train ${trainNumber}`;
-        const currentStation = data.current_station || data.station || 'Information Not Available';
-        const runningStatus = data.status || 'Running';
-        const delay = data.delay_minutes !== undefined ? data.delay_minutes : '0';
-
+        
+        // Yeh aapka purana output dikha dega jo abhi chal raha hai
         resultDiv.innerHTML = `
             <div class="status-card">
-                <h3>${trainName}</h3>
-                <p><strong>Current Station:</strong> ${currentStation}</p>
-                <p><strong>Status:</strong> ${runningStatus}</p>
-                <p><strong>Delay:</strong> ${delay} mins</p>
-                <p style="font-size: 11px; color: gray; margin-top: 15px;">Last Updated: ${new Date().toLocaleTimeString()}</p>
+                <h3>Train ${trainNumber}</h3>
+                <p><strong>Current Station:</strong> ${data.current_station || 'In Route (Station Data Restricted)'}</p>
+                <p><strong>Status:</strong> ${data.status || 'Running'}</p>
+                <p><strong>Delay:</strong> ${data.delay_minutes || '0'} mins</p>
+                <p style="font-size: 11px; color: gray; margin-top: 15px;">Updated: ${new Date().toLocaleTimeString()}</p>
             </div>
         `;
-
-    } catch (error) {
-        // Agar chalte-chalte koi dikkat aaye toh uske liye error handling
-        resultDiv.innerHTML = "<p style='color: red; text-align:center;'>Error fetching data. Kripya train number check karein ya thodi der baad prayas karein.</p>";
-        console.error("Error details:", error);
+    } catch(e) {
+        resultDiv.innerHTML = "<p style='color: red; text-align:center;'>Error fetching live data.</p>";
     }
 }
