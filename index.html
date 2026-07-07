@@ -3,168 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Custom Video Player</title>
-    <style>
-        /* Player Ka Main Container */
-        .video-container {
-            max-width: 800px;
-            margin: 20px auto;
-            position: relative;
-            background-color: #000;
-            font-family: Arial, sans-serif;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-
-        video {
-            width: 100%;
-            display: block;
-        }
-
-        /* Custom Controls Bar */
-        .custom-controls {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            gap: 15px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        /* Hover karne par controls dikhenge (Video.js jaisa) */
-        .video-container:hover .custom-controls {
-            opacity: 1;
-        }
-
-        button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            outline: none;
-            padding: 5px 10px;
-        }
-
-        button:hover {
-            color: #00ffcc; /* Video.js skin jaisa neon touch */
-        }
-
-        /* Progress Bar (Seek Bar) */
-        .seek-bar {
-            flex-grow: 1;
-            cursor: pointer;
-            accent-color: #00ffcc;
-        }
-
-        /* Volume Slider */
-        .volume-bar {
-            width: 80px;
-            cursor: pointer;
-            accent-color: #00ffcc;
-        }
-
-        .time-display {
-            color: white;
-            font-size: 14px;
-        }
-    </style>
+    <title>My Live Train Tracker</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <div class="video-container">
-        <video id="my-video" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"></video>
-
-        <div class="custom-controls">
-            <button id="play-pause">▶</button>
-            
-            <input type="range" id="seek-bar" class="seek-bar" value="0" min="0" step="0.1">
-            
-            <span id="time-display" class="time-display">0:00</span>
-            
-            <button id="mute-btn">🔊</button>
-            <input type="range" id="volume-bar" class="volume-bar" value="1" min="0" max="1" step="0.1">
+    <div class="container">
+        <h2>Live Train Tracker</h2>
+        <div class="search-box">
+            <input type="text" id="trainNum" placeholder="Enter 5-Digit Train Number (e.g. 12301)">
+            <button onclick="getTrainStatus()">Check Status</button>
         </div>
+        <div id="result" class="result-box"></div>
     </div>
 
-    <script>
-        const video = document.getElementById('my-video');
-        const playPauseBtn = document.getElementById('play-pause');
-        const seekBar = document.getElementById('seek-bar');
-        const volumeBar = document.getElementById('volume-bar');
-        const muteBtn = document.getElementById('mute-btn');
-        const timeDisplay = document.getElementById('time-display');
-
-        // Play aur Pause Functionality
-        playPauseBtn.addEventListener('click', () => {
-            if (video.paused) {
-                video.play();
-                playPauseBtn.textContent = '⏸';
-            } else {
-                video.pause();
-                playPauseBtn.textContent = '▶';
-            }
-        });
-
-        // Video click karne par bhi play/pause ho
-        video.addEventListener('click', () => {
-            playPauseBtn.click();
-        });
-
-        // Video ke sath Progress Bar update hona
-        video.addEventListener('timeupdate', () => {
-            if (!isNaN(video.duration)) {
-                const value = (video.currentTime / video.duration) * 100;
-                seekBar.value = value;
-
-                // Time Display Format (Minutes:Seconds)
-                let mins = Math.floor(video.currentTime / 60);
-                let secs = Math.floor(video.currentTime % 60);
-                if (secs < 10) secs = '0' + secs;
-                timeDisplay.textContent = `${mins}:${secs}`;
-            }
-        });
-
-        // Video track ke duration set hone par seek bar ki max value set karna
-        video.addEventListener('loadedmetadata', () => {
-            seekBar.max = 100;
-        });
-
-        // Seek bar ko aage-piche karne par video badalna
-        seekBar.addEventListener('input', () => {
-            const time = (seekBar.value / 100) * video.duration;
-            video.currentTime = time;
-        });
-
-        // Volume Change
-        volumeBar.addEventListener('input', () => {
-            video.volume = volumeBar.value;
-            if (video.volume === 0) {
-                muteBtn.textContent = '🔇';
-            } else {
-                muteBtn.textContent = '🔊';
-            }
-        });
-
-        // Mute/Unmute Button
-        muteBtn.addEventListener('click', () => {
-            if (video.muted) {
-                video.muted = false;
-                muteBtn.textContent = '🔊';
-                volumeBar.value = video.volume;
-            } else {
-                video.muted = true;
-                muteBtn.textContent = '🔇';
-                volumeBar.value = 0;
-            }
-        });
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
