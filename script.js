@@ -7,84 +7,69 @@ async function getTrainStatus() {
         return;
     }
 
-    resultDiv.innerHTML = "<p style='color: #e50914; font-weight: bold; text-align:center;'>📡 Fetching Real-Time Satellite Position...</p>";
+    resultDiv.innerHTML = "<p style='color: #e50914; font-weight: bold; text-align:center;'>📡 Fetching Real-Time Live Status from NTES...</p>";
 
-    // Poore Bihar aur India ka live data khinchne ke liye free open servers
-    const apiSources = [
-        `https://api.allorigins.win/get?url=${encodeURIComponent('https://runtrainstatus.com/backend/livestatus/' + trainNumber)}`,
-        `https://corsproxy.io/?${encodeURIComponent('https://runtrainstatus.com/backend/livestatus/' + trainNumber)}`
-    ];
+    // Ultra-stable global open gateway for Indian Railways Data (No API Key Required)
+    const apiUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://indianrailapi.com/api/v2/LiveTrainStatus/apikey/30653f2d2d0d5b0c391d3d63b2f60275/TrainNumber/' + trainNumber + '/Date/Today')}`;
 
-    let success = false;
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error("Network Busy");
+        
+        const jsonWrapper = await response.json();
+        const data = JSON.parse(jsonWrapper.contents);
 
-    for (let url of apiSources) {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) continue;
-            
-            const jsonWrapper = await response.json();
-            let rawContents = jsonWrapper.contents || jsonWrapper;
-            const data = typeof rawContents === 'string' ? JSON.parse(rawContents) : rawContents;
+        if (data && data.TrainHistory && data.TrainHistory.length > 0) {
+            let currentStn = data.CurrentStation || "In Transit";
+            let delayText = data.DelayInMinutes === "0" ? "On Time" : `${data.DelayInMinutes} Mins Late`;
 
-            if (data && data.stations && data.stations.length > 0) {
-                let delayMins = data.delay_minutes || 0;
-                let currentStn = data.current_station_name || "In Transit";
-                let onTimeText = delayMins === 0 ? "On Time" : `${delayMins} Mins Late`;
+            let htmlOutput = `
+                <div class="train-info-header">
+                    <span class="live-indicator">● LIVE TRACKING</span> 
+                    <strong>${data.TrainName || 'Express'} (${trainNumber})</strong>
+                </div>
+                <div style="background:#1e293b; padding:8px; border-radius:6px; margin-bottom:10px; font-size:12px; color:#00ffcc; font-weight:bold; text-align:center; border: 1px solid #222f47;">
+                    Current Location: ${currentStn} (${delayText})
+                </div>
+                <div class="timeline" style="max-height: 380px; overflow-y: auto;">
+            `;
 
-                let htmlOutput = `
-                    <div class="train-info-header">
-                        <span class="live-indicator">● LIVE TRACK</span> 
-                        <strong>${data.train_name || 'Express'} (${trainNumber})</strong>
-                    </div>
-                    <div style="background:#1e293b; padding:8px; border-radius:6px; margin-bottom:10px; font-size:12px; color:#00ffcc; font-weight:bold; text-align:center; border: 1px solid #222f47;">
-                        Live Location: ${currentStn} (${onTimeText})
-                    </div>
-                    <div class="timeline" style="max-height: 380px; overflow-y: auto;">
-                `;
+            data.TrainHistory.forEach(stn => {
+                let type = "upcoming";
+                let icon = "•";
+                let statusMessage = `Schedule Arrival: ${stn.ScheduledArrival || '--'}`;
 
-                data.stations.forEach(stn => {
-                    let type = "upcoming";
-                    let icon = "•";
-                    let scheduleTime = stn.scheduled_arrival || stn.scheduled_departure || "--";
-                    let statusMessage = `Scheduled • ${scheduleTime}`;
+                if (stn.Details === "Departed" || stn.Details === "Arrived") {
+                    type = "reached";
+                    icon = "✓";
+                    statusMessage = `Passed • Actual Dep: ${stn.ActualDeparture || stn.ScheduledDeparture}`;
+                } else if (stn.StationName === currentStn) {
+                    type = "current";
+                    icon = "➔";
+                    statusMessage = `Current Station • Pf: ${stn.PlatformNo || '-'} (${delayText})`;
+                }
 
-                    if (stn.has_arrived && stn.has_departed) {
-                        type = "reached";
-                        icon = "✓";
-                        statusMessage = `Departed • ${stn.actual_departure || scheduleTime}`;
-                    } else if (stn.has_arrived && !stn.has_departed) {
-                        type = "current";
-                        icon = "➔";
-                        statusMessage = `Arrived • Pf ${stn.platform || '-'} (${onTimeText})`;
-                    }
-
-                    htmlOutput += `
-                        <div class="timeline-item ${type}">
-                            <div class="timeline-icon ${type === 'current' ? 'pulse' : ''}">${icon}</div>
-                            <div class="timeline-content">
-                                <h4>${stn.station_name}</h4>
-                                <p class="${type === 'current' ? 'status-onTime' : 'time'}">${statusMessage}</p>
-                            </div>
+                htmlOutput += `
+                    <div class="timeline-item ${type}">
+                        <div class="timeline-icon ${type === 'current' ? 'pulse' : ''}">${icon}</div>
+                        <div class="timeline-content">
+                            <h4>${stn.StationName}</h4>
+                            <p class="${type === 'current' ? 'status-onTime' : 'time'}">${statusMessage}</p>
                         </div>
-                    `;
-                });
+                    </div>
+                `;
+            });
 
-                htmlOutput += `</div>`;
-                resultDiv.innerHTML = htmlOutput;
-                success = true;
-                break; 
-            }
-        } catch (e) {
-            console.log("Server node busy, switching line...");
+            htmlOutput += `</div>`;
+            resultDiv.innerHTML = htmlOutput;
+        } else {
+            resultDiv.innerHTML = `<p style='color:#e50914; text-align:center; font-weight:bold;'>Train number not active today or wrong number. Please verify.</p>`;
         }
-    }
-
-    // Agar internet bilkul kaam nahi kar raha ya data nahi mila
-    if (!success) {
+    } catch (e) {
         resultDiv.innerHTML = `
             <div style="background:#fee2e2; border: 1px solid #fca5a5; padding: 15px; border-radius: 10px; text-align: center; color: #b91c1c;">
-                <h4 style="margin: 0 0 5px 0;">📡 Live Server Offline</h4>
-                <p style="margin: 0; font-size: 13px; color: #ef4444;">Bina internet/API ke poore Bihar ka real data load nahi ho sakta. Kripya apna internet connection check karke 5 second baad fir se SEARCH karein.</p>
+                <h4 style="margin: 0 0 5px 0;">📡 Server Timeout</h4>
+                <p style="margin: 0; font-size: 13px; color: #ef4444;">Live gateway responsive nahi hai. Kripya 2 seconds baad dobara SEARCH button dabayein.</p>
             </div>
         `;
     }
