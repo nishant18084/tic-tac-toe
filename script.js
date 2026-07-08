@@ -7,22 +7,23 @@ function getTrainStatus() {
         return;
     }
 
-    // Checking if it's a valid 5 digit train number format
     if(trainNumber.length !== 5 || isNaN(trainNumber)) {
         alert("Please enter a valid 5-digit train number");
         return;
     }
 
-    resultDiv.innerHTML = `
-        <div class="status-card" style="border-left: 5px solid #007bff; text-align: center;">
-            <h3>Train ${trainNumber} Found</h3>
-            <p>Redirecting you to the official Live Running Route tracker...</p>
-            <p style="font-size: 12px; color: gray;">Loading maps and timetable data...</p>
-        </div>
-    `;
+    resultDiv.innerHTML = "<p style='color: #0b6623; font-weight: bold;'>Loading Live 'Where Is My Train' Dashboard...</p>";
 
-    // 1.5 seconds ka delay taaki animation complete dikhe, fir direct official map tracker open ho jaye
+    // Mobile-friendly fully dynamic visual live widget URL
+    const embeddedTrackerUrl = `https://railbeeps.com/train-running-status/${trainNumber}?embed=true`;
+
+    // Iframe ke zariye live dashboard ko app ke andar load karna
     setTimeout(() => {
-        window.location.href = `https://enquiry.indianrail.gov.in/mntes/?opt=TrainRunningStatus&subOpt=SearchTrain&trainNo=${trainNumber}`;
-    }, 1500);
+        resultDiv.innerHTML = `
+            <div style="margin-bottom: 10px; font-weight: bold; color: #334155; text-align: left;">
+                Live Route Map & Station Updates (Train: ${trainNumber})
+            </div>
+            <iframe class="status-frame" src="${embeddedTrackerUrl}" allowfullscreen></iframe>
+        `;
+    }, 1000);
 }
