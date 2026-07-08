@@ -13,7 +13,8 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     width: 100%;
-    max-width: 430px;
+    max-width: 400px;
+    margin-top: 20px;
 }
 
 h2 {
@@ -35,6 +36,7 @@ input {
     border: 2px solid #cbd5e1;
     border-radius: 8px;
     font-size: 16px;
+    outline: none;
 }
 
 button {
@@ -47,14 +49,13 @@ button {
     font-weight: bold;
 }
 
-/* "Where Is My Train" Styles */
 .train-info-header {
     background: #0b6623;
     color: white;
     padding: 10px;
     border-radius: 6px;
     margin-bottom: 20px;
-    font-size: 14px;
+    font-size: 13px;
     display: flex;
     justify-content: space-between;
 }
@@ -104,10 +105,6 @@ button {
     color: white;
 }
 
-.current .pulse {
-    animation: shadow-pulse 1.5s infinite;
-}
-
 .timeline-content h4 {
     margin: 0;
     font-size: 15px;
@@ -126,8 +123,3 @@ button {
 }
 
 @keyframes blink { 50% { opacity: 0; } }
-@keyframes shadow-pulse {
-    0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.6); }
-    70% { box-shadow: 0 0 0 8px rgba(0, 123, 255, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
-}
