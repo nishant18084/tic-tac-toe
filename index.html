@@ -1,14 +1,29 @@
-<div class="container">
-    <h2>Live Train Tracker</h2>
-    
-    <div class="live-clock-card">
-        <span class="clock-label">🔴 DEVICE TIME:</span>
-        <span id="liveClock">00:00:00 AM</span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Train Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Live Train Tracker</h2>
+        
+        <div class="live-clock-card">
+            <span class="clock-label">🔴 DEVICE TIME:</span>
+            <span id="liveClock">00:00:00 AM</span>
+        </div>
+
+        <div class="search-box">
+            <input type="number" id="trainNum" placeholder="Enter 5-Digit Train Number">
+            <button onclick="getTrainStatus()">Check Status</button>
+        </div>
+        
+        <div id="result"></div>
     </div>
 
-    <div class="search-box">
-        <input type="number" id="trainNum" placeholder="Enter 5-Digit Train Number">
-        <button onclick="getTrainStatus()">Check Status</button>
-    </div>
-    <div id="result"></div>
-</div>
+    <script src="script.js"></script>
+</body>
+</html>
