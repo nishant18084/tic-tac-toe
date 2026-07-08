@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Live Train Tracker</title>
+    <title>Live Train Tracker</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <div class="container">
         <h2>Live Train Tracker</h2>
+        
         <div class="search-box">
-            <input type="text" id="trainNum" placeholder="Enter 5-Digit Train Number (e.g. 12301)">
+            <input type="text" id="trainNum" placeholder="Enter 5-Digit Train No. (e.g., 13022)" maxlength="5">
             <button onclick="getTrainStatus()">Check Status</button>
         </div>
+
         <div id="result" class="result-box"></div>
     </div>
 
