@@ -64,3 +64,4 @@ function showWhereIsMyTrainInterface(trainNum, resultDiv) {
         </p>
     `;
 }
+
