@@ -9,16 +9,21 @@ async function getTrainStatus() {
 
     resultDiv.innerHTML = "<p style='color: #e50914; font-weight: bold; text-align:center;'>📡 Accessing Live National Train Database...</p>";
 
-    // Direct open-source scraper stream (No CORS blocks)
+    // RailYatri public JSON feed via ultra-fast corsproxy
     const apiUrl = `https://corsproxy.io/?${encodeURIComponent('https://images.railyatri.in/live_status/' + trainNumber + '/today.json')}`;
 
+    // 4-second hard timeout setting taaki code kabhi loading par na atke
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
+
     try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error("Server Error");
+        const response = await fetch(apiUrl, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) throw new Error("Server Down");
         
         const data = await response.json();
 
-        // Checking real data from RailYatri live feed
         if (data && data.data && data.data.station_statuses) {
             let trainName = data.data.train_name || "Express";
             let currentStn = data.data.current_station_name || "In Transit";
@@ -67,10 +72,11 @@ async function getTrainStatus() {
             resultDiv.innerHTML = `<p style='color:#e50914; text-align:center; font-weight:bold;'>Train status not updated yet or incorrect number.</p>`;
         }
     } catch (e) {
+        clearTimeout(timeoutId);
         resultDiv.innerHTML = `
             <div style="background:#fee2e2; border: 1px solid #fca5a5; padding: 15px; border-radius: 10px; text-align: center; color: #b91c1c;">
-                <h4 style="margin: 0 0 5px 0;">📡 Security Bypass Error</h4>
-                <p style="margin: 0; font-size: 13px; color: #ef4444;">Server busy hai. Ek baar page ko reload karke fir se try kijiye!</p>
+                <h4 style="margin: 0 0 5px 0;">📡 Connection Timeout</h4>
+                <p style="margin: 0; font-size: 13px; color: #ef4444;">Server respond nahi kar raha hai. Kripya 2 seconds baad dobara SEARCH dabayein.</p>
             </div>
         `;
     }
