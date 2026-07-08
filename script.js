@@ -7,53 +7,54 @@ async function getTrainStatus() {
         return;
     }
 
-    resultDiv.innerHTML = "<p style='color: #e50914; font-weight: bold; text-align:center;'>📡 Fetching Real-Time Live Status from NTES...</p>";
+    resultDiv.innerHTML = "<p style='color: #e50914; font-weight: bold; text-align:center;'>📡 Accessing Live National Train Database...</p>";
 
-    // Ultra-stable global open gateway for Indian Railways Data (No API Key Required)
-    const apiUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://indianrailapi.com/api/v2/LiveTrainStatus/apikey/30653f2d2d0d5b0c391d3d63b2f60275/TrainNumber/' + trainNumber + '/Date/Today')}`;
+    // Direct open-source scraper stream (No CORS blocks)
+    const apiUrl = `https://corsproxy.io/?${encodeURIComponent('https://images.railyatri.in/live_status/' + trainNumber + '/today.json')}`;
 
     try {
         const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error("Network Busy");
+        if (!response.ok) throw new Error("Server Error");
         
-        const jsonWrapper = await response.json();
-        const data = JSON.parse(jsonWrapper.contents);
+        const data = await response.json();
 
-        if (data && data.TrainHistory && data.TrainHistory.length > 0) {
-            let currentStn = data.CurrentStation || "In Transit";
-            let delayText = data.DelayInMinutes === "0" ? "On Time" : `${data.DelayInMinutes} Mins Late`;
+        // Checking real data from RailYatri live feed
+        if (data && data.data && data.data.station_statuses) {
+            let trainName = data.data.train_name || "Express";
+            let currentStn = data.data.current_station_name || "In Transit";
+            let delayText = data.data.delay_text || "On Time";
 
             let htmlOutput = `
                 <div class="train-info-header">
-                    <span class="live-indicator">● LIVE TRACKING</span> 
-                    <strong>${data.TrainName || 'Express'} (${trainNumber})</strong>
+                    <span class="live-indicator">● LIVE TRACK</span> 
+                    <strong>${trainName} (${trainNumber})</strong>
                 </div>
                 <div style="background:#1e293b; padding:8px; border-radius:6px; margin-bottom:10px; font-size:12px; color:#00ffcc; font-weight:bold; text-align:center; border: 1px solid #222f47;">
-                    Current Location: ${currentStn} (${delayText})
+                    Current Status: ${currentStn} (${delayText})
                 </div>
                 <div class="timeline" style="max-height: 380px; overflow-y: auto;">
             `;
 
-            data.TrainHistory.forEach(stn => {
+            data.data.station_statuses.forEach(stn => {
                 let type = "upcoming";
                 let icon = "•";
-                let statusMessage = `Schedule Arrival: ${stn.ScheduledArrival || '--'}`;
+                let statusMessage = `Arr: ${stn.eta || '--'} | Dep: ${stn.etd || '--'}`;
 
-                if (stn.Details === "Departed" || stn.Details === "Arrived") {
+                if (stn.has_arrived && stn.has_departed) {
                     type = "reached";
                     icon = "✓";
-                    statusMessage = `Passed • Actual Dep: ${stn.ActualDeparture || stn.ScheduledDeparture}`;
-                } else if (stn.StationName === currentStn) {
+                    statusMessage = `Passed • Arr: ${stn.ata || stn.eta}`;
+                } else if (!stn.has_departed && stn.has_arrived) {
                     type = "current";
                     icon = "➔";
-                    statusMessage = `Current Station • Pf: ${stn.PlatformNo || '-'} (${delayText})`;
+                    statusMessage = `Current Station • Pf: ${stn.platform_number || '-'} (${stn.delay_in_minutes}m Late)`;
                 }
 
                 htmlOutput += `
                     <div class="timeline-item ${type}">
                         <div class="timeline-icon ${type === 'current' ? 'pulse' : ''}">${icon}</div>
                         <div class="timeline-content">
-                            <h4>${stn.StationName}</h4>
+                            <h4>${stn.station_name}</h4>
                             <p class="${type === 'current' ? 'status-onTime' : 'time'}">${statusMessage}</p>
                         </div>
                     </div>
@@ -63,13 +64,13 @@ async function getTrainStatus() {
             htmlOutput += `</div>`;
             resultDiv.innerHTML = htmlOutput;
         } else {
-            resultDiv.innerHTML = `<p style='color:#e50914; text-align:center; font-weight:bold;'>Train number not active today or wrong number. Please verify.</p>`;
+            resultDiv.innerHTML = `<p style='color:#e50914; text-align:center; font-weight:bold;'>Train status not updated yet or incorrect number.</p>`;
         }
     } catch (e) {
         resultDiv.innerHTML = `
             <div style="background:#fee2e2; border: 1px solid #fca5a5; padding: 15px; border-radius: 10px; text-align: center; color: #b91c1c;">
-                <h4 style="margin: 0 0 5px 0;">📡 Server Timeout</h4>
-                <p style="margin: 0; font-size: 13px; color: #ef4444;">Live gateway responsive nahi hai. Kripya 2 seconds baad dobara SEARCH button dabayein.</p>
+                <h4 style="margin: 0 0 5px 0;">📡 Security Bypass Error</h4>
+                <p style="margin: 0; font-size: 13px; color: #ef4444;">Server busy hai. Ek baar page ko reload karke fir se try kijiye!</p>
             </div>
         `;
     }
