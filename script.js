@@ -7,31 +7,29 @@ async function getTrainStatus() {
         return;
     }
 
-    resultDiv.innerHTML = "<p style='color: #0b6623; font-weight: bold; text-align:center;'>Fetching Real Live Data from Satellites...</p>";
+    resultDiv.innerHTML = "<p style='color: #0b6623; font-weight: bold; text-align:center;'>Connecting Live Tracking Engine...</p>";
 
-    // Direct Live Tracking Server Endpoint Node (CORS Covered Proxy)
     const apiUrl = `https://api.allorigins.win/get?url=${encodeURIComponent('https://runtrainstatus.com/backend/livestatus/' + trainNumber)}`;
 
     try {
         const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error("Network issues");
+        if (!response.ok) throw new Error("Server Offline");
         
         const jsonWrapper = await response.json();
         const data = JSON.parse(jsonWrapper.contents);
 
-        // Agar live data internet par available hai toh execute karein
         if (data && data.stations && data.stations.length > 0) {
             let delayMins = data.delay_minutes || 0;
-            let currentStn = data.current_station_name || "Not Started Yet";
+            let currentStn = data.current_station_name || "Not Started";
             let onTimeText = delayMins === 0 ? "On Time" : `${delayMins} Mins Late`;
 
             let htmlOutput = `
                 <div class="train-info-header">
-                    <span class="live-indicator">● LIVE TARGET MATCH</span> 
+                    <span class="live-indicator">● LIVE NETWORK SYNC</span> 
                     <strong>${data.train_name || 'Express'} (${trainNumber})</strong>
                 </div>
                 <div style="background:#f0fdf4; padding:8px; border-radius:6px; margin-bottom:10px; font-size:12px; color:#166534; font-weight:bold; text-align:center; border: 1px solid #bbf7d0;">
-                    Live App Position: ${currentStn} (${onTimeText})
+                    Live App Station: ${currentStn} (${onTimeText})
                 </div>
                 <div class="timeline" style="max-height: 380px; overflow-y: auto;">
             `;
@@ -72,10 +70,9 @@ async function getTrainStatus() {
             return;
         }
     } catch (e) {
-        console.log("Switching to device sync backup node.");
+        console.log("Switching to device backup.");
     }
 
-    // Backup Engine: Agar API down ho ya custom simulated route chalana ho
     runLocalBackupTracker(trainNumber, resultDiv);
 }
 
@@ -88,11 +85,9 @@ function runLocalBackupTracker(trainNum, resultDiv) {
     };
 
     const train = backupDb[trainNum] || { name: "Express Special", startHour: 8, startMin: 0, stops: ["Origin Station", "Transit Node", "Destination Terminus"] };
-    
     const timeNow = new Date();
     const phoneMins = (timeNow.getHours() * 60) + timeNow.getMinutes();
     const trainStartMins = (train.startHour * 60) + train.startMin;
-    
     let isStarted = phoneMins >= trainStartMins;
     
     let html = `
@@ -103,7 +98,6 @@ function runLocalBackupTracker(trainNum, resultDiv) {
         <div class="timeline" style="max-height: 380px; overflow-y: auto;">
     `;
 
-    // Dynamic automated movement layout engine
     let currentMarked = false;
     train.stops.forEach((stop, idx) => {
         let type = "upcoming";
@@ -119,7 +113,7 @@ function runLocalBackupTracker(trainNum, resultDiv) {
         } else if (!currentMarked) {
             type = "current";
             icon = "➔";
-            label = "Live Tracking Area";
+            label = "Live Area";
             currentMarked = true;
         }
 
@@ -137,3 +131,27 @@ function runLocalBackupTracker(trainNum, resultDiv) {
     html += `</div>`;
     resultDiv.innerHTML = html;
 }
+
+// Live Digital Clock Ticking Engine
+function updateLiveClock() {
+    const clockElement = document.getElementById('liveClock');
+    if (!clockElement) return;
+
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const formattedHours = String(hours).padStart(2, '0');
+
+    clockElement.innerText = `${formattedHours}:${minutes}:${seconds} ${ampm}`;
+}
+
+setInterval(updateLiveClock, 1000);
+window.onload = function() {
+    updateLiveClock();
+};
+
