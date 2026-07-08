@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Train Tracker</title>
+    <title>Premium Train Tracker Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="container">
-        <h2>Live Train Tracker</h2>
+        <h2>TRAIN TRACKER</h2>
         
         <div class="live-clock-card">
-            <span class="clock-label">🔴 DEVICE TIME:</span>
+            <span class="clock-label">🔴 SYSTEM TIME:</span>
             <span id="liveClock">00:00:00 AM</span>
         </div>
 
         <div class="search-box">
-            <input type="number" id="trainNum" placeholder="Enter 5-Digit Train Number">
-            <button onclick="getTrainStatus()">Check Status</button>
+            <input type="number" id="trainNum" placeholder="Enter Train Number (e.g. 13022)">
+            <button onclick="getTrainStatus()">SEARCH</button>
         </div>
         
         <div id="result"></div>
