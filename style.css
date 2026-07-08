@@ -117,8 +117,13 @@ button {
     color: #64748b;
 }
 
-.status-msgText {
+.status-onTime {
     color: #007bff !important;
+    font-weight: bold;
+}
+
+.status-lateTime {
+    color: #dc3545 !important;
     font-weight: bold;
 }
 
