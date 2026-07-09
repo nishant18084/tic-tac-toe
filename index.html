@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIHAR TRAIN TRACKER - GEMINI ENGINE</title>
+    <title>BIHAR TRAIN TRACKER - AI CORE</title>
     <script src="config.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,7 +42,7 @@
         
         .status-container { margin-top: 10px; min-height: 50px; }
         .ai-response-box { background: #0d1624; border-radius: 10px; padding: 15px; text-align: left; border: 1px solid #1e2d4a; font-size: 13px; line-height: 1.6; color: #e2e8f0; }
-        .ai-header { background: #6b21a8; color: white; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 4px; margin-bottom: 10px; display: inline-block; }
+        .ai-header { background: #117a45; color: white; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 4px; margin-bottom: 10px; display: inline-block; }
 
         @keyframes pulse { 0%, 100% { transform: scale(0.95); } 50% { transform: scale(1); } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -51,21 +51,21 @@
 <body>
 
     <div class="gemini-verified-bar">
-        <div class="gemini-status"><span class="gemini-sparkle">✦ GEMINI AI</span><span>LIVE LLM GATEWAY</span></div>
-        <div class="secure-badge">🔒 SECURE NODE</div>
+        <div class="gemini-status"><span class="gemini-sparkle">✦ GEMINI AI</span><span>LIVE LLM CONNECTED</span></div>
+        <div class="secure-badge">🔒 CONFIG MODE ACTIVE</div>
     </div>
 
     <div class="dashboard-grid">
         <div class="processing-panel">
             <div class="panel-title"><div class="pulse-dot"></div>AI Diagnostics Terminal</div>
             <div class="log-box" id="terminalLogs">
-                <div class="log-entry log-gemini">[SYSTEM] Neural link ready with config.js keys.</div>
+                <div class="log-entry log-gemini">[SYSTEM] Global handshake link configured via config.js vector keys.</div>
             </div>
         </div>
 
         <div class="tracker-card">
             <div class="title">BIHAR TRAIN TRACKER</div>
-            <div class="subtitle">Powered by Gemini Intelligent Core</div>
+            <div class="subtitle">Dynamic Real-Time AI Generation Module</div>
             <div class="time-badge"><span id="clockDisplay">--:--:-- AM</span></div>
 
             <div class="search-box">
@@ -74,7 +74,7 @@
             </div>
 
             <div class="status-container" id="statusOutput">
-                <p style="color: #64748b; font-size: 13px;">AI Engine will generate analytics based on your input.</p>
+                <p style="color: #64748b; font-size: 13px;">Enter a train number. Gemini will dynamically fetch the historical schedule and live predictions.</p>
             </div>
         </div>
     </div>
@@ -99,14 +99,15 @@
             const output = document.getElementById('statusOutput');
 
             if (!trainNum) {
-                output.innerHTML = `<p style="color: #ff3333;">⚠️ Train number daalein.</p>`;
+                output.innerHTML = `<p style="color: #ff3333;">⚠️ Please enter a train number.</p>`;
                 return;
             }
 
-            addLog(`[GEMINI] Initiating active API handshake for #${trainNum}...`, "log-gemini");
-            output.innerHTML = `<div style="color: #38bdf8; font-weight: bold;"><span style="display:inline-block; width:12px; height:12px; border:2px solid #3b82f6; border-top:transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:8px;"></span>AI is thinking...</div>`;
+            addLog(`[AI CLOUD] Initializing secure telemetry fetch for #${trainNum}...`, "log-gemini");
+            output.innerHTML = `<div style="color: #38bdf8; font-weight: bold;"><span style="display:inline-block; width:12px; height:12px; border:2px solid #3b82f6; border-top:transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin-right:8px;"></span>Gemini is reading train metrics...</div>`;
 
-            const promptText = `Provide the typical official route, current scheduled timings, and key stations within Bihar for Indian Train Number ${trainNum}. Format it clearly as a clean list of stations with standard arrival timings. Keep it brief and professional.`;
+            // Prompt optimization for cleaner interface responses
+            const promptText = `Provide the standard official route and key halting stations in Bihar for Train Number ${trainNum}. List the main stations along with expected arrival/departure schedules. Keep it formatted nicely with line breaks. Do not mention extra markdown chat text, keep it concise.`;
 
             try {
                 const response = await fetch(`${GEMINI_CONFIG.MODEL_URL}?key=${GEMINI_CONFIG.API_KEY}`, {
@@ -118,22 +119,27 @@
                 });
 
                 const data = await response.json();
-                const aiText = data.candidates[0].content.parts[0].text;
                 
-                addLog(`[SUCCESS] Data stream resolved from Gemini Core.`, "log-success");
-                
-                // Convert simple newlines to HTML breaks for readable format
-                const formattedText = aiText.replace(/\n/g, "<br>");
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const aiText = data.candidates[0].content.parts[0].text;
+                    addLog(`[SUCCESS] Data stream completely captured from Google LLM Cloud.`, "log-success");
+                    
+                    // Fixed: Clean plain-text formatting for raw text responses
+                    const formattedText = aiText.replace(/\n/g, "<br>").replace(/\*\*/g, "");
 
-                output.innerHTML = `
-                    <div class="ai-response-box">
-                        <div class="ai-header">✦ GEMINI LIVE INTELLIGENCE FEED</div>
-                        <div>${formattedText}</div>
-                    </div>
-                `;
+                    output.innerHTML = `
+                        <div class="ai-response-box">
+                            <div class="ai-header">🛰️ GEMINI LIVE SCHEDULER DATA</div>
+                            <div style="font-family: monospace; white-space: pre-line; color:#e2e8f0;">${aiText}</div>
+                        </div>
+                    `;
+                } else {
+                    throw new Error("Invalid Stream Response Structure");
+                }
+
             } catch (error) {
-                addLog(`[ERROR] Direct link rejected. Check Key authentication.`, "log-warn");
-                output.innerHTML = `<p style="color: #ffcc00;">⚠️ Handshake error. GitHub Page par load hone ke baad config key verify karein.</p>`;
+                addLog(`[GATEWAY ERROR] Link rejected or Key corrupted. Check config structure.`, "log-warn");
+                output.innerHTML = `<p style="color: #ffcc00;">⚠️ Handshake Failed. Make sure your config.js variables match correctly on GitHub.</p>`;
             }
         }
     </script>
