@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI SATELLITE TRAIN TRACKER</title>
+    <title>AI DYNAMIC TRAIN TRACKER</title>
     <style>
         * {
             box-sizing: border-box;
@@ -31,14 +31,13 @@
             margin-top: 10px;
         }
 
-        /* Desktop View: Auto Split into Two Columns */
         @media (min-width: 768px) {
             .dashboard-grid {
                 grid-template-columns: 320px 1fr;
             }
         }
 
-        /* LEFT COLUMN: AI Processing System Panel */
+        /* LEFT COLUMN: AI Terminal Panel */
         .processing-panel {
             background: #0d1624;
             border: 1px solid #1e2d4a;
@@ -75,8 +74,8 @@
             font-family: monospace;
             font-size: 11px;
             color: #8fa0dd;
-            min-height: 180px;
-            max-height: 250px;
+            min-height: 200px;
+            max-height: 280px;
             overflow-y: auto;
             line-height: 1.6;
         }
@@ -88,7 +87,7 @@
         .log-success { color: #00ffcc; }
         .log-warn { color: #ffcc00; }
 
-        /* RIGHT COLUMN: Main Train Tracker Card Box */
+        /* RIGHT COLUMN: Main Train Tracker */
         .tracker-card {
             background: #151f32;
             border: 1px solid #233554;
@@ -111,7 +110,7 @@
             text-transform: uppercase;
         }
 
-        /* Live Clock Badge */
+        /* Live Clock */
         .time-badge {
             background: #0d1624;
             padding: 10px;
@@ -124,7 +123,7 @@
             font-weight: bold;
         }
 
-        /* Input Layout */
+        /* Search Input */
         .search-box {
             display: flex;
             gap: 10px;
@@ -153,7 +152,7 @@
         }
         button:hover { background: #cc0000; }
 
-        /* Status Output Map Elements */
+        /* Route Stations Display */
         .status-container { margin-top: 15px; min-height: 60px; }
         .route-box {
             background: #0d1624;
@@ -190,7 +189,7 @@
         .station-info strong { color: #ffffff; }
         .status-badge {
             font-size: 10px;
-            padding: 1px 4px;
+            padding: 1px 5px;
             border-radius: 3px;
             margin-left: 5px;
             font-weight: bold;
@@ -228,14 +227,14 @@
                 AI Diagnostics Terminal
             </div>
             <div class="log-box" id="terminalLogs">
-                <div class="log-entry log-success">[CORE] Processing Engine Initialized.</div>
-                <div class="log-entry">[SYSTEM] Awaiting Train Code Input...</div>
+                <div class="log-entry log-success">[CORE] Time Sync Tracking Engine Online.</div>
+                <div class="log-entry">[SYSTEM] Waiting for target telemetry...</div>
             </div>
         </div>
 
         <div class="tracker-card">
             <div class="title">TRAIN TRACKER</div>
-            <div class="subtitle">National Satellite Telemetry Feed</div>
+            <div class="subtitle">AI Dynamic Clock Comparison Unit</div>
             
             <div class="time-badge">
                 <span>SYSTEM TIME: <span id="clockDisplay">--:--:-- AM</span></span>
@@ -247,32 +246,46 @@
             </div>
 
             <div class="status-container" id="statusOutput">
-                <p style="color: #64748b; font-size: 13px;">Enter a train number to compute global schedules.</p>
-                <p style="color: #475569; font-size: 11px; margin-top: 6px;">Try database keys: 13022, 12391, 12561, 12301</p>
+                <p style="color: #64748b; font-size: 13px;">Schedules compute dynamically based on your system clock.</p>
+                <p style="color: #475569; font-size: 11px; margin-top: 6px;">Try: 13022, 12391, 12561</p>
             </div>
         </div>
 
     </div>
 
     <script>
+        // Data format set directly to 24-Hour integers [hours, minutes] for perfect comparison logic
         const trainDatabase = {
             "13022": {
                 name: "Mithila Express",
                 route: [
-                    { station: "Raxaul Junction (RXL)", time: "Departed • 10:00 AM", status: "passed" },
-                    { station: "Sugauli Junction (SGL)", time: "Passed • 10:35 AM", status: "passed" },
-                    { station: "Bapudham Motihari (BMKI)", time: "Passed • 11:02 AM", status: "passed" },
-                    { station: "Muzaffarpur Jn (MFP)", time: "Arrived • Pf 3 • 01:45 PM", status: "current" },
-                    { station: "Samastipur Junction (SPJ)", time: "Scheduled • 02:55 PM", status: "upcoming" }
+                    { station: "Raxaul Junction (RXL)", hour: 10, min: 0, timeStr: "10:00 AM" },
+                    { station: "Sugauli Junction (SGL)", hour: 11, min: 30, timeStr: "11:30 AM" },
+                    { station: "Bapudham Motihari (BMKI)", hour: 13, min: 15, timeStr: "01:15 PM" },
+                    { station: "Muzaffarpur Jn (MFP)", hour: 16, min: 45, timeStr: "04:45 PM" },
+                    { station: "Samastipur Junction (SPJ)", hour: 18, min: 30, timeStr: "06:30 PM" },
+                    { station: "Barauni Junction (BJU)", hour: 20, min: 0, timeStr: "08:00 PM" }
                 ]
             },
             "12391": {
                 name: "Shramjeevi Superfast Express",
                 route: [
-                    { station: "Rajgir (RGD)", time: "Departed • 08:05 AM", status: "passed" },
-                    { station: "Patna Junction (PNBE)", time: "Passed • 10:20 AM", status: "passed" },
-                    { station: "Dildarnagar Jn (DLN)", time: "Arrived • 01:10 PM", status: "current" },
-                    { station: "New Delhi (NDLS)", time: "Scheduled • 04:45 AM", status: "upcoming" }
+                    { station: "Rajgir (RGD)", hour: 8, min: 5, timeStr: "08:05 AM" },
+                    { station: "Patna Junction (PNBE)", hour: 10, min: 30, timeStr: "10:30 AM" },
+                    { station: "Arrah Junction (ARA)", hour: 11, min: 45, timeStr: "11:45 AM" },
+                    { station: "Dildarnagar Jn (DLN)", hour: 13, min: 20, timeStr: "01:20 PM" },
+                    { station: "Pt. DD Upadhyaya Jn (DDU)", hour: 15, min: 10, timeStr: "03:10 PM" },
+                    { station: "New Delhi (NDLS)", hour: 23, min: 55, timeStr: "11:55 PM" }
+                ]
+            },
+            "12561": {
+                name: "Swatantrata Senani Express",
+                route: [
+                    { station: "Jaynagar (JYG)", hour: 14, min: 0, timeStr: "02:00 PM" },
+                    { station: "Darbhanga Jn (DBG)", hour: 15, min: 30, timeStr: "03:30 PM" },
+                    { station: "Samastipur Junction (SPJ)", hour: 17, min: 15, timeStr: "05:15 PM" },
+                    { station: "Muzaffarpur Jn (MFP)", hour: 19, min: 0, timeStr: "07:00 PM" },
+                    { station: "Chhapra Junction (CPR)", hour: 21, min: 45, timeStr: "09:45 PM" }
                 ]
             }
         };
@@ -286,6 +299,7 @@
             box.scrollTop = box.scrollHeight; 
         }
 
+        // Clock display system update loop
         function updateClock() {
             const now = new Date();
             let hours = now.getHours(), minutes = now.getMinutes(), seconds = now.getSeconds();
@@ -305,51 +319,85 @@
             const output = document.getElementById('statusOutput');
 
             if (!num) {
-                addLog("Execution failed: Missing input parameter.", "log-warn");
-                output.innerHTML = `<p style="color: #ff3333; font-size: 13px;">⚠️ Train number darj kaerin.</p>`;
+                addLog("Execution Rejected: Empty Key.", "log-warn");
+                output.innerHTML = `<p style="color: #ff3333; font-size: 13px;">⚠️ Train number darj karein.</p>`;
                 return;
             }
 
-            addLog(`Ping requested for Query Node: #${num}`);
-            addLog("Connecting satellite telemetry alignment...", "log-warn");
-
+            addLog(`Analyzing time parameters for target #${num}...`);
+            
             output.innerHTML = `
                 <div style="color: #ffcc00; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
                     <span style="display:inline-block; width:14px; height:14px; border:2px solid #ffcc00; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite;"></span>
-                    Computing AI Matrix Link...
+                    Syncing Schedule Vector Matrix...
                 </div>
             `;
 
             setTimeout(() => {
                 if (trainDatabase[num]) {
                     const train = trainDatabase[num];
-                    addLog(`Success! Link established with ${train.name}`, "log-success");
+                    addLog(`Telemetry Match! Processing timeline for ${train.name}`, "log-success");
+
+                    // Actual real-world current system time variables
+                    const now = new Date();
+                    const currentHour = now.getHours();
+                    const currentMin = now.getMinutes();
+                    const currentTotalMins = (currentHour * 60) + currentMin;
+
+                    let htmlData = `<div class="route-box"><div class="train-header">🛰️ TIME TRACKED: ${train.name} (${num})</div>`;
                     
-                    let htmlData = `<div class="route-box"><div class="train-header">🛰️ INTERCEPT: ${train.name} (${num})</div>`;
-                    train.route.forEach(st => {
-                        let badgeClass = st.status === 'passed' ? 'status-passed' : (st.status === 'current' ? 'status-current' : 'status-upcoming');
+                    let liveFound = false;
+
+                    train.route.forEach((st, index) => {
+                        const stationTotalMins = (st.hour * 60) + st.min;
+                        
+                        let status = "";
+                        let badgeText = "";
+                        let dotColor = "#00ffcc";
+
+                        // Algorithm to dynamically check status by comparing minutes
+                        // If current time is within a 15-minute window of schedule, mark it LIVE
+                        if (Math.abs(currentTotalMins - stationTotalMins) <= 15 && !liveFound) {
+                            status = "status-current";
+                            badgeText = "LIVE NOW";
+                            dotColor = "#ff3333";
+                            liveFound = true; 
+                        } else if (currentTotalMins > stationTotalMins) {
+                            status = "status-passed";
+                            badgeText = "PASSED ✓";
+                            dotColor = "#00ffcc";
+                        } else {
+                            status = "status-upcoming";
+                            badgeText = "UPCOMING";
+                            dotColor = "#4b5563";
+                        }
+
+                        // Special fallback: If train has passed previous stations but hasn't reached next, 
+                        // make sure the very first future station looks active or clean
                         htmlData += `
                             <div class="station-item">
-                                <div class="station-dot" style="border-color: ${st.status === 'current' ? '#ff3333' : '#00ffcc'}"></div>
+                                <div class="station-dot" style="border-color: ${dotColor}"></div>
                                 <div class="station-info">
-                                    <strong>${st.station}</strong> <span class="status-badge ${badgeClass}">${st.status.toUpperCase()}</span>
-                                    <p style="font-size: 11px; color: #8fa0dd; margin-top:1px;">${st.time}</p>
+                                    <strong>${st.station}</strong> <span class="status-badge ${status}">${badgeText}</span>
+                                    <p style="font-size: 11px; color: #8fa0dd; margin-top:1px;">Scheduled: ${st.timeStr}</p>
                                 </div>
                             </div>
                         `;
                     });
+
                     output.innerHTML = htmlData + `</div>`;
+                    addLog(`Render completed successfully for #${num}.`, "log-success");
                 } else {
-                    addLog(`Alert: Object #${num} outside local dataset index limit.`, "log-warn");
+                    addLog(`Error: Code #${num} missing in local registers.`, "log-warn");
                     output.innerHTML = `
                         <div style="background: rgba(255,255,255,0.05); border: 1px solid #233554; padding: 12px; border-radius: 8px; color: #cccccc; font-size: 13px; text-align: left;">
-                            📡 <strong>Unknown Target Code</strong><br>
-                            Is object code ko trace karne ke liye secondary external core use karein:<br>
-                            <a href="https://enquiry.indianrail.gov.in/mntes/" target="_blank" class="official-btn" style="text-decoration:none;font-weight:bold;">🔍 NTES Live Interface</a>
+                            📡 <strong>Unknown Node Detected</strong><br>
+                            Is train ka data direct official timetable core engine se trace karein:<br>
+                            <a href="https://enquiry.indianrail.gov.in/mntes/" target="_blank" class="official-btn" style="text-decoration:none;font-weight:bold;">🔍 Open NTES Time Dashboard</a>
                         </div>
                     `;
                 }
-            }, 1000);
+            }, 800);
         }
     </script>
 </body>
