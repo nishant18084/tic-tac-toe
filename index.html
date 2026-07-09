@@ -3,31 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Train Tracker Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-    <div class="container">
-        <h2>TRAIN TRACKER</h2>
-        
-        <div class="live-clock-card">
-            <span class="clock-label">🔴 SYSTEM TIME:</span>
-            <span id="liveClock">00:00:00 AM</span>
-        </div>
-
-        <div class="search-box">
-            <input type="number" id="trainNum" placeholder="Enter Train Number (e.g. 13022)">
-            <button onclick="getTrainStatus()">SEARCH</button>
-        </div>
-        
-        <div id="result"></div>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIVE TRAIN TRACKER - SATELLITE FEED</title>
+    <title>AI SATELLITE TRAIN TRACKER</title>
     <style>
         * {
             box-sizing: border-box;
@@ -38,32 +14,101 @@
             background-color: #0b111e;
             color: #ffffff;
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* Main Tracker Card Box */
+        /* Responsive Dashboard Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+            margin-top: 10px;
+        }
+
+        /* Desktop View: Auto Split into Two Columns */
+        @media (min-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 320px 1fr;
+            }
+        }
+
+        /* LEFT COLUMN: AI Processing System Panel */
+        .processing-panel {
+            background: #0d1624;
+            border: 1px solid #1e2d4a;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+        }
+        .panel-title {
+            color: #00ffcc;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ffcc;
+            border-radius: 50%;
+            animation: pulse 1.2s infinite;
+        }
+        .log-box {
+            background: #050a12;
+            border: 1px solid #152033;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 11px;
+            color: #8fa0dd;
+            min-height: 180px;
+            max-height: 250px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+        .log-entry {
+            margin-bottom: 6px;
+            border-bottom: 1px dashed #152033;
+            padding-bottom: 4px;
+        }
+        .log-success { color: #00ffcc; }
+        .log-warn { color: #ffcc00; }
+
+        /* RIGHT COLUMN: Main Train Tracker Card Box */
         .tracker-card {
             background: #151f32;
             border: 1px solid #233554;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 450px;
+            border-radius: 12px;
             padding: 25px;
             box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
             text-align: center;
         }
-
         .title {
             color: #ff3333;
             font-size: 24px;
             font-weight: bold;
             letter-spacing: 1.5px;
+            margin-bottom: 4px;
+        }
+        .subtitle {
+            color: #8fa0dd;
+            font-size: 11px;
             margin-bottom: 20px;
-            text-shadow: 0 0 10px rgba(255, 51, 51, 0.3);
+            text-transform: uppercase;
         }
 
         /* Live Clock Badge */
@@ -72,24 +117,14 @@
             padding: 10px;
             border-radius: 8px;
             font-family: monospace;
-            font-size: 14px;
-            color: #8fa0dd;
+            font-size: 15px;
+            color: #ffcc00;
             margin-bottom: 20px;
             border: 1px solid #1e2d4a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
-        .live-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #ff3333;
-            border-radius: 50%;
-            animation: blink 1s infinite;
+            font-weight: bold;
         }
 
-        /* Search Input Box Layout */
+        /* Input Layout */
         .search-box {
             display: flex;
             gap: 10px;
@@ -102,45 +137,24 @@
             border-radius: 8px;
             padding: 12px;
             color: #fff;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
-            letter-spacing: 1px;
             outline: none;
         }
-        input:focus {
-            border-color: #ff3333;
-        }
+        input:focus { border-color: #ff3333; }
         button {
             background: #ff3333;
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 12px 20px;
             font-weight: bold;
-            font-size: 14px;
             border-radius: 8px;
             cursor: pointer;
-            transition: background 0.2s;
         }
-        button:hover {
-            background: #cc0000;
-        }
+        button:hover { background: #cc0000; }
 
-        /* Status Output Screens */
-        .status-container {
-            margin-top: 15px;
-            min-height: 80px;
-        }
-        .loading-text {
-            color: #ffcc00;
-            font-weight: bold;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        /* Route Station Map Design */
+        /* Status Output Map Elements */
+        .status-container { margin-top: 15px; min-height: 60px; }
         .route-box {
             background: #0d1624;
             border-radius: 10px;
@@ -162,27 +176,21 @@
             align-items: flex-start;
             gap: 10px;
             margin-bottom: 12px;
-            position: relative;
             font-size: 13px;
         }
         .station-dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             background: #233554;
             border: 2px solid #00ffcc;
             border-radius: 50%;
-            margin-top: 3px;
-            z-index: 2;
+            margin-top: 4px;
         }
-        .station-info {
-            color: #cccccc;
-        }
-        .station-info strong {
-            color: #ffffff;
-        }
+        .station-info { color: #cccccc; }
+        .station-info strong { color: #ffffff; }
         .status-badge {
-            font-size: 11px;
-            padding: 1px 5px;
+            font-size: 10px;
+            padding: 1px 4px;
             border-radius: 3px;
             margin-left: 5px;
             font-weight: bold;
@@ -191,35 +199,62 @@
         .status-current { background: rgba(255, 51, 51, 0.1); color: #ff3333; }
         .status-upcoming { background: rgba(255, 255, 255, 0.1); color: #aaa; }
 
-        @keyframes blink {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
+        .official-btn {
+            display: inline-block;
+            margin-top: 10px;
+            background: #0284c7;
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
         }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 204, 0.5); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(0, 255, 204, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 204, 0); }
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div class="tracker-card">
-        <div class="title">TRAIN TRACKER</div>
+    <div class="dashboard-grid">
         
-        <div class="time-badge">
-            <div class="live-dot"></div>
-            <span>SYSTEM TIME: <span id="clockDisplay">--:--:-- AM</span></span>
+        <div class="processing-panel">
+            <div class="panel-title">
+                <div class="pulse-dot"></div>
+                AI Diagnostics Terminal
+            </div>
+            <div class="log-box" id="terminalLogs">
+                <div class="log-entry log-success">[CORE] Processing Engine Initialized.</div>
+                <div class="log-entry">[SYSTEM] Awaiting Train Code Input...</div>
+            </div>
         </div>
 
-        <div class="search-box">
-            <input type="number" id="trainInput" placeholder="Enter Train Number (e.g. 13022)" onkeypress="handleKeyPress(event)">
-            <button onclick="trackLiveTrain()">SEARCH</button>
+        <div class="tracker-card">
+            <div class="title">TRAIN TRACKER</div>
+            <div class="subtitle">National Satellite Telemetry Feed</div>
+            
+            <div class="time-badge">
+                <span>SYSTEM TIME: <span id="clockDisplay">--:--:-- AM</span></span>
+            </div>
+
+            <div class="search-box">
+                <input type="number" id="trainInput" placeholder="Enter Train Number (e.g. 13022)" onkeypress="handleKeyPress(event)">
+                <button onclick="trackLiveTrain()">TRACK</button>
+            </div>
+
+            <div class="status-container" id="statusOutput">
+                <p style="color: #64748b; font-size: 13px;">Enter a train number to compute global schedules.</p>
+                <p style="color: #475569; font-size: 11px; margin-top: 6px;">Try database keys: 13022, 12391, 12561, 12301</p>
+            </div>
         </div>
 
-        <div class="status-container" id="statusOutput">
-            <p style="color: #64748b; font-size: 13px;">Enter a valid train number above to connect with satellite feed.</p>
-        </div>
     </div>
 
     <script>
-        // 1. Sabhi Major Train Ka Name Aur Number Database
         const trainDatabase = {
             "13022": {
                 name: "Mithila Express",
@@ -227,131 +262,94 @@
                     { station: "Raxaul Junction (RXL)", time: "Departed • 10:00 AM", status: "passed" },
                     { station: "Sugauli Junction (SGL)", time: "Passed • 10:35 AM", status: "passed" },
                     { station: "Bapudham Motihari (BMKI)", time: "Passed • 11:02 AM", status: "passed" },
-                    { station: "Muzaffarpur Jn (MFP)", time: "Arrived • Pf 3 (On Time) • 01:45 PM", status: "current" },
-                    { station: "Samastipur Junction (SPJ)", time: "Scheduled • 02:55 PM", status: "upcoming" },
-                    { station: "Barauni Junction (BJU)", time: "Scheduled • 04:10 PM", status: "upcoming" },
-                    { station: "Jhajha (JAJ)", time: "Scheduled • 07:35 PM", status: "upcoming" }
+                    { station: "Muzaffarpur Jn (MFP)", time: "Arrived • Pf 3 • 01:45 PM", status: "current" },
+                    { station: "Samastipur Junction (SPJ)", time: "Scheduled • 02:55 PM", status: "upcoming" }
                 ]
             },
-            "13019": {
-                name: "Bagh Express",
+            "12391": {
+                name: "Shramjeevi Superfast Express",
                 route: [
-                    { station: "Howrah Junction (HWH)", time: "Departed • 09:45 PM", status: "passed" },
-                    { station: "Asansol Jn (ASN)", time: "Passed • 01:10 AM", status: "passed" },
-                    { station: "Jhajha (JAJ)", time: "Passed • 04:30 AM", status: "passed" },
-                    { station: "Barauni Junction (BJU)", time: "Passed • 07:20 AM", status: "passed" },
-                    { station: "Muzaffarpur Jn (MFP)", time: "Arrived • Pf 1 • 09:15 AM", status: "current" },
-                    { station: "Chhapra Junction (CPR)", time: "Scheduled • 12:30 PM", status: "upcoming" }
-                ]
-            },
-            "15284": {
-                name: "Jayanagar - Manihari Janki Express",
-                route: [
-                    { station: "Jayanagar (JYG)", time: "Departed • 04:45 AM", status: "passed" },
-                    { station: "Madhubani (MBI)", time: "Passed • 05:15 AM", status: "passed" },
-                    { station: "Darbhanga Jn (DBG)", time: "Arrived • Pf 2 • 06:20 AM", status: "current" },
-                    { station: "Samastipur Junction (SPJ)", time: "Scheduled • 07:45 AM", status: "upcoming" }
-                ]
-            },
-            "63012": {
-                name: "Muzaffarpur - Samastipur Memu Passenger",
-                route: [
-                    { station: "Muzaffarpur Jn (MFP)", time: "Departed • 08:30 AM", status: "passed" },
-                    { station: "Siho (SIHO)", time: "Passed • 08:52 AM", status: "passed" },
-                    { station: "Silout (SLT)", time: "Arrived • On Time • 09:12 AM", status: "current" },
-                    { station: "Samastipur Junction (SPJ)", time: "Scheduled • 10:05 AM", status: "upcoming" }
+                    { station: "Rajgir (RGD)", time: "Departed • 08:05 AM", status: "passed" },
+                    { station: "Patna Junction (PNBE)", time: "Passed • 10:20 AM", status: "passed" },
+                    { station: "Dildarnagar Jn (DLN)", time: "Arrived • 01:10 PM", status: "current" },
+                    { station: "New Delhi (NDLS)", time: "Scheduled • 04:45 AM", status: "upcoming" }
                 ]
             }
         };
 
-        // Live Clock Implementation
+        function addLog(text, type = '') {
+            const box = document.getElementById('terminalLogs');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerText = `[${new Date().toLocaleTimeString()}] ${text}`;
+            box.appendChild(entry);
+            box.scrollTop = box.scrollHeight; 
+        }
+
         function updateClock() {
             const now = new Date();
-            let hours = now.getHours();
-            let minutes = now.getMinutes();
-            let seconds = now.getSeconds();
+            let hours = now.getHours(), minutes = now.getMinutes(), seconds = now.getSeconds();
             const ampm = hours >= 12 ? 'PM' : 'AM';
-            
-            hours = hours % 12;
-            hours = hours ? hours : 12; 
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            seconds = seconds < 10 ? '0' + seconds : seconds;
-            hours = hours < 10 ? '0' + hours : hours;
-
-            document.getElementById('clockDisplay').innerText = `${hours}:${minutes}:${seconds} ${ampm}`;
+            hours = hours % 12 || 12;
+            document.getElementById('clockDisplay').innerText = `${hours < 10 ? '0'+hours : hours}:${minutes < 10 ? '0'+minutes : minutes}:${seconds < 10 ? '0'+seconds : seconds} ${ampm}`;
         }
         setInterval(updateClock, 1000);
         window.onload = updateClock;
 
-        // Enter key press handler
         function handleKeyPress(event) {
-            if (event.key === "Enter") {
-                trackLiveTrain();
-            }
+            if (event.key === "Enter") trackLiveTrain();
         }
 
-        // Search Tracker System Logic
         function trackLiveTrain() {
             const num = document.getElementById('trainInput').value.trim();
             const output = document.getElementById('statusOutput');
 
             if (!num) {
-                output.innerHTML = `<p style="color: #ff3333; font-size: 13px;">⚠️ Kripya train number darj karein.</p>`;
+                addLog("Execution failed: Missing input parameter.", "log-warn");
+                output.innerHTML = `<p style="color: #ff3333; font-size: 13px;">⚠️ Train number darj kaerin.</p>`;
                 return;
             }
 
-            // Step 1: Fake Satellite Scan Loading Simulation
+            addLog(`Ping requested for Query Node: #${num}`);
+            addLog("Connecting satellite telemetry alignment...", "log-warn");
+
             output.innerHTML = `
-                <div class="loading-text">
-                    <span style="display:inline-block; width:15px; height:15px; border:2px solid #ffcc00; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite;"></span>
-                    Connecting Live Satellite Route Engine...
+                <div style="color: #ffcc00; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <span style="display:inline-block; width:14px; height:14px; border:2px solid #ffcc00; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite;"></span>
+                    Computing AI Matrix Link...
                 </div>
             `;
 
-            // Dynamic spinner injection
-            if (!document.getElementById('spin-style')) {
-                const style = document.createElement('style');
-                style.id = 'spin-style';
-                style.innerHTML = `@keyframes spin { 100% { transform: rotate(360deg); } }`;
-                document.head.appendChild(style);
-            }
-
-            // Step 2: 1.2 Second ke baad response print karega
             setTimeout(() => {
                 if (trainDatabase[num]) {
                     const train = trainDatabase[num];
-                    let htmlData = `
-                        <div class="route-box">
-                            <div class="train-header">🟢 LIVE ROUTE MAP: ${train.name} (${num})</div>
-                    `;
-
+                    addLog(`Success! Link established with ${train.name}`, "log-success");
+                    
+                    let htmlData = `<div class="route-box"><div class="train-header">🛰️ INTERCEPT: ${train.name} (${num})</div>`;
                     train.route.forEach(st => {
                         let badgeClass = st.status === 'passed' ? 'status-passed' : (st.status === 'current' ? 'status-current' : 'status-upcoming');
-                        let badgeText = st.status === 'passed' ? '✓ Passed' : (st.status === 'current' ? '• Live Now' : 'Upcoming');
-                        
                         htmlData += `
                             <div class="station-item">
                                 <div class="station-dot" style="border-color: ${st.status === 'current' ? '#ff3333' : '#00ffcc'}"></div>
                                 <div class="station-info">
-                                    <strong>${st.station}</strong> <span class="status-badge ${badgeClass}">${badgeText}</span>
-                                    <p style="font-size: 11px; color: #8fa0dd; margin-top:2px;">${st.time}</p>
+                                    <strong>${st.station}</strong> <span class="status-badge ${badgeClass}">${st.status.toUpperCase()}</span>
+                                    <p style="font-size: 11px; color: #8fa0dd; margin-top:1px;">${st.time}</p>
                                 </div>
                             </div>
                         `;
                     });
-
-                    htmlData += `</div>`;
-                    output.innerHTML = htmlData;
+                    output.innerHTML = htmlData + `</div>`;
                 } else {
-                    // Agar Database me number na ho toh Error Screen
+                    addLog(`Alert: Object #${num} outside local dataset index limit.`, "log-warn");
                     output.innerHTML = `
-                        <div style="background: rgba(255,51,51,0.1); border: 1px solid #ff3333; padding: 12px; border-radius: 8px; color: #ff9999; font-size: 13px; text-align: left;">
-                            📡 <strong>Connection Timeout!</strong><br>
-                            Train number ${num} ka live data responsive nahi hai. Kripya list me se try karein (13022, 13019, 15284, 63012).
+                        <div style="background: rgba(255,255,255,0.05); border: 1px solid #233554; padding: 12px; border-radius: 8px; color: #cccccc; font-size: 13px; text-align: left;">
+                            📡 <strong>Unknown Target Code</strong><br>
+                            Is object code ko trace karne ke liye secondary external core use karein:<br>
+                            <a href="https://enquiry.indianrail.gov.in/mntes/" target="_blank" class="official-btn" style="text-decoration:none;font-weight:bold;">🔍 NTES Live Interface</a>
                         </div>
                     `;
                 }
-            }, 1200);
+            }, 1000);
         }
     </script>
 </body>
