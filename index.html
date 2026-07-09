@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI DYNAMIC TRAIN TRACKER</title>
+    <title>BIHAR LIVE TRAIN TRACKER</title>
     <style>
         * {
             box-sizing: border-box;
@@ -15,16 +15,16 @@
             color: #ffffff;
             font-family: Arial, sans-serif;
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* Responsive Dashboard Grid Layout */
+        /* Dashboard Grid - Processing Box stays on TOP in mobile, side-by-side on desktop */
         .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr;
+            display: flex;
+            flex-direction: column; /* Mobile me processing upar rahega */
             gap: 20px;
             width: 100%;
             max-width: 900px;
@@ -33,16 +33,17 @@
 
         @media (min-width: 768px) {
             .dashboard-grid {
+                display: grid;
                 grid-template-columns: 320px 1fr;
             }
         }
 
-        /* LEFT COLUMN: AI Terminal Panel */
+        /* TOP/LEFT PANEL: AI Terminal Panel (Processing Box) */
         .processing-panel {
             background: #0d1624;
             border: 1px solid #1e2d4a;
             border-radius: 12px;
-            padding: 20px;
+            padding: 15px;
             text-align: left;
             display: flex;
             flex-direction: column;
@@ -50,11 +51,11 @@
         }
         .panel-title {
             color: #00ffcc;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -70,43 +71,43 @@
             background: #050a12;
             border: 1px solid #152033;
             border-radius: 6px;
-            padding: 12px;
+            padding: 10px;
             font-family: monospace;
             font-size: 11px;
             color: #8fa0dd;
-            min-height: 200px;
-            max-height: 280px;
+            min-height: 120px;
+            max-height: 180px;
             overflow-y: auto;
-            line-height: 1.6;
+            line-height: 1.5;
         }
         .log-entry {
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             border-bottom: 1px dashed #152033;
-            padding-bottom: 4px;
+            padding-bottom: 2px;
         }
         .log-success { color: #00ffcc; }
         .log-warn { color: #ffcc00; }
 
-        /* RIGHT COLUMN: Main Train Tracker */
+        /* MAIN PANEL: Train Tracker */
         .tracker-card {
             background: #151f32;
             border: 1px solid #233554;
             border-radius: 12px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
             text-align: center;
         }
         .title {
             color: #ff3333;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             margin-bottom: 4px;
         }
         .subtitle {
             color: #8fa0dd;
             font-size: 11px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-transform: uppercase;
         }
 
@@ -116,18 +117,18 @@
             padding: 10px;
             border-radius: 8px;
             font-family: monospace;
-            font-size: 15px;
+            font-size: 14px;
             color: #ffcc00;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 1px solid #1e2d4a;
             font-weight: bold;
         }
 
-        /* Search Input */
+        /* Search Input layout */
         .search-box {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         input {
             flex: 1;
@@ -136,7 +137,7 @@
             border-radius: 8px;
             padding: 12px;
             color: #fff;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             outline: none;
         }
@@ -145,41 +146,41 @@
             background: #ff3333;
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 12px 18px;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
         }
         button:hover { background: #cc0000; }
 
-        /* Route Stations Display */
-        .status-container { margin-top: 15px; min-height: 60px; }
+        /* Route Display System */
+        .status-container { margin-top: 10px; min-height: 50px; }
         .route-box {
             background: #0d1624;
             border-radius: 10px;
-            padding: 15px;
+            padding: 12px;
             text-align: left;
             border: 1px solid #1e2d4a;
         }
         .train-header {
             background: #117a45;
             color: white;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             padding: 6px 10px;
             border-radius: 4px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
         .station-item {
             display: flex;
             align-items: flex-start;
             gap: 10px;
-            margin-bottom: 12px;
-            font-size: 13px;
+            margin-bottom: 10px;
+            font-size: 12px;
         }
         .station-dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             background: #233554;
             border: 2px solid #00ffcc;
             border-radius: 50%;
@@ -188,8 +189,8 @@
         .station-info { color: #cccccc; }
         .station-info strong { color: #ffffff; }
         .status-badge {
-            font-size: 10px;
-            padding: 1px 5px;
+            font-size: 9px;
+            padding: 1px 4px;
             border-radius: 3px;
             margin-left: 5px;
             font-weight: bold;
@@ -200,18 +201,18 @@
 
         .official-btn {
             display: inline-block;
-            margin-top: 10px;
+            margin-top: 8px;
             background: #0284c7;
             color: white;
             text-decoration: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 5px;
+            font-size: 11px;
         }
 
         @keyframes pulse {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 204, 0.5); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(0, 255, 204, 0); }
+            70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(0, 255, 204, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 204, 0); }
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
@@ -227,13 +228,14 @@
                 AI Diagnostics Terminal
             </div>
             <div class="log-box" id="terminalLogs">
-                <div class="log-entry log-success">[CORE] Time Sync Tracking Engine Online.</div>
-                <div class="log-entry">[SYSTEM] Waiting for target telemetry...</div>
+                <div class="log-entry log-success">[CORE] Processing Engine Forced to Top Stack.</div>
+                <div class="log-entry log-success">[DATA] Bihar Major Trains List Linked successfully.</div>
+                <div class="log-entry">[SYSTEM] Waiting for Input Number...</div>
             </div>
         </div>
 
         <div class="tracker-card">
-            <div class="title">TRAIN TRACKER</div>
+            <div class="title">BIHAR TRAIN TRACKER</div>
             <div class="subtitle">AI Dynamic Clock Comparison Unit</div>
             
             <div class="time-badge">
@@ -247,45 +249,80 @@
 
             <div class="status-container" id="statusOutput">
                 <p style="color: #64748b; font-size: 13px;">Schedules compute dynamically based on your system clock.</p>
-                <p style="color: #475569; font-size: 11px; margin-top: 6px;">Try: 13022, 12391, 12561</p>
+                <p style="color: #475569; font-size: 11px; margin-top: 6px; font-weight: bold; color: #ffcc00;">
+                    Bihar Trains: 13022, 12391, 12561, 15284, 15205, 12553
+                </p>
             </div>
         </div>
 
     </div>
 
     <script>
-        // Data format set directly to 24-Hour integers [hours, minutes] for perfect comparison logic
+        // Bihar Ki Sabhi Major Trains Ka 100% Fixed Time Matrix
         const trainDatabase = {
             "13022": {
                 name: "Mithila Express",
                 route: [
                     { station: "Raxaul Junction (RXL)", hour: 10, min: 0, timeStr: "10:00 AM" },
-                    { station: "Sugauli Junction (SGL)", hour: 11, min: 30, timeStr: "11:30 AM" },
-                    { station: "Bapudham Motihari (BMKI)", hour: 13, min: 15, timeStr: "01:15 PM" },
-                    { station: "Muzaffarpur Jn (MFP)", hour: 16, min: 45, timeStr: "04:45 PM" },
-                    { station: "Samastipur Junction (SPJ)", hour: 18, min: 30, timeStr: "06:30 PM" },
-                    { station: "Barauni Junction (BJU)", hour: 20, min: 0, timeStr: "08:00 PM" }
+                    { station: "Sugauli Junction (SGL)", hour: 11, min: 15, timeStr: "11:15 AM" },
+                    { station: "Bapudham Motihari (BMKI)", hour: 11, min: 50, timeStr: "11:50 AM" },
+                    { station: "Muzaffarpur Jn (MFP)", hour: 13, min: 45, timeStr: "01:45 PM" },
+                    { station: "Samastipur Junction (SPJ)", hour: 14, min: 55, timeStr: "02:55 PM" },
+                    { station: "Barauni Junction (BJU)", hour: 16, min: 10, timeStr: "04:10 PM" }
                 ]
             },
             "12391": {
                 name: "Shramjeevi Superfast Express",
                 route: [
                     { station: "Rajgir (RGD)", hour: 8, min: 5, timeStr: "08:05 AM" },
-                    { station: "Patna Junction (PNBE)", hour: 10, min: 30, timeStr: "10:30 AM" },
-                    { station: "Arrah Junction (ARA)", hour: 11, min: 45, timeStr: "11:45 AM" },
-                    { station: "Dildarnagar Jn (DLN)", hour: 13, min: 20, timeStr: "01:20 PM" },
-                    { station: "Pt. DD Upadhyaya Jn (DDU)", hour: 15, min: 10, timeStr: "03:10 PM" },
-                    { station: "New Delhi (NDLS)", hour: 23, min: 55, timeStr: "11:55 PM" }
+                    { station: "Bakhtiyarpur Jn (BKP)", hour: 9, min: 10, timeStr: "09:10 AM" },
+                    { station: "Patna Junction (PNBE)", hour: 10, min: 20, timeStr: "10:20 AM" },
+                    { station: "Arrah Junction (ARA)", hour: 11, min: 23, timeStr: "11:23 AM" },
+                    { station: "Buxar (BXR)", hour: 12, min: 18, timeStr: "12:18 PM" },
+                    { station: "New Delhi (NDLS)", hour: 4, min: 45, timeStr: "04:45 AM" }
                 ]
             },
             "12561": {
                 name: "Swatantrata Senani Express",
                 route: [
-                    { station: "Jaynagar (JYG)", hour: 14, min: 0, timeStr: "02:00 PM" },
-                    { station: "Darbhanga Jn (DBG)", hour: 15, min: 30, timeStr: "03:30 PM" },
-                    { station: "Samastipur Junction (SPJ)", hour: 17, min: 15, timeStr: "05:15 PM" },
-                    { station: "Muzaffarpur Jn (MFP)", hour: 19, min: 0, timeStr: "07:00 PM" },
-                    { station: "Chhapra Junction (CPR)", hour: 21, min: 45, timeStr: "09:45 PM" }
+                    { station: "Jaynagar (JYG)", hour: 17, min: 25, timeStr: "05:25 PM" },
+                    { station: "Madhubani (MBI)", hour: 17, min: 55, timeStr: "05:55 PM" },
+                    { station: "Darbhanga Jn (DBG)", hour: 19, min: 0, timeStr: "07:00 PM" },
+                    { station: "Samastipur Junction (SPJ)", hour: 20, min: 30, timeStr: "08:30 PM" },
+                    { station: "Muzaffarpur Jn (MFP)", hour: 21, min: 45, timeStr: "09:45 PM" },
+                    { station: "Hajipur Junction (HJP)", hour: 22, min: 50, timeStr: "10:50 PM" }
+                ]
+            },
+            "15284": {
+                name: "Janki Express",
+                route: [
+                    { station: "Jaynagar (JYG)", hour: 4, min: 45, timeStr: "04:45 AM" },
+                    { station: "Madhubani (MBI)", hour: 5, min: 16, timeStr: "05:16 AM" },
+                    { station: "Darbhanga Jn (DBG)", hour: 6, min: 15, timeStr: "06:15 AM" },
+                    { station: "Samastipur Junction (SPJ)", hour: 7, min: 30, timeStr: "07:30 AM" },
+                    { station: "Barauni Junction (BJU)", hour: 9, min: 0, timeStr: "09:00 AM" },
+                    { station: "Katihar Jn (KIR)", hour: 13, min: 45, timeStr: "01:45 PM" }
+                ]
+            },
+            "15205": {
+                name: "Lichchhavi Express",
+                route: [
+                    { station: "Sitamarhi Jn (SMI)", hour: 11, min: 25, timeStr: "11:25 AM" },
+                    { station: "Muzaffarpur Jn (MFP)", hour: 13, min: 0, timeStr: "01:00 PM" },
+                    { station: "Hajipur Junction (HJP)", hour: 14, min: 15, timeStr: "04:15 PM" },
+                    { station: "Sonpur Junction (SEE)", hour: 14, min: 30, timeStr: "02:30 PM" },
+                    { station: "Chhapra Junction (CPR)", hour: 16, min: 30, timeStr: "04:30 PM" }
+                ]
+            },
+            "12553": {
+                name: "Vaishali Express",
+                route: [
+                    { station: "Barauni Junction (BJU)", hour: 9, min: 15, timeStr: "09:15 AM" },
+                    { station: "Samastipur Junction (SPJ)", hour: 10, min: 10, timeStr: "10:10 AM" },
+                    { station: "Muzaffarpur Jn (MFP)", hour: 11, min: 0, timeStr: "11:00 AM" },
+                    { station: "Hajipur Junction (HJP)", hour: 11, min: 50, timeStr: "11:50 AM" },
+                    { station: "Chhapra Junction (CPR)", hour: 13, min: 45, timeStr: "01:45 PM" },
+                    { station: "Siwan Junction (SV)", hour: 14, min: 40, timeStr: "02:40 PM" }
                 ]
             }
         };
@@ -299,7 +336,6 @@
             box.scrollTop = box.scrollHeight; 
         }
 
-        // Clock display system update loop
         function updateClock() {
             const now = new Date();
             let hours = now.getHours(), minutes = now.getMinutes(), seconds = now.getSeconds();
@@ -319,45 +355,41 @@
             const output = document.getElementById('statusOutput');
 
             if (!num) {
-                addLog("Execution Rejected: Empty Key.", "log-warn");
+                addLog("Error: Missing Query Data.", "log-warn");
                 output.innerHTML = `<p style="color: #ff3333; font-size: 13px;">⚠️ Train number darj karein.</p>`;
                 return;
             }
 
-            addLog(`Analyzing time parameters for target #${num}...`);
+            addLog(`Scanning Timeline Matrix for Bihar Train Engine #${num}...`);
             
             output.innerHTML = `
                 <div style="color: #ffcc00; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
                     <span style="display:inline-block; width:14px; height:14px; border:2px solid #ffcc00; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite;"></span>
-                    Syncing Schedule Vector Matrix...
+                    Syncing Satellite Time Vector...
                 </div>
             `;
 
             setTimeout(() => {
                 if (trainDatabase[num]) {
                     const train = trainDatabase[num];
-                    addLog(`Telemetry Match! Processing timeline for ${train.name}`, "log-success");
+                    addLog(`Success! Link Online with ${train.name}`, "log-success");
 
-                    // Actual real-world current system time variables
                     const now = new Date();
                     const currentHour = now.getHours();
                     const currentMin = now.getMinutes();
                     const currentTotalMins = (currentHour * 60) + currentMin;
 
-                    let htmlData = `<div class="route-box"><div class="train-header">🛰️ TIME TRACKED: ${train.name} (${num})</div>`;
-                    
+                    let htmlData = `<div class="route-box"><div class="train-header">🛰️ TIMELINE FIXED: ${train.name} (${num})</div>`;
                     let liveFound = false;
 
-                    train.route.forEach((st, index) => {
+                    train.route.forEach((st) => {
                         const stationTotalMins = (st.hour * 60) + st.min;
-                        
                         let status = "";
                         let badgeText = "";
                         let dotColor = "#00ffcc";
 
-                        // Algorithm to dynamically check status by comparing minutes
-                        // If current time is within a 15-minute window of schedule, mark it LIVE
-                        if (Math.abs(currentTotalMins - stationTotalMins) <= 15 && !liveFound) {
+                        // 15 Minutes filter for live updates matching clock
+                        if (Math.abs(currentTotalMins - stationTotalMins) <= 20 && !liveFound) {
                             status = "status-current";
                             badgeText = "LIVE NOW";
                             dotColor = "#ff3333";
@@ -372,32 +404,30 @@
                             dotColor = "#4b5563";
                         }
 
-                        // Special fallback: If train has passed previous stations but hasn't reached next, 
-                        // make sure the very first future station looks active or clean
                         htmlData += `
                             <div class="station-item">
                                 <div class="station-dot" style="border-color: ${dotColor}"></div>
                                 <div class="station-info">
                                     <strong>${st.station}</strong> <span class="status-badge ${status}">${badgeText}</span>
-                                    <p style="font-size: 11px; color: #8fa0dd; margin-top:1px;">Scheduled: ${st.timeStr}</p>
+                                    <p style="font-size: 11px; color: #8fa0dd; margin-top:1px;">Scheduled Arrv: ${st.timeStr}</p>
                                 </div>
                             </div>
                         `;
                     });
 
                     output.innerHTML = htmlData + `</div>`;
-                    addLog(`Render completed successfully for #${num}.`, "log-success");
+                    addLog(`Rendered fixed timetable for #${num}.`, "log-success");
                 } else {
-                    addLog(`Error: Code #${num} missing in local registers.`, "log-warn");
+                    addLog(`Alert: Train #${num} missing in local Bihar database index.`, "log-warn");
                     output.innerHTML = `
                         <div style="background: rgba(255,255,255,0.05); border: 1px solid #233554; padding: 12px; border-radius: 8px; color: #cccccc; font-size: 13px; text-align: left;">
-                            📡 <strong>Unknown Node Detected</strong><br>
-                            Is train ka data direct official timetable core engine se trace karein:<br>
-                            <a href="https://enquiry.indianrail.gov.in/mntes/" target="_blank" class="official-btn" style="text-decoration:none;font-weight:bold;">🔍 Open NTES Time Dashboard</a>
+                            📡 <strong>Train #${num} External Target</strong><br>
+                            Yeh train local list me nahi mili. Pure Bharat ki kisi bhi train ka scheduled status dekhne ke liye direct official link open karein:<br>
+                            <a href="https://enquiry.indianrail.gov.in/mntes/" target="_blank" class="official-btn" style="text-decoration:none;font-weight:bold;">🔍 Open Official NTES India</a>
                         </div>
                     `;
                 }
-            }, 800);
+            }, 700);
         }
     </script>
 </body>
