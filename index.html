@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIHAR LIVE TRAIN TRACKER</title>
+    <title>BIHAR TRAIN TRACKER - SECURE CORE</title>
+    <script src="config.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -15,20 +16,55 @@
             color: #ffffff;
             font-family: Arial, sans-serif;
             min-height: 100vh;
-            padding: 15px;
+            padding: 0 15px 20px 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* Dashboard Grid - Processing Box stays on TOP in mobile, side-by-side on desktop */
+        /* Top Gemini Verification Ribbon Bar */
+        .gemini-verified-bar {
+            width: 100%;
+            background: linear-gradient(90deg, #1e3a8a, #0f172a);
+            border-bottom: 2px solid #3b82f6;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+        .gemini-status {
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+        }
+        .gemini-sparkle {
+            color: #fff;
+            background: linear-gradient(45deg, #a855f7, #3b82f6);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+        .secure-badge {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            padding: 2px 8px;
+            border-radius: 20px;
+            border: 1px solid #10b981;
+        }
+
+        /* Dashboard Responsive Layout */
         .dashboard-grid {
             display: flex;
-            flex-direction: column; /* Mobile me processing upar rahega */
+            flex-direction: column;
             gap: 20px;
             width: 100%;
             max-width: 900px;
-            margin-top: 10px;
         }
 
         @media (min-width: 768px) {
@@ -38,7 +74,7 @@
             }
         }
 
-        /* TOP/LEFT PANEL: AI Terminal Panel (Processing Box) */
+        /* PROCESSING PANEL: AI Terminal Box (Stays Top on Mobile) */
         .processing-panel {
             background: #0d1624;
             border: 1px solid #1e2d4a;
@@ -50,7 +86,7 @@
             height: fit-content;
         }
         .panel-title {
-            color: #00ffcc;
+            color: #38bdf8;
             font-size: 13px;
             font-weight: bold;
             text-transform: uppercase;
@@ -63,7 +99,7 @@
         .pulse-dot {
             width: 8px;
             height: 8px;
-            background: #00ffcc;
+            background: #38bdf8;
             border-radius: 50%;
             animation: pulse 1.2s infinite;
         }
@@ -86,9 +122,10 @@
             padding-bottom: 2px;
         }
         .log-success { color: #00ffcc; }
+        .log-gemini { color: #a855f7; font-weight: bold; }
         .log-warn { color: #ffcc00; }
 
-        /* MAIN PANEL: Train Tracker */
+        /* MAIN TRACKER SYSTEM CARD */
         .tracker-card {
             background: #151f32;
             border: 1px solid #233554;
@@ -111,7 +148,7 @@
             text-transform: uppercase;
         }
 
-        /* Live Clock */
+        /* System Clock Badge */
         .time-badge {
             background: #0d1624;
             padding: 10px;
@@ -124,7 +161,7 @@
             font-weight: bold;
         }
 
-        /* Search Input layout */
+        /* Search Box Layout styling */
         .search-box {
             display: flex;
             gap: 10px;
@@ -141,7 +178,7 @@
             font-weight: bold;
             outline: none;
         }
-        input:focus { border-color: #ff3333; }
+        input:focus { border-color: #3b82f6; }
         button {
             background: #ff3333;
             color: white;
@@ -153,7 +190,7 @@
         }
         button:hover { background: #cc0000; }
 
-        /* Route Display System */
+        /* Live Route Status Mapping Graphics */
         .status-container { margin-top: 10px; min-height: 50px; }
         .route-box {
             background: #0d1624;
@@ -170,6 +207,9 @@
             padding: 6px 10px;
             border-radius: 4px;
             margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .station-item {
             display: flex;
@@ -199,44 +239,40 @@
         .status-current { background: rgba(255, 51, 51, 0.1); color: #ff3333; }
         .status-upcoming { background: rgba(255, 255, 255, 0.1); color: #aaa; }
 
-        .official-btn {
-            display: inline-block;
-            margin-top: 8px;
-            background: #0284c7;
-            color: white;
-            text-decoration: none;
-            padding: 6px 10px;
-            border-radius: 5px;
-            font-size: 11px;
-        }
-
         @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 204, 0.5); }
-            70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(0, 255, 204, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 204, 0); }
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.5); }
+            70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(56, 189, 248, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
+    <div class="gemini-verified-bar">
+        <div class="gemini-status">
+            <span class="gemini-sparkle">✦ GEMINI AI</span>
+            <span>External Configuration Core</span>
+        </div>
+        <div class="secure-badge">🔒 SECURE MODE</div>
+    </div>
+
     <div class="dashboard-grid">
         
         <div class="processing-panel">
             <div class="panel-title">
                 <div class="pulse-dot"></div>
-                AI Diagnostics Terminal
+                Gemini API Stream Router
             </div>
             <div class="log-box" id="terminalLogs">
-                <div class="log-entry log-success">[CORE] Processing Engine Forced to Top Stack.</div>
-                <div class="log-entry log-success">[DATA] Bihar Major Trains List Linked successfully.</div>
-                <div class="log-entry">[SYSTEM] Waiting for Input Number...</div>
+                <div class="log-entry log-gemini">[GEMINI] Security architecture loaded from 'config.js'.</div>
+                <div class="log-entry">[SYSTEM] Waiting for target query key...</div>
             </div>
         </div>
 
         <div class="tracker-card">
-            <div class="title">BIHAR TRAIN TRACKER</div>
-            <div class="subtitle">AI Dynamic Clock Comparison Unit</div>
+            <div class="title">LIVE TRAIN SYSTEM</div>
+            <div class="subtitle">AI Dynamic Cloud Data Handshake Engine</div>
             
             <div class="time-badge">
                 <span>SYSTEM TIME: <span id="clockDisplay">--:--:-- AM</span></span>
@@ -248,85 +284,13 @@
             </div>
 
             <div class="status-container" id="statusOutput">
-                <p style="color: #64748b; font-size: 13px;">Schedules compute dynamically based on your system clock.</p>
-                <p style="color: #475569; font-size: 11px; margin-top: 6px; font-weight: bold; color: #ffcc00;">
-                    Bihar Trains: 13022, 12391, 12561, 15284, 15205, 12553
-                </p>
+                <p style="color: #64748b; font-size: 13px;">Enter train number to safely execute real-time server fetching.</p>
             </div>
         </div>
 
     </div>
 
     <script>
-        // Bihar Ki Sabhi Major Trains Ka 100% Fixed Time Matrix
-        const trainDatabase = {
-            "13022": {
-                name: "Mithila Express",
-                route: [
-                    { station: "Raxaul Junction (RXL)", hour: 10, min: 0, timeStr: "10:00 AM" },
-                    { station: "Sugauli Junction (SGL)", hour: 11, min: 15, timeStr: "11:15 AM" },
-                    { station: "Bapudham Motihari (BMKI)", hour: 11, min: 50, timeStr: "11:50 AM" },
-                    { station: "Muzaffarpur Jn (MFP)", hour: 13, min: 45, timeStr: "01:45 PM" },
-                    { station: "Samastipur Junction (SPJ)", hour: 14, min: 55, timeStr: "02:55 PM" },
-                    { station: "Barauni Junction (BJU)", hour: 16, min: 10, timeStr: "04:10 PM" }
-                ]
-            },
-            "12391": {
-                name: "Shramjeevi Superfast Express",
-                route: [
-                    { station: "Rajgir (RGD)", hour: 8, min: 5, timeStr: "08:05 AM" },
-                    { station: "Bakhtiyarpur Jn (BKP)", hour: 9, min: 10, timeStr: "09:10 AM" },
-                    { station: "Patna Junction (PNBE)", hour: 10, min: 20, timeStr: "10:20 AM" },
-                    { station: "Arrah Junction (ARA)", hour: 11, min: 23, timeStr: "11:23 AM" },
-                    { station: "Buxar (BXR)", hour: 12, min: 18, timeStr: "12:18 PM" },
-                    { station: "New Delhi (NDLS)", hour: 4, min: 45, timeStr: "04:45 AM" }
-                ]
-            },
-            "12561": {
-                name: "Swatantrata Senani Express",
-                route: [
-                    { station: "Jaynagar (JYG)", hour: 17, min: 25, timeStr: "05:25 PM" },
-                    { station: "Madhubani (MBI)", hour: 17, min: 55, timeStr: "05:55 PM" },
-                    { station: "Darbhanga Jn (DBG)", hour: 19, min: 0, timeStr: "07:00 PM" },
-                    { station: "Samastipur Junction (SPJ)", hour: 20, min: 30, timeStr: "08:30 PM" },
-                    { station: "Muzaffarpur Jn (MFP)", hour: 21, min: 45, timeStr: "09:45 PM" },
-                    { station: "Hajipur Junction (HJP)", hour: 22, min: 50, timeStr: "10:50 PM" }
-                ]
-            },
-            "15284": {
-                name: "Janki Express",
-                route: [
-                    { station: "Jaynagar (JYG)", hour: 4, min: 45, timeStr: "04:45 AM" },
-                    { station: "Madhubani (MBI)", hour: 5, min: 16, timeStr: "05:16 AM" },
-                    { station: "Darbhanga Jn (DBG)", hour: 6, min: 15, timeStr: "06:15 AM" },
-                    { station: "Samastipur Junction (SPJ)", hour: 7, min: 30, timeStr: "07:30 AM" },
-                    { station: "Barauni Junction (BJU)", hour: 9, min: 0, timeStr: "09:00 AM" },
-                    { station: "Katihar Jn (KIR)", hour: 13, min: 45, timeStr: "01:45 PM" }
-                ]
-            },
-            "15205": {
-                name: "Lichchhavi Express",
-                route: [
-                    { station: "Sitamarhi Jn (SMI)", hour: 11, min: 25, timeStr: "11:25 AM" },
-                    { station: "Muzaffarpur Jn (MFP)", hour: 13, min: 0, timeStr: "01:00 PM" },
-                    { station: "Hajipur Junction (HJP)", hour: 14, min: 15, timeStr: "04:15 PM" },
-                    { station: "Sonpur Junction (SEE)", hour: 14, min: 30, timeStr: "02:30 PM" },
-                    { station: "Chhapra Junction (CPR)", hour: 16, min: 30, timeStr: "04:30 PM" }
-                ]
-            },
-            "12553": {
-                name: "Vaishali Express",
-                route: [
-                    { station: "Barauni Junction (BJU)", hour: 9, min: 15, timeStr: "09:15 AM" },
-                    { station: "Samastipur Junction (SPJ)", hour: 10, min: 10, timeStr: "10:10 AM" },
-                    { station: "Muzaffarpur Jn (MFP)", hour: 11, min: 0, timeStr: "11:00 AM" },
-                    { station: "Hajipur Junction (HJP)", hour: 11, min: 50, timeStr: "11:50 AM" },
-                    { station: "Chhapra Junction (CPR)", hour: 13, min: 45, timeStr: "01:45 PM" },
-                    { station: "Siwan Junction (SV)", hour: 14, min: 40, timeStr: "02:40 PM" }
-                ]
-            }
-        };
-
         function addLog(text, type = '') {
             const box = document.getElementById('terminalLogs');
             const entry = document.createElement('div');
@@ -350,84 +314,89 @@
             if (event.key === "Enter") trackLiveTrain();
         }
 
-        function trackLiveTrain() {
+        // BACKEND API STREAM METHOD LOGIC
+        async function trackLiveTrain() {
             const num = document.getElementById('trainInput').value.trim();
             const output = document.getElementById('statusOutput');
 
             if (!num) {
-                addLog("Error: Missing Query Data.", "log-warn");
+                addLog("Fetch Denied: Parameter Value is null.", "log-warn");
                 output.innerHTML = `<p style="color: #ff3333; font-size: 13px;">⚠️ Train number darj karein.</p>`;
                 return;
             }
 
-            addLog(`Scanning Timeline Matrix for Bihar Train Engine #${num}...`);
+            // Fallback validation if config.js file fails to load globally
+            if (typeof GEMINI_CONFIG === 'undefined') {
+                addLog(`[CRITICAL ERROR] config.js script file is missing!`, "log-warn");
+                output.innerHTML = `<p style="color: #ffcc00; font-size: 13px;">⚠️ Error: Same folder me 'config.js' file banayein.</p>`;
+                return;
+            }
+
+            addLog(`[GEMINI AI] Inspecting configuration arrays...`, "log-gemini");
             
             output.innerHTML = `
-                <div style="color: #ffcc00; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    <span style="display:inline-block; width:14px; height:14px; border:2px solid #ffcc00; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite;"></span>
-                    Syncing Satellite Time Vector...
+                <div style="color: #38bdf8; font-weight: bold; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <span style="display:inline-block; width:14px; height:14px; border:2px solid #3b82f6; border-top:2px solid transparent; border-radius:50%; animation:spin 0.8s linear infinite;"></span>
+                    Parsing External Server Packets...
                 </div>
             `;
 
-            setTimeout(() => {
-                if (trainDatabase[num]) {
-                    const train = trainDatabase[num];
-                    addLog(`Success! Link Online with ${train.name}`, "log-success");
-
-                    const now = new Date();
-                    const currentHour = now.getHours();
-                    const currentMin = now.getMinutes();
-                    const currentTotalMins = (currentHour * 60) + currentMin;
-
-                    let htmlData = `<div class="route-box"><div class="train-header">🛰️ TIMELINE FIXED: ${train.name} (${num})</div>`;
-                    let liveFound = false;
-
-                    train.route.forEach((st) => {
-                        const stationTotalMins = (st.hour * 60) + st.min;
-                        let status = "";
-                        let badgeText = "";
-                        let dotColor = "#00ffcc";
-
-                        // 15 Minutes filter for live updates matching clock
-                        if (Math.abs(currentTotalMins - stationTotalMins) <= 20 && !liveFound) {
-                            status = "status-current";
-                            badgeText = "LIVE NOW";
-                            dotColor = "#ff3333";
-                            liveFound = true; 
-                        } else if (currentTotalMins > stationTotalMins) {
-                            status = "status-passed";
-                            badgeText = "PASSED ✓";
-                            dotColor = "#00ffcc";
-                        } else {
-                            status = "status-upcoming";
-                            badgeText = "UPCOMING";
-                            dotColor = "#4b5563";
-                        }
-
-                        htmlData += `
-                            <div class="station-item">
-                                <div class="station-dot" style="border-color: ${dotColor}"></div>
-                                <div class="station-info">
-                                    <strong>${st.station}</strong> <span class="status-badge ${status}">${badgeText}</span>
-                                    <p style="font-size: 11px; color: #8fa0dd; margin-top:1px;">Scheduled Arrv: ${st.timeStr}</p>
-                                </div>
-                            </div>
-                        `;
-                    });
-
-                    output.innerHTML = htmlData + `</div>`;
-                    addLog(`Rendered fixed timetable for #${num}.`, "log-success");
-                } else {
-                    addLog(`Alert: Train #${num} missing in local Bihar database index.`, "log-warn");
+            // Block request if placeholder key hasn't been changed yet
+            if(GEMINI_CONFIG.API_KEY === "YOUR_ACTUAL_RAPIDAPI_KEY_HERE") {
+                setTimeout(() => {
+                    addLog(`[API ERROR] Validation Terminated. Default placeholder key detected.`, "log-warn");
                     output.innerHTML = `
-                        <div style="background: rgba(255,255,255,0.05); border: 1px solid #233554; padding: 12px; border-radius: 8px; color: #cccccc; font-size: 13px; text-align: left;">
-                            📡 <strong>Train #${num} External Target</strong><br>
-                            Yeh train local list me nahi mili. Pure Bharat ki kisi bhi train ka scheduled status dekhne ke liye direct official link open karein:<br>
-                            <a href="https://enquiry.indianrail.gov.in/mntes/" target="_blank" class="official-btn" style="text-decoration:none;font-weight:bold;">🔍 Open Official NTES India</a>
+                        <div style="background: rgba(255,51,51,0.05); border: 1px solid #ff3333; padding: 12px; border-radius: 8px; color: #ff8888; font-size: 13px; text-align: left;">
+                            📡 <strong>External Key Setup Needed</strong><br>
+                            Bhai! Pehle <strong>config.js</strong> file kholiye aur wahan line number 3 par apni real <strong>API Key</strong> enter karke save kijiye!
                         </div>
                     `;
-                }
-            }, 700);
+                }, 1000);
+                return;
+            }
+
+            try {
+                // Fetch Request directly leveraging config tokens
+                const response = await fetch(`${GEMINI_CONFIG.API_URL}${num}`, {
+                    method: "GET",
+                    headers: {
+                        "X-RapidAPI-Key": GEMINI_CONFIG.API_KEY,
+                        "X-RapidAPI-Host": "indian-railway-api-host.p.rapidapi.com" 
+                    }
+                });
+
+                const data = await response.json();
+                addLog(`[API STREAM] 200 OK. Packets received smoothly.`, "log-success");
+
+                let htmlData = `
+                    <div class="route-box">
+                        <div class="train-header">
+                            <span>🛰️ LIVE RESPONSE: ${data.train_name || 'Express'} (${num})</span>
+                            <span style="font-size:10px; color:#38bdf8;">✓ SECURE DISPATCH</span>
+                        </div>
+                `;
+
+                data.route.forEach((st) => {
+                    let statusClass = st.has_arrived ? "status-passed" : (st.is_current ? "status-current" : "status-upcoming");
+                    let badgeText = st.has_arrived ? "PASSED ✓" : (st.is_current ? "LIVE NOW" : "UPCOMING");
+                    
+                    htmlData += `
+                        <div class="station-item">
+                            <div class="station-dot" style="border-color: ${st.is_current ? '#ff3333' : '#00ffcc'}"></div>
+                            <div class="station-info">
+                                <strong>${st.station_name}</strong> <span class="status-badge ${statusClass}">${badgeText}</span>
+                                <p style="font-size: 11px; color: #8fa0dd; margin-top:1px;">Arrv Time: ${st.time}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                output.innerHTML = htmlData + `</div>`;
+
+            } catch (error) {
+                addLog(`Gateway Handshake dropped. Connection broken.`, "log-warn");
+                output.innerHTML = `<p style="color:#ffcc00; font-size:13px;">⚠️ Server connecting error. URL aur API parameters verify karein.</p>`;
+            }
         }
     </script>
 </body>
